@@ -1,5 +1,8 @@
 Properties localProperties = new Properties()
-localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+def localPropertiesFile = project.rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.newDataInputStream())
+}
 
 def storeFile = localProperties.getProperty('STORE_FILE')
 def storePassword = localProperties.getProperty('STORE_PASSWORD')
