@@ -96,7 +96,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
                 showClearCourseDialog();
                 break;
             case R.id.btn_github:
-                WebUtil.gotoWeb(mActivity, "");
+                WebUtil.gotoWeb(mActivity, "https://github.com/GuJin/TimeTable");
                 break;
         }
     }
