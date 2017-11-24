@@ -1,0 +1,22 @@
+Properties localProperties = new Properties()
+localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def storeFile = localProperties.getProperty('STORE_FILE')
+def storePassword = localProperties.getProperty('STORE_PASSWORD')
+def keyAlias = localProperties.getProperty('KEY_ALIAS')
+def keyPassword = localProperties.getProperty('KEY_PASSWORD')
+
+ext {
+    propertyHaveSigningConfigs = (storeFile != null && file(storeFile).exists() && storePassword != null && keyAlias != null && keyPassword != null)
+    propertyStoreFile = storeFile
+    propertyStorePassword = storePassword
+    propertyKeyAlias = keyAlias
+    propertyKeyPassword = keyPassword
+    propertyBuglyId = localProperties.getProperty('BUGLY_ID')
+}
+
+if (propertyHaveSigningConfigs) {
+    logger.quiet("propertyHaveSigningConfigs true")
+} else {
+    logger.quiet("propertyHaveSigningConfigs false")
+}

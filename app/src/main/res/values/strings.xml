@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">我是课程表</string>
+
+    <string name="week_sat">星期六</string>
+    <string name="week_sun">星期日</string>
+    <string name="week_work_day">星期一 ~ 星期五</string>
+
+    <string name="semester">学 期</string>
+    <string name="table">表 格</string>
+    <string name="settings_course">课 程</string>
+    <string name="more">更 多</string>
+    <string name="donation">捐赠作者</string>
+
+    <string name="confrim">确 认</string>
+    <string name="cancle">取 消</string>
+
+    <string name="course">课程名称</string>
+    <string name="classroom">上课地点</string>
+    <string name="line"> ~ </string>
+    <string name="week">周</string>
+
+    <string name="start_date">起始日期</string>
+    <string name="end_date">结束日期</string>
+    <string name="semester_week">周数</string>
+    <string name="click_edit">点击更改</string>
+    <string name="course_morining">上午课程</string>
+    <string name="afternoon_course">下午课程</string>
+    <string name="course_evening">晚上课程</string>
+    <string name="work_day">上课日</string>
+    <string name="donation_hint">点击支付宝二维码可跳转至支付宝\n长按二维码可保存至本地</string>
+    <string name="msg_camera_framework_bug">未获得相机权限</string>
+    <string name="msg_default_status">请将二维码置于取景框内扫描</string>
+    <string name="msg_pick_from_photo">从相册中选取</string>
+
+    <string name="permission_carema_fail">未获得相机权限，无法扫描二维码</string>
+    <string name="permission_carema_message">扫描二维码需要使用相机，因此要获得相机权限</string>
+    <string name="permission_write_fail_qr_code">未获得写入权限，无法存储二维码</string>
+    <string name="permission_write_message_qr_code">将二维码保存到手机中需要获得写入权限</string>
+    <string name="permission_read_fail_background">未获得读取权限，无法加载图片</string>
+    <string name="permission_read_message">从系统中加载图片需要获得读取权限</string>
+
+    <string name="i_know">我知道了</string>
+
+    <string name="dialog_delete">确认删除？</string>
+
+
+</resources>

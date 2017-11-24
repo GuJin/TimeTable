@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="week">
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+        <item>星期日</item>
+    </string-array>
+
+    <string-array name="section">
+        <item>上午</item>
+        <item>下午</item>
+        <item>晚上</item>
+    </string-array>
+
+    <string-array name="time">
+        <item>第一节</item>
+        <item>第二节</item>
+        <item>第三节</item>
+        <item>第四节</item>
+        <item>第五节</item>
+        <item>第六节</item>
+        <item>第七节</item>
+        <item>第八节</item>
+        <item>第九节</item>
+        <item>第十节</item>
+    </string-array>
+
+</resources>

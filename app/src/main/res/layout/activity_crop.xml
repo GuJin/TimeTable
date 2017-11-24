@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <com.sunrain.timetablev4.view.CropImageView.CropImageView
+        android:id="@+id/cropImageView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="-14dp"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtn_rotate_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:scv_animation_duration="200"
+        app:scv_animation_enabled="true"
+        app:scv_background_color="#000"
+        app:scv_frame_color="@color/white_press"
+        app:scv_frame_stroke_weight="1dp"
+        app:scv_guide_color="@color/white_press"
+        app:scv_guide_stroke_weight="1dp"
+        app:scv_handle_color="@color/white_press"
+        app:scv_handle_size="14dp"
+        app:scv_min_frame_size="50dp"
+        app:scv_overlay_color="#88000000"
+        app:scv_touch_padding="8dp"/>
+
+    <ImageButton
+        android:id="@+id/imgBtn_rotate_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:padding="10dp"
+        android:src="@drawable/ic_rotate_left"
+        app:layout_constraintBottom_toTopOf="@+id/imgBtn_rotate_right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <ImageButton
+        android:id="@+id/imgBtn_rotate_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:padding="10dp"
+        android:src="@drawable/ic_rotate_right"
+        app:layout_constraintBottom_toTopOf="@+id/imgBtn_done"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgBtn_rotate_left"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <ImageButton
+        android:id="@+id/imgBtn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:padding="10dp"
+        android:src="@drawable/ic_done"
+        app:layout_constraintBottom_toTopOf="@+id/imgBtn_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgBtn_rotate_right"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <ImageButton
+        android:id="@+id/imgBtn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:padding="10dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgBtn_done"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtn_rotate_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+</android.support.constraint.ConstraintLayout>

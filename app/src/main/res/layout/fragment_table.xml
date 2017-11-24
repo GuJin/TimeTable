@@ -1,0 +1,87 @@
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_morning"
+        style="@style/SettingsItem.LargeText"
+        android:layout_marginTop="0dp"
+        android:text="@string/course_morining"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.sunrain.timetablev4.view.UserSpinner
+        android:id="@+id/sp_morning"
+        style="@style/SettingsItem.NormalText"
+        android:layout_alignBaseline="@id/tv_morning"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_morning"
+        app:layout_constraintLeft_toRightOf="@+id/tv_morning"/>
+
+    <TextView
+        android:id="@+id/tv_afternoon"
+        style="@style/SettingsItem.LargeText"
+        android:layout_below="@id/tv_morning"
+        android:text="@string/afternoon_course"
+        android:textColor="@android:color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_morning"/>
+
+    <com.sunrain.timetablev4.view.UserSpinner
+        android:id="@+id/sp_afternoon"
+        style="@style/SettingsItem.NormalText"
+        android:layout_alignBaseline="@id/tv_afternoon"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_afternoon"
+        app:layout_constraintLeft_toRightOf="@+id/tv_afternoon"/>
+
+    <TextView
+        android:id="@+id/tv_evening"
+        style="@style/SettingsItem.LargeText"
+        android:layout_below="@id/tv_afternoon"
+        android:text="@string/course_evening"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_afternoon"/>
+
+    <com.sunrain.timetablev4.view.UserSpinner
+        android:id="@+id/sp_evening"
+        style="@style/SettingsItem.NormalText"
+        android:layout_alignBaseline="@id/tv_evening"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_evening"
+        app:layout_constraintLeft_toRightOf="@+id/tv_evening"/>
+
+    <TextView
+        android:id="@+id/tv_workday"
+        style="@style/SettingsItem.LargeText"
+        android:text="@string/work_day"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_morning"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <CheckBox
+        android:id="@+id/cb_workday"
+        style="@style/SettingsItem.NormalText"
+        android:layout_alignBaseline="@id/tv_workday"
+        android:checked="true"
+        android:enabled="false"
+        android:text="@string/week_work_day"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_morning"
+        app:layout_constraintLeft_toRightOf="@+id/tv_workday"/>
+
+    <CheckBox
+        android:id="@+id/cb_sat"
+        style="@style/SettingsItem.NormalText"
+        android:layout_below="@id/cb_workday"
+        android:text="@string/week_sat"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_afternoon"
+        app:layout_constraintLeft_toRightOf="@+id/tv_workday"/>
+
+    <CheckBox
+        android:id="@+id/cb_sun"
+        style="@style/SettingsItem.NormalText"
+        android:layout_below="@id/cb_sat"
+        android:text="@string/week_sun"
+        android:visibility="invisible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_evening"
+        app:layout_constraintLeft_toRightOf="@+id/tv_workday"/>
+</android.support.constraint.ConstraintLayout>

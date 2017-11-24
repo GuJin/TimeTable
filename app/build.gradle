@@ -1,0 +1,71 @@
+apply plugin: 'com.android.application'
+apply from: '../properties-util.gradle'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.1"
+
+    defaultConfig {
+        applicationId "com.sunrain.timetablev4"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 23
+        versionName "2.1.0"
+        resConfigs "zh"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        if (propertyHaveSigningConfigs) {
+            release {
+                storeFile file(propertyStoreFile)
+                storePassword propertyStorePassword
+                keyAlias propertyKeyAlias
+                keyPassword propertyKeyPassword
+            }
+            debug {
+                storeFile file(propertyStoreFile)
+                storePassword propertyStorePassword
+                keyAlias propertyKeyAlias
+                keyPassword propertyKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (propertyHaveSigningConfigs) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    buildTypes.each {
+        it.buildConfigField "String", "BUGLY_ID", propertyBuglyId
+    }
+}
+
+ext.versions = [
+        'support': '27.0.1'
+]
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile files('libs/core-3.2.1.jar')
+    compile 'tech.gujin:toast-util:1.1.1'
+    compile 'com.tencent.bugly:crashreport:2.6.6.1'
+    compile 'com.android.support:support-compat:' + versions.support
+    compile 'com.android.support:support-v13:' + versions.support
+    compile 'com.android.support:support-annotations:' + versions.support
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+}

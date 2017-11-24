@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dialog_corners">15dp</dimen>
+    <dimen name="leftBar_width">50dp</dimen>
+
+    <dimen name="marginStart">30dp</dimen>
+    <dimen name="marginTop">30dp</dimen>
+
+    <dimen name="settings_large_text_size">17sp</dimen>
+    <dimen name="settings_normal_text_size">14sp</dimen>
+</resources>

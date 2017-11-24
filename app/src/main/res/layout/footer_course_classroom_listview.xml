@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/course"
+        android:imeOptions="flagNoExtractUi"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/et_classroom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/classroom"
+        android:imeOptions="flagNoExtractUi"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/btn_add_course_classroom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加"/>
+</LinearLayout>

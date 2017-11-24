@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CropImageView">
+        <attr name="scv_img_src" format="reference"/>
+        <attr name="scv_background_color" format="reference|color"/>
+        <attr name="scv_overlay_color" format="reference|color"/>
+        <attr name="scv_frame_color" format="reference|color"/>
+        <attr name="scv_handle_color" format="reference|color"/>
+        <attr name="scv_guide_color" format="reference|color"/>
+        <attr name="scv_handle_size" format="dimension"/>
+        <attr name="scv_touch_padding" format="dimension"/>
+        <attr name="scv_min_frame_size" format="dimension"/>
+        <attr name="scv_frame_stroke_weight" format="dimension"/>
+        <attr name="scv_guide_stroke_weight" format="dimension"/>
+        <attr name="scv_initial_frame_scale" format="float"/>
+        <attr name="scv_animation_enabled" format="boolean"/>
+        <attr name="scv_animation_duration" format="integer"/>
+    </declare-styleable>
+</resources>

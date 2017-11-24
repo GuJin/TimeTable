@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RadioGroup
+        android:id="@+id/rg_settings"
+        android:layout_width="@dimen/leftBar_width"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/leftBar_width"
+        android:layout_marginTop="@dimen/leftBar_width"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rb_semester"
+            style="@style/radioButton_settings"
+            android:checked="true"
+            android:text="@string/semester"
+            android:textStyle="bold"/>
+
+        <RadioButton
+            android:id="@+id/rb_table"
+            style="@style/radioButton_settings"
+            android:text="@string/table"/>
+
+        <RadioButton
+            android:id="@+id/rb_background"
+            style="@style/radioButton_settings"
+            android:text="@string/settings_course"/>
+
+        <RadioButton
+            android:id="@+id/rb_more"
+            style="@style/radioButton_settings"
+            android:text="@string/more"/>
+    </RadioGroup>
+
+    <View
+        android:layout_width="0.4dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="50dp"
+        android:background="@color/white_press"/>
+
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="110.4dp"
+        android:layout_marginTop="60dp"/>
+
+</FrameLayout>
