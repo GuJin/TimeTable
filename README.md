@@ -9,13 +9,13 @@
 ## 截图
 ![](/images/screenshots.jpg)
 
+## 测试数据
+使用导入课表功能扫描此二维码<br/>
+![](/images/test_course.jpg)
+
 ## TODO
 - [ ] 桌面小部件
 - [ ] 单双周
-
-## 测试数据
-使用导入课表功能扫描此二维码
-![](/images/test_course.jpg)
 
 ## LIB
 - [ToastUtil](https://github.com/GuJin/ToastUtil)
