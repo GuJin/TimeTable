@@ -15,7 +15,7 @@ ext {
     propertyStorePassword = storePassword
     propertyKeyAlias = keyAlias
     propertyKeyPassword = keyPassword
-    propertyBuglyId = localProperties.getProperty('BUGLY_ID')
+    propertyBuglyId = localProperties.getProperty('BUGLY_ID', "\"\"")
 }
 
 if (propertyHaveSigningConfigs) {
