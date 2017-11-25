@@ -6,9 +6,16 @@
 我是课程表，只保留基本的功能，安安静静做课表。<br/>
 沉下心来，让查课变得简单。
 
+## 截图
+![](/images/screenshots.jpg)
+
 ## TODO
 - [ ] 桌面小部件
 - [ ] 单双周
+
+## 测试数据
+使用导入课表功能扫描此二维码
+![](/images/test_course.jpg)
 
 ## LIB
 - [ToastUtil](https://github.com/GuJin/ToastUtil)
