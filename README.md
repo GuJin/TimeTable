@@ -14,8 +14,10 @@
 ![](/images/test_course.jpg)
 
 ## TODO
+- [ ] 使用教程
 - [ ] 桌面小部件
-- [ ] 单双周
+- [ ] 支持单双周
+- [ ] 将所有数据库操作转移至子线程
 
 ## LIB
 - [ToastUtil](https://github.com/GuJin/ToastUtil)
