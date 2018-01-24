@@ -70,7 +70,7 @@ public class TableView extends View {
         refreshConfig();
 
         mTableData = TableData.getInstance();
-        mTableData.setTableView(this);
+        mTableData.bindTableView(this);
 
         mGestureDetector = new GestureDetector(context, new OnTableViewGestureListener());
 

@@ -26,7 +26,7 @@ public class TableData {
         return TableDataHolder.sInstance;
     }
 
-    void setTableView(TableView tableView) {
+    void bindTableView(TableView tableView) {
         mTableView = tableView;
         refreshData();
     }
