@@ -13,6 +13,7 @@ import com.sunrain.timetablev4.manager.FragmentChanger;
 import com.sunrain.timetablev4.manager.WallpaperManager;
 import com.sunrain.timetablev4.ui.fragment.CourseFragment;
 import com.sunrain.timetablev4.ui.fragment.SettingsFragment;
+import com.sunrain.timetablev4.utils.ChannelHelper;
 import com.sunrain.timetablev4.view.DrawerArrowDrawable;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -71,7 +72,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(MyApplication.sContext);
         strategy.setAppVersion(BuildConfig.VERSION_NAME);
         strategy.setAppPackageName(BuildConfig.APPLICATION_ID);
-        strategy.setAppChannel("default");
+        strategy.setAppChannel(ChannelHelper.getChannel());
         CrashReport.initCrashReport(MyApplication.sContext, BuildConfig.BUGLY_ID, BuildConfig.DEBUG, strategy);
     }
 
