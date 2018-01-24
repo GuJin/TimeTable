@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'walle'
 apply from: '../properties-util.gradle'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.sunrain.timetablev4"
@@ -33,7 +34,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            shrinkResources false
+            if (propertyHaveSigningConfigs) {
+                signingConfig signingConfigs.debug
+            }
+        }
         release {
+            debuggable false
+            jniDebuggable false
             minifyEnabled true
             zipAlignEnabled true
             shrinkResources true
@@ -50,7 +63,7 @@ android {
 }
 
 ext.versions = [
-        'support': '27.0.1'
+        'support': '27.0.2'
 ]
 
 dependencies {
@@ -68,4 +81,10 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+}
+
+walle {
+    apkOutputFolder = new File("${project.buildDir}/outputs/apk/release/channels")
+    apkFileNameFormat = 'timetable_${versionName}_${channel}.apk'
+    channelFile = new File("${project.getProjectDir()}/channel")
 }
