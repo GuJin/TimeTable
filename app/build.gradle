@@ -1,8 +1,6 @@
 apply plugin: 'com.android.application'
 apply from: '../properties-util.gradle'
-if (propertyHaveSigningConfigs) {
-    apply plugin: 'walle'
-}
+//apply plugin: 'walle'
 
 android {
     compileSdkVersion 27
@@ -26,12 +24,6 @@ android {
                 keyAlias propertyKeyAlias
                 keyPassword propertyKeyPassword
             }
-            debug {
-                storeFile file(propertyStoreFile)
-                storePassword propertyStorePassword
-                keyAlias propertyKeyAlias
-                keyPassword propertyKeyPassword
-            }
         }
     }
 
@@ -43,7 +35,7 @@ android {
             minifyEnabled false
             shrinkResources false
             if (propertyHaveSigningConfigs) {
-                signingConfig signingConfigs.debug
+                signingConfig signingConfigs.release
             }
         }
         release {
@@ -85,10 +77,8 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
 
-if (propertyHaveSigningConfigs) {
-    walle {
-        apkOutputFolder = new File("${project.buildDir}/outputs/apk/release/channels")
-        apkFileNameFormat = 'timetable_${versionName}_${channel}.apk'
-        channelFile = new File("${project.getProjectDir()}/channel")
-    }
-}
+//walle {
+//    apkOutputFolder = new File("${project.buildDir}/outputs/apk/release/channels")
+//    apkFileNameFormat = 'timetable_${versionName}_${channel}.apk'
+//    channelFile = new File("${project.getProjectDir()}/channel")
+//}
