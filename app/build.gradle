@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'walle'
 apply from: '../properties-util.gradle'
+if (propertyHaveSigningConfigs) {
+    apply plugin: 'walle'
+}
 
 android {
     compileSdkVersion 27
@@ -83,8 +85,10 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
 
-walle {
-    apkOutputFolder = new File("${project.buildDir}/outputs/apk/release/channels")
-    apkFileNameFormat = 'timetable_${versionName}_${channel}.apk'
-    channelFile = new File("${project.getProjectDir()}/channel")
+if (propertyHaveSigningConfigs) {
+    walle {
+        apkOutputFolder = new File("${project.buildDir}/outputs/apk/release/channels")
+        apkFileNameFormat = 'timetable_${versionName}_${channel}.apk'
+        channelFile = new File("${project.getProjectDir()}/channel")
+    }
 }
