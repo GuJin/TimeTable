@@ -256,7 +256,7 @@ public class CropImageView extends ImageView {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (getDrawable() != null)
+        if (getDrawable() != null && !mIsCropping)
             setupLayout(mViewWidth, mViewHeight);
     }
 
