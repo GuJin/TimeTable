@@ -31,6 +31,10 @@ public class TableData {
         refreshData();
     }
 
+    void unBindTableView() {
+        mTableView = null;
+    }
+
     public void setContentChange() {
         isContentChange = true;
     }

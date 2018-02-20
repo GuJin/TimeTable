@@ -70,7 +70,6 @@ public class TableView extends View {
         refreshConfig();
 
         mTableData = TableData.getInstance();
-        mTableData.bindTableView(this);
 
         mGestureDetector = new GestureDetector(context, new OnTableViewGestureListener());
 
@@ -424,4 +423,15 @@ public class TableView extends View {
         mEdgeGlowBottom.onRelease();
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mTableData.bindTableView(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        mTableData.unBindTableView();
+        super.onDetachedFromWindow();
+    }
 }
