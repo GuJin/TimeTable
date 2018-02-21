@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tech.gujin.toast.ToastUtil;
+
 
 public class ShareClassDialog extends Dialog implements View.OnClickListener {
 
@@ -143,6 +145,7 @@ public class ShareClassDialog extends Dialog implements View.OnClickListener {
         protected void onPostExecute(Bitmap bitmap) {
             ShareClassDialog shareClassDialog = mShareClassDialogWeakReference.get();
             if (shareClassDialog == null) {
+                ToastUtil.show("生成二维码错误");
                 return;
             }
 
