@@ -134,7 +134,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     }
 
     private void save(CourseClassroomBean bean) {
-        CourseClassroomDao.insert(bean);
+        CourseClassroomDao.insertInBackground(bean);
         mCourseClassroomList.add(bean);
         mCourseClassroomAdapter.notifyDataSetChanged();
 
@@ -173,8 +173,8 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        CourseClassroomDao.delete(bean);
-                        TableDao.delete(bean);
+                        CourseClassroomDao.deleteInBackground(bean);
+                        TableDao.deleteInBackground(bean);
                         mCourseClassroomList.remove(bean);
                         mCourseClassroomAdapter.notifyDataSetChanged();
                         TableData.getInstance().setContentChange();

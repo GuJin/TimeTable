@@ -23,10 +23,28 @@ public class CourseClassroomDao extends BaseDao {
         DBManager.close(database);
     }
 
+    public static void insertInBackground(final CourseClassroomBean bean) {
+        DaoExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                insert(bean);
+            }
+        });
+    }
+
     public static void delete(CourseClassroomBean bean) {
         SQLiteDatabase database = DBManager.getDb();
         delete(database, TABLE_NAME, "course = ? and classroom = ?", new String[]{bean.course, bean.classroom});
         DBManager.close(database);
+    }
+
+    public static void deleteInBackground(final CourseClassroomBean bean) {
+        DaoExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                delete(bean);
+            }
+        });
     }
 
     @NonNull
@@ -72,4 +90,14 @@ public class CourseClassroomDao extends BaseDao {
         delete(db, TABLE_NAME, null, null);
         DBManager.close(db);
     }
+
+    public static void clearInBackground() {
+        DaoExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                clear();
+            }
+        });
+    }
+
 }

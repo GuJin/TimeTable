@@ -111,8 +111,8 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                TableDao.clear();
-                CourseClassroomDao.clear();
+                TableDao.clearInBackground();
+                CourseClassroomDao.clearInBackground();
                 TableData.getInstance().setContentChange();
                 ToastUtil.show("已清空");
             }

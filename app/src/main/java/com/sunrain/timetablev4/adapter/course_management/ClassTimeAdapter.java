@@ -50,24 +50,6 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
         return viewHolder;
     }
 
-    public static final class ViewHolder extends BaseListAdapter.ViewHolder {
-
-        TextView mtvTime;
-        ImageButton mImgBtnDelete;
-        ImageButton mImgBtnEdit;
-        OnButtonClickListener mListener;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        public void initView(View itemView) {
-            mtvTime = itemView.findViewById(R.id.tv_time);
-            mImgBtnDelete = itemView.findViewById(R.id.imgBtn_delete);
-            mImgBtnEdit = itemView.findViewById(R.id.imgBtn_edit);
-        }
-    }
 
     public void setCourseClassroom(@NonNull CourseClassroomBean courseClassroomBean) {
         mCourseClassroomBean = courseClassroomBean;
@@ -110,7 +92,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                TableDao.delete(classBean);
+                TableDao.deleteInBackground(classBean);
                 mList.remove(classBean);
                 notifyDataSetChanged();
             }
@@ -129,7 +111,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
                     classBean._id = TableDao.insert(classBean);
                     mList.add(classBean);
                 } else {
-                    TableDao.updateClassTime(classBean._id, new ClassTimeBean(classBean));
+                    TableDao.updateClassTimeInBackground(classBean._id, new ClassTimeBean(classBean));
                     for (int i = 0; i < mList.size(); i++) {
                         ClassBean bean = mList.get(i);
                         if (bean._id == classBean._id) {
@@ -163,6 +145,26 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
                     showEditDialog(classBean);
                     break;
             }
+        }
+
+    }
+
+    protected static final class ViewHolder extends BaseListAdapter.ViewHolder {
+
+        TextView mtvTime;
+        ImageButton mImgBtnDelete;
+        ImageButton mImgBtnEdit;
+        OnButtonClickListener mListener;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void initView(View itemView) {
+            mtvTime = itemView.findViewById(R.id.tv_time);
+            mImgBtnDelete = itemView.findViewById(R.id.imgBtn_delete);
+            mImgBtnEdit = itemView.findViewById(R.id.imgBtn_edit);
         }
     }
 }

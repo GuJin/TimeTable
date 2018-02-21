@@ -69,7 +69,6 @@ public class TableDao extends BaseDao {
         int courseIndex = cursor.getColumnIndex("course");
         int classroomIndex = cursor.getColumnIndex("classroom");
 
-
         List<ClassBean> list = new ArrayList<>(count);
         while (cursor.moveToNext()) {
             ClassBean bean = new ClassBean();
@@ -230,10 +229,28 @@ public class TableDao extends BaseDao {
         DBManager.close(db);
     }
 
+    public static void deleteInBackground(final ClassBean classBean) {
+        DaoExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                delete(classBean);
+            }
+        });
+    }
+
     public static void delete(CourseClassroomBean courseClassroomBean) {
         SQLiteDatabase db = DBManager.getDb();
         delete(db, TABLE_NAME, "course = ? and classroom = ?", new String[]{courseClassroomBean.course, courseClassroomBean.classroom});
         DBManager.close(db);
+    }
+
+    public static void deleteInBackground(final CourseClassroomBean courseClassroomBean) {
+        DaoExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                delete(courseClassroomBean);
+            }
+        });
     }
 
     public static void updateClassTime(long id, ClassTimeBean bean) {
@@ -248,9 +265,27 @@ public class TableDao extends BaseDao {
         DBManager.close(db);
     }
 
+    public static void updateClassTimeInBackground(final long id, final ClassTimeBean bean) {
+        DaoExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                updateClassTime(id, bean);
+            }
+        });
+    }
+
     public static void clear() {
         SQLiteDatabase db = DBManager.getDb();
         delete(db, TABLE_NAME, null, null);
         DBManager.close(db);
+    }
+
+    public static void clearInBackground() {
+        DaoExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                clear();
+            }
+        });
     }
 }
