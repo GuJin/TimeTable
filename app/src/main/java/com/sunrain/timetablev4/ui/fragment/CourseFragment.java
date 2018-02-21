@@ -132,6 +132,12 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void showClassDialog(int week, int section, int time) {
+        List<ClassBean> classes = TableDao.getClasses(week, section, time);
+        if (classes.isEmpty()) {
+            ToastUtil.show("无课程");
+            return;
+        }
+
         if (mClassDialog == null) {
             mClassDialog = new MessageDialog(mActivity).hideNegativeButton().setPositiveButton("关闭", new DialogInterface.OnClickListener() {
                 @Override
@@ -141,11 +147,6 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
             });
         }
 
-        List<ClassBean> classes = TableDao.getClasses(week, section, time);
-        if (classes.isEmpty()) {
-            ToastUtil.show("无课程");
-            return;
-        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < classes.size(); i++) {
             sb.append(ClassBean.Format.getFormatCourseClassroom(classes.get(i)));
