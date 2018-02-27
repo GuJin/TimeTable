@@ -7,7 +7,7 @@
     android:layout_marginEnd="5dp"
     android:drawableEnd="@drawable/ic_go"
     android:lineSpacingMultiplier="1.2"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
     android:textColor="@android:color/white"
     android:textSize="@dimen/settings_normal_text_size"/>

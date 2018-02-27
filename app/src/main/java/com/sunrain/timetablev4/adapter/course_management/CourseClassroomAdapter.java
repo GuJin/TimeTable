@@ -1,5 +1,6 @@
 package com.sunrain.timetablev4.adapter.course_management;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,13 @@ import java.util.List;
 public class CourseClassroomAdapter extends BaseListAdapter<CourseClassroomBean, CourseClassroomAdapter.ViewHolder> {
 
     private final StringBuilder mSb;
+    private int mClickPosition = -1;
+    private int mClickColor;
 
     public CourseClassroomAdapter(List<CourseClassroomBean> courseClassroomList) {
         super(courseClassroomList);
         mSb = new StringBuilder();
+        mClickColor = 0x20ffffff;
     }
 
     @Override
@@ -37,6 +41,15 @@ public class CourseClassroomAdapter extends BaseListAdapter<CourseClassroomBean,
         mSb.setLength(0);
         mSb.append(bean.course).append("\n").append(bean.classroom);
         viewHolder.mTvCourseClassroom.setText(mSb.toString());
+        if (position == mClickPosition) {
+            viewHolder.mTvCourseClassroom.setBackgroundColor(mClickColor);
+        } else {
+            viewHolder.mTvCourseClassroom.setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+
+    public void setClickPosition(int clickPosition) {
+        mClickPosition = clickPosition;
     }
 
     public static final class ViewHolder extends BaseListAdapter.ViewHolder {

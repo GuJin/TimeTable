@@ -146,6 +146,8 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CourseClassroomBean classroomBean = mCourseClassroomAdapter.getItem(position);
         mClassTimeAdapter.setCourseClassroom(classroomBean);
+        mCourseClassroomAdapter.setClickPosition(position);
+        mCourseClassroomAdapter.notifyDataSetChanged();
         if (mLvClassTime.getVisibility() == View.INVISIBLE) {
             mLvClassTime.setVisibility(View.VISIBLE);
         }
