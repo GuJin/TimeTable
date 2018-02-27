@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -31,7 +32,7 @@ public class TableView extends View {
     private final GestureDetector mGestureDetector;
 
     private Paint mLinePaint;
-    private Paint mTextPaint;
+    private TextPaint mTextPaint;
 
     private EdgeEffect mEdgeGlowTop;
     private EdgeEffect mEdgeGlowBottom;
@@ -61,6 +62,7 @@ public class TableView extends View {
     private TableData mTableData;
     private OnBoxClickListener mOnBoxClickListener;
     private OnBoxLongClickListener mOnBoxLongClickListener;
+    private int mBoxTextMaxWidth;
 
     public TableView(Context context) {
         super(context);
@@ -182,8 +184,20 @@ public class TableView extends View {
             } else if (classBean.section == 2) {
                 y += mAfternoonHeight;
             }
-            canvas.drawText(classBean.course, x, y - mTextHeight, mTextPaint);
-            canvas.drawText(classBean.classroom, x, y + mTextHeight, mTextPaint);
+
+            if (mTextPaint.measureText(classBean.course) > mBoxTextMaxWidth) {
+                canvas.drawText(TextUtils.ellipsize(classBean.course, mTextPaint, mBoxTextMaxWidth, TextUtils.TruncateAt.END)
+                        .toString(), x, y - mTextHeight, mTextPaint);
+            } else {
+                canvas.drawText(classBean.course, x, y - mTextHeight, mTextPaint);
+            }
+
+            if (mTextPaint.measureText(classBean.classroom) > mBoxTextMaxWidth) {
+                canvas.drawText(TextUtils.ellipsize(classBean.classroom, mTextPaint, mBoxTextMaxWidth, TextUtils.TruncateAt.END)
+                        .toString(), x, y + mTextHeight, mTextPaint);
+            } else {
+                canvas.drawText(classBean.classroom, x, y + mTextHeight, mTextPaint);
+            }
         }
     }
 
@@ -259,6 +273,7 @@ public class TableView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mClassBoxHeight = (getHeight() - WEEK_BOX_HEIGHT) / 4;
         mClassBoxWidth = (getMeasuredWidth() - TIME_BOX_WIDTH) / mWorkdays;
+        mBoxTextMaxWidth = mClassBoxWidth - DensityUtil.dip2Px(15);
 
         mTotalClasses = mMorningClasses + mAfternoonClasses + mEveningClasses;
 
