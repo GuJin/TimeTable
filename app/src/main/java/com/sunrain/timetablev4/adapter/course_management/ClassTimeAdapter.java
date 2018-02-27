@@ -50,7 +50,6 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
         return viewHolder;
     }
 
-
     public void setCourseClassroom(@NonNull CourseClassroomBean courseClassroomBean) {
         mCourseClassroomBean = courseClassroomBean;
         mList.clear();
