@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/course"
-        android:imeOptions="flagNoExtractUi"
+        android:imeOptions="flagNoExtractUi|actionDone"
+        android:inputType="text"
         android:textSize="14sp"/>
 
     <EditText
@@ -18,12 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/classroom"
-        android:imeOptions="flagNoExtractUi"
+        android:imeOptions="flagNoExtractUi|actionDone"
+        android:inputType="text"
         android:textSize="14sp"/>
 
     <Button
         android:id="@+id/btn_add_course_classroom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="添加"/>
+        android:text="添加课程"/>
 </LinearLayout>

@@ -4,4 +4,4 @@
     android:id="@+id/btn_add_class_time"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="添加"/>
+    android:text="添加上课时间"/>
