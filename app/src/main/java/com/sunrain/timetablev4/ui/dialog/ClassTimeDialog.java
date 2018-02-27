@@ -22,6 +22,8 @@ import com.sunrain.timetablev4.view.UserSpinner;
 
 public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements UserSpinner.OnItemSelectedByUserListener {
 
+    private final Context mContext;
+
     private UserSpinner mSpWeek;
     private UserSpinner mSpSection;
     private UserSpinner mSpTime;
@@ -35,6 +37,7 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
 
     public ClassTimeDialog(Context context) {
         super(context);
+        mContext = context;
 
         mSpStartWeek.setOnItemSelectedByUserListener(this);
         mSpEndWeek.setOnItemSelectedByUserListener(this);
@@ -132,7 +135,7 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
         int workday = SharedPreUtils.getInt(SharedPreConstants.WORK_DAY, 5);
         weeks = new String[workday];
         System.arraycopy(tempWeeks, 0, weeks, 0, workday);
-        ArrayAdapter<String> weekAdapter = new ArrayAdapter<>(MyApplication.sContext, R.layout.spinner_item, weeks);
+        ArrayAdapter<String> weekAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, weeks);
         weekAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpWeek.setAdapter(weekAdapter);
 
@@ -144,27 +147,27 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
             System.arraycopy(tempSections, 0, sections, 0, 2);
         }
 
-        ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(MyApplication.sContext, R.layout.spinner_item, sections);
+        ArrayAdapter<String> sectionsAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, sections);
         sectionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpSection.setAdapter(sectionsAdapter);
 
         int morningClass = SharedPreUtils.getInt(SharedPreConstants.MORNING_CLASS_NUMBER, SharedPreConstants.DEFAULT_MORNING_CLASS_NUMBER);
         morningTimes = new String[morningClass];
         System.arraycopy(tempTimes, 0, morningTimes, 0, morningClass);
-        mMorningClassAdapter = new ArrayAdapter<>(MyApplication.sContext, R.layout.spinner_item, morningTimes);
+        mMorningClassAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, morningTimes);
         mMorningClassAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         int afternoonClass = SharedPreUtils.getInt(SharedPreConstants.AFTERNOON_CLASS_NUMBER, SharedPreConstants
                 .DEFAULT_AFTERNOON_CLASS_NUMBER);
         afternoonTimes = new String[afternoonClass];
         System.arraycopy(tempTimes, 0, afternoonTimes, 0, afternoonClass);
-        mAfternoonClassAdapter = new ArrayAdapter<>(MyApplication.sContext, R.layout.spinner_item, afternoonTimes);
+        mAfternoonClassAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, afternoonTimes);
         mAfternoonClassAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         int eveningClass = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants.DEFAULT_EVENING_CLASS_NUMBER);
         eveningTimes = new String[eveningClass];
         System.arraycopy(tempTimes, 0, eveningTimes, 0, eveningClass);
-        mEveningClassAdapter = new ArrayAdapter<>(MyApplication.sContext, R.layout.spinner_item, eveningTimes);
+        mEveningClassAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, eveningTimes);
         mEveningClassAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
@@ -173,7 +176,7 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
         for (int i = 0; i < week; i++) {
             duringWeeks[i] = i + 1;
         }
-        ArrayAdapter<Integer> duringAdapter = new ArrayAdapter<>(MyApplication.sContext, R.layout.spinner_item, duringWeeks);
+        ArrayAdapter<Integer> duringAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_item, duringWeeks);
         duringAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mSpStartWeek.setAdapter(duringAdapter);
