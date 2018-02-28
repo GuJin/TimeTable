@@ -72,7 +72,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     }
 
     private void initClassTimeListView() {
-        mClassTimeAdapter = new ClassTimeAdapter(mActivity);
+        mClassTimeAdapter = new ClassTimeAdapter(mActivity, mLvClassTime);
         mLvClassTime.setAdapter(mClassTimeAdapter);
 
         View view = View.inflate(mActivity, R.layout.footer_class_time_listview, null);
@@ -137,6 +137,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         CourseClassroomDao.insertInBackground(bean);
         mCourseClassroomList.add(bean);
         mCourseClassroomAdapter.notifyDataSetChanged();
+        mLvCourseClassroom.smoothScrollByOffset(200);
 
         mEtCourse.setText("");
         mEtClassroom.setText("");

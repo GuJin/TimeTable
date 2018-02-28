@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sunrain.timetablev4.R;
@@ -23,11 +24,14 @@ import com.sunrain.timetablev4.view.table.TableData;
 public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapter.ViewHolder> {
 
     private final Context mContext;
+    private final ListView mListView;
+
     private CourseClassroomBean mCourseClassroomBean;
     private ClassTimeDialog mClassTimeDialog;
 
-    public ClassTimeAdapter(Context context) {
+    public ClassTimeAdapter(Context context, ListView listView) {
         mContext = context;
+        mListView = listView;
     }
 
     @Override
@@ -121,6 +125,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
                 }
                 TableData.getInstance().setContentChange();
                 notifyDataSetChanged();
+                mListView.smoothScrollByOffset(200);
             }
         });
     }
