@@ -3,6 +3,7 @@
 
     <style name="MyTheme" parent="@android:style/Theme.Material.NoActionBar.Fullscreen">
         <item name="android:colorButtonNormal">#00000000</item>
+        <item name="android:navigationBarColor">#00000000</item>
     </style>
 
     <style name="MyDialog" parent="android:style/Theme.Dialog">
