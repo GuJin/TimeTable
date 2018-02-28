@@ -6,4 +6,6 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:minHeight="80dp"
+    android:padding="5dp"
+    android:scrollbars="vertical"
     android:textColor="@android:color/white"/>
