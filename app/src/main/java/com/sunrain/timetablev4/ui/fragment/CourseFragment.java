@@ -151,11 +151,10 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
         for (int i = 0; i < classes.size(); i++) {
             sb.append(ClassBean.Format.getFormatCourseClassroom(classes.get(i)));
             if (i < classes.size() - 1) {
-                sb.append("\n");
+                sb.append("\n\n");
             }
         }
         mClassDialog.setMessage(sb.toString());
         mClassDialog.show();
     }
-
 }
