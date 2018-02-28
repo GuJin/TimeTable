@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.sunrain.timetablev4.R;
+import com.sunrain.timetablev4.utils.SystemUiUtil;
 
 @SuppressWarnings("unchecked")
 public class BaseDialog<T extends BaseDialog> extends Dialog {
@@ -135,5 +136,20 @@ public class BaseDialog<T extends BaseDialog> extends Dialog {
         attributes.width = mRequireWidth;
 
         window.setAttributes(attributes);
+    }
+
+    @Override
+    public void show() {
+        Window window = getWindow();
+        if (window == null) {
+            return;
+        }
+
+        // 防止 NavigationBar 弹出
+        // 参考：https://stackoverflow.com/questions/22794049/how-do-i-maintain-the-immersive-mode-in-dialogs/23207365
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        SystemUiUtil.setSystemUi(window.getDecorView());
+        super.show();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 }
