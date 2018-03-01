@@ -18,13 +18,16 @@ import com.sunrain.timetablev4.bean.CourseClassroomBean;
 import com.sunrain.timetablev4.dao.TableDao;
 import com.sunrain.timetablev4.ui.dialog.ClassTimeDialog;
 import com.sunrain.timetablev4.ui.dialog.MessageDialog;
+import com.sunrain.timetablev4.utils.DensityUtil;
 import com.sunrain.timetablev4.view.table.TableData;
 
 
 public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapter.ViewHolder> {
 
+
     private final Context mContext;
     private final ListView mListView;
+    private final int mSmoothOffset;
 
     private CourseClassroomBean mCourseClassroomBean;
     private ClassTimeDialog mClassTimeDialog;
@@ -32,6 +35,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
     public ClassTimeAdapter(Context context, ListView listView) {
         mContext = context;
         mListView = listView;
+        mSmoothOffset = DensityUtil.dip2Px(60);
     }
 
     @Override
@@ -125,7 +129,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
                 }
                 TableData.getInstance().setContentChange();
                 notifyDataSetChanged();
-                mListView.smoothScrollByOffset(200);
+                mListView.smoothScrollByOffset(mSmoothOffset);
             }
         });
     }

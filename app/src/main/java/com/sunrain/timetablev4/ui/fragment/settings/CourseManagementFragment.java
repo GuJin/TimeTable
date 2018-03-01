@@ -21,6 +21,7 @@ import com.sunrain.timetablev4.bean.CourseClassroomBean;
 import com.sunrain.timetablev4.dao.CourseClassroomDao;
 import com.sunrain.timetablev4.dao.TableDao;
 import com.sunrain.timetablev4.ui.dialog.MessageDialog;
+import com.sunrain.timetablev4.utils.DensityUtil;
 import com.sunrain.timetablev4.utils.SystemUiUtil;
 import com.sunrain.timetablev4.view.table.TableData;
 
@@ -39,6 +40,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     private List<CourseClassroomBean> mCourseClassroomList;
     private CourseClassroomAdapter mCourseClassroomAdapter;
     private ClassTimeAdapter mClassTimeAdapter;
+    private int mSmoothOffset;
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
@@ -57,6 +59,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         initCourseClassroomListView();
         initClassTimeListView();
         setListener();
+        mSmoothOffset = DensityUtil.dip2Px(60);
     }
 
     private void initCourseClassroomListView() {
@@ -137,7 +140,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         CourseClassroomDao.insertInBackground(bean);
         mCourseClassroomList.add(bean);
         mCourseClassroomAdapter.notifyDataSetChanged();
-        mLvCourseClassroom.smoothScrollByOffset(200);
+        mLvCourseClassroom.smoothScrollByOffset(mSmoothOffset);
 
         mEtCourse.setText("");
         mEtClassroom.setText("");
