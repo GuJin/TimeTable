@@ -66,6 +66,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     private void setListener() {
         View view = getView();
         view.findViewById(R.id.btn_background).setOnClickListener(this);
+        view.findViewById(R.id.btn_tutorial).setOnClickListener(this);
         view.findViewById(R.id.btn_input_course).setOnClickListener(this);
         view.findViewById(R.id.btn_share_course).setOnClickListener(this);
         view.findViewById(R.id.btn_clear_course).setOnClickListener(this);
@@ -97,6 +98,9 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.btn_github:
                 WebUtil.gotoWeb(mActivity, "https://github.com/GuJin/TimeTable");
+                break;
+            case R.id.btn_tutorial:
+                WebUtil.gotoWeb(mActivity, "http://timetable.gujin.tech/tutorial.html");
                 break;
         }
     }

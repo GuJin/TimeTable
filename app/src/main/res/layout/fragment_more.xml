@@ -30,7 +30,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_share_course"/>
 
         <Button
-            android:id="@+id/btn_guide"
+            android:id="@+id/btn_tutorial"
             style="@style/SettingsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,8 +45,8 @@
             android:layout_height="wrap_content"
             android:text="设置背景"
             app:layout_constraintLeft_toLeftOf="@+id/btn_donation"
-            app:layout_constraintStart_toEndOf="@+id/btn_guide"
-            app:layout_constraintTop_toTopOf="@+id/btn_guide"/>
+            app:layout_constraintStart_toEndOf="@+id/btn_tutorial"
+            app:layout_constraintTop_toTopOf="@+id/btn_tutorial"/>
 
         <Button
             android:id="@+id/btn_share_course"
@@ -56,7 +56,7 @@
             android:layout_marginTop="8dp"
             android:text="分享课表"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_guide"/>
+            app:layout_constraintTop_toBottomOf="@+id/btn_tutorial"/>
 
         <Button
             android:id="@+id/btn_input_course"
