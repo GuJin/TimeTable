@@ -48,6 +48,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.common.HybridBinarizer;
 import com.sunrain.timetablev4.R;
+import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.manager.PermissionManager;
 import com.sunrain.timetablev4.view.CropImageView.util.Utils;
 
@@ -71,6 +72,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
     private static final int PERMISSION_PICK_IMAGE = 10;
+    private final int REQUEST_PERMISSION_BACKGROUND = 1;
     private final int REQUEST_SAF_PICK_IMAGE = 12;
 
     private CameraManager cameraManager;
@@ -279,26 +281,26 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_photo:
-                choosePhoto();
+                checkPhotoPermission();
                 break;
         }
     }
 
-    private void choosePhoto() {
-        mPermissionManager = new PermissionManager(new PermissionManager.OnRequestPermissionsListener() {
-            @Override
-            public void onGranted(int requestCode) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_SAF_PICK_IMAGE);
-            }
+    private void checkPhotoPermission() {
+        if (mPermissionManager == null) {
+            mPermissionManager = new PermissionManager(new PermissionManager.OnRequestPermissionsListener() {
+                @Override
+                public void onGranted(int requestCode) {
+                    startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                            REQUEST_SAF_PICK_IMAGE);
+                }
 
-            @Override
-            public void onDenied(int requestCode) {
-                ToastUtil.show(getString(R.string.permission_read_fail_background), true);
-            }
-        });
+                @Override
+                public void onDenied(int requestCode) {
+                    ToastUtil.show(getString(R.string.permission_read_fail_background), true);
+                }
+            });
+        }
         mPermissionManager.checkPermission(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_PICK_IMAGE, R.string
                 .permission_read_message);
     }
@@ -310,7 +312,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
         switch (requestCode) {
             case REQUEST_SAF_PICK_IMAGE:
-                analysisImage(Utils.ensureUriPermission(this, data));
+                analysisImage(data.getData());
                 break;
         }
 
@@ -321,12 +323,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             ToastUtil.show("加载图片失败");
             return;
         }
-        final String photoPath = getPicturePath(uri);
         //解析图片
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Result result = syncDecodeQRCode(getDecodeAbleBitmap(photoPath));
+                final Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(MyApplication.sContext, uri, 500);
+                final Result result = syncDecodeQRCode(sampledBitmap);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -401,4 +403,5 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull final int[] grantResults) {
         mPermissionManager.onRequestPermissionsResult(requestCode, grantResults);
     }
+
 }
