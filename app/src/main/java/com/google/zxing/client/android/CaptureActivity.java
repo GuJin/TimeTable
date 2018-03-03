@@ -327,7 +327,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(MyApplication.sContext, uri, 500);
+                final Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(MyApplication.sContext, uri, 600);
                 final Result result = syncDecodeQRCode(sampledBitmap);
                 runOnUiThread(new Runnable() {
                     @Override
