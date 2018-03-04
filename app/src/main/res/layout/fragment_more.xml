@@ -13,21 +13,24 @@
         <Button
             android:id="@+id/btn_donation"
             style="@style/SettingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/donation"
             app:layout_constraintStart_toEndOf="@+id/btn_praise"
             app:layout_constraintTop_toTopOf="@+id/btn_praise"/>
 
         <Button
-            android:id="@+id/btn_praise"
+            android:id="@+id/btn_version"
             style="@style/SettingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="给个好评"
+            android:text="软件版本"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_share_course"/>
+
+        <Button
+            android:id="@+id/btn_praise"
+            style="@style/SettingsButton"
+            android:text="给个好评"
+            app:layout_constraintStart_toEndOf="@+id/btn_version"
+            app:layout_constraintTop_toTopOf="@+id/btn_version"/>
 
         <Button
             android:id="@+id/btn_tutorial"
@@ -41,8 +44,6 @@
         <Button
             android:id="@+id/btn_background"
             style="@style/SettingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="设置背景"
             app:layout_constraintLeft_toLeftOf="@+id/btn_donation"
             app:layout_constraintStart_toEndOf="@+id/btn_tutorial"
@@ -51,8 +52,6 @@
         <Button
             android:id="@+id/btn_share_course"
             style="@style/SettingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="分享课表"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,8 +60,6 @@
         <Button
             android:id="@+id/btn_input_course"
             style="@style/SettingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="导入课表"
             app:layout_constraintStart_toEndOf="@+id/btn_share_course"
             app:layout_constraintTop_toTopOf="@+id/btn_share_course"/>
@@ -70,8 +67,6 @@
         <Button
             android:id="@+id/btn_clear_course"
             style="@style/SettingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="清空课表"
             app:layout_constraintStart_toEndOf="@+id/btn_input_course"
             app:layout_constraintTop_toTopOf="@+id/btn_input_course"/>
@@ -79,8 +74,6 @@
         <Button
             android:id="@+id/btn_github"
             style="@style/SettingsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="Github"
             android:textAllCaps="false"
             app:layout_constraintStart_toEndOf="@+id/btn_donation"

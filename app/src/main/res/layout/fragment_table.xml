@@ -22,7 +22,6 @@
     <TextView
         android:id="@+id/tv_afternoon"
         style="@style/SettingsItem.LargeText"
-        android:layout_below="@id/tv_morning"
         android:text="@string/afternoon_course"
         android:textColor="@android:color/white"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -38,7 +37,6 @@
     <TextView
         android:id="@+id/tv_evening"
         style="@style/SettingsItem.LargeText"
-        android:layout_below="@id/tv_afternoon"
         android:text="@string/course_evening"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_afternoon"/>
@@ -51,10 +49,25 @@
         app:layout_constraintLeft_toRightOf="@+id/tv_evening"/>
 
     <TextView
+        android:id="@+id/tv_double_week"
+        style="@style/SettingsItem.LargeText"
+        android:text="单双周"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_morning"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <Switch
+        android:id="@+id/sw_double_week"
+        style="@style/SettingsItem.NormalText"
+        android:layout_alignBaseline="@id/tv_double_week"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_morning"
+        app:layout_constraintLeft_toRightOf="@+id/tv_double_week"/>
+
+    <TextView
         android:id="@+id/tv_workday"
         style="@style/SettingsItem.LargeText"
         android:text="@string/work_day"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_morning"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_afternoon"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
@@ -65,23 +78,23 @@
         android:checked="true"
         android:enabled="false"
         android:text="@string/week_work_day"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_morning"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_afternoon"
         app:layout_constraintLeft_toRightOf="@+id/tv_workday"/>
 
     <CheckBox
         android:id="@+id/cb_sat"
         style="@style/SettingsItem.NormalText"
-        android:layout_below="@id/cb_workday"
+        android:layout_marginTop="10dp"
         android:text="@string/week_sat"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_afternoon"
-        app:layout_constraintLeft_toRightOf="@+id/tv_workday"/>
+        app:layout_constraintLeft_toRightOf="@+id/tv_workday"
+        app:layout_constraintTop_toBottomOf="@+id/cb_workday"/>
 
     <CheckBox
         android:id="@+id/cb_sun"
         style="@style/SettingsItem.NormalText"
-        android:layout_below="@id/cb_sat"
+        android:layout_marginTop="10dp"
         android:text="@string/week_sun"
         android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tv_evening"
-        app:layout_constraintLeft_toRightOf="@+id/tv_workday"/>
+        app:layout_constraintLeft_toRightOf="@+id/tv_workday"
+        app:layout_constraintTop_toBottomOf="@+id/cb_sat"/>
 </android.support.constraint.ConstraintLayout>

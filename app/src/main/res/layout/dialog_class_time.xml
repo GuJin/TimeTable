@@ -2,10 +2,12 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="340dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:paddingBottom="20dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:paddingTop="20dp">
 
     <com.sunrain.timetablev4.view.UserSpinner
@@ -58,10 +60,21 @@
         app:layout_constraintEnd_toEndOf="@+id/sp_section"/>
 
     <TextView
+        android:id="@+id/tv_week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/week"
         android:textColor="@android:color/white"
         app:layout_constraintBaseline_toBaselineOf="@+id/sp_start_week"
         app:layout_constraintStart_toEndOf="@+id/sp_end_week"/>
+
+    <CheckBox
+        android:id="@+id/cb_double_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="双周"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/sp_start_week"
+        app:layout_constraintStart_toEndOf="@+id/tv_week"/>
 </android.support.constraint.ConstraintLayout>

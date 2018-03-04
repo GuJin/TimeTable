@@ -25,7 +25,6 @@
     <TextView
         android:id="@+id/tv_end_hint"
         style="@style/SettingsItem.LargeText"
-        android:layout_below="@id/tv_start_hint"
         android:text="@string/end_date"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_start_hint"/>
