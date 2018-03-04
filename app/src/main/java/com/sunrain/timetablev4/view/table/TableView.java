@@ -93,22 +93,6 @@ public class TableView extends View {
         mWorkdays = SharedPreUtils.getInt(SharedPreConstants.WORK_DAY, SharedPreConstants.DEFAULT_WORK_DAY);
     }
 
-    public void setWorkdays(int workdays) {
-        mWorkdays = workdays;
-    }
-
-    public void setMorningClasses(int morningClasses) {
-        mMorningClasses = morningClasses;
-    }
-
-    public void setAfternoonClasses(int afternoonClasses) {
-        mAfternoonClasses = afternoonClasses;
-    }
-
-    public void setEveningClasses(int eveningClasses) {
-        mEveningClasses = eveningClasses;
-    }
-
     private void initText(Context context) {
         Resources resources = context.getResources();
         mWeekArray = resources.getStringArray(R.array.week);
