@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -98,11 +99,27 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         super.onCreate(icicle);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        int navigationHeight = getNavigationHeight();
+        if (navigationHeight > 0) {
+            window.setNavigationBarColor(0x00000000);
+            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+
         setContentView(R.layout.activity_capture);
 
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
         findViewById(R.id.btn_photo).setOnClickListener(this);
+    }
+
+    private int getNavigationHeight() {
+        Resources resources = getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
 
