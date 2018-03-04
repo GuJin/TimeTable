@@ -33,6 +33,20 @@ class BaseDao {
     }
 
     /**
+     * 插入或替换
+     * 约束值不存在，进行插入
+     * 约束值存在，则忽略
+     * 约束值：建表时UNIQUE规定的字段
+     *
+     * @param db            数据库
+     * @param tableName     要操作的表名
+     * @param contentValues 表中个字段的键值对（键的名字要和表中字段名一致，区分大小写）
+     */
+    static void insertOrIgnore(SQLiteDatabase db, String tableName, ContentValues contentValues) {
+        db.insertWithOnConflict(tableName, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    /**
      * 删除
      *
      * @param db          数据库

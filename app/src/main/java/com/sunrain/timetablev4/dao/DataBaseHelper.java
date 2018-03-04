@@ -54,13 +54,13 @@ class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO table_1_backup SELECT week , section , time , startWeek , endWeek , doubleWeek , course , classroom FROM table_1");
         db.execSQL("DROP TABLE table_1");
         db.execSQL("CREATE TABLE table_1(_id INTEGER PRIMARY KEY AUTOINCREMENT , week INTEGER , section INTEGER , time INTEGER , startWeek INTEGER , endWeek INTEGER ,doubleWeek INTEGER , course CHAR , classroom CHAR)");
-        db.execSQL("INSERT INTO table_1 SELECT week , section , time , startWeek , endWeek , doubleWeek , course , classroom FROM table_1_backup");
+        db.execSQL("INSERT INTO table_1 (week , section , time , startWeek , endWeek , doubleWeek , course , classroom) SELECT week , section , time , startWeek , endWeek , doubleWeek , course , classroom FROM table_1_backup");
         db.execSQL("DROP TABLE table_1_backup");
 
         // 创建 course_classroom 表
         db.execSQL("CREATE TABLE course_classroom(_id INTEGER PRIMARY KEY AUTOINCREMENT , course CHAR , classroom CHAR , UNIQUE(course , classroom))");
         // 初始化 course_classroom 表数据
-        db.execSQL("INSERT INTO course_classroom SELECT course , classroom FROM table_1");
+        db.execSQL("INSERT OR IGNORE INTO course_classroom (course , classroom) SELECT course , classroom FROM table_1");
 
         // 删除 table_2 表
         db.execSQL("DROP TABLE IF EXISTS table_2");
