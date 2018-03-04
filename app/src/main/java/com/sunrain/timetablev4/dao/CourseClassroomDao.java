@@ -85,6 +85,16 @@ public class CourseClassroomDao extends BaseDao {
         return exists;
     }
 
+    public static boolean isDataBaseEmpty() {
+        SQLiteDatabase database = DBManager.getDb();
+        String[] columns = {"_id"};
+        Cursor cursor = queryComplex(database, TABLE_NAME, columns, null, null, null, null, null, "1");
+        boolean isEmpty = cursor.getCount() == 0;
+        cursor.close();
+        DBManager.close(database);
+        return isEmpty;
+    }
+
     public static void clear() {
         SQLiteDatabase db = DBManager.getDb();
         delete(db, TABLE_NAME, null, null);

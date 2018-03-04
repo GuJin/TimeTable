@@ -19,7 +19,8 @@ public class TableDao extends BaseDao {
 
     public static boolean isDataBaseEmpty() {
         SQLiteDatabase database = DBManager.getDb();
-        Cursor cursor = query(database, TABLE_NAME, null, null);
+        String[] columns = {"_id"};
+        Cursor cursor = queryComplex(database, TABLE_NAME, columns, null, null, null, null, null, "1");
         boolean isEmpty = cursor.getCount() == 0;
         cursor.close();
         DBManager.close(database);
@@ -223,6 +224,58 @@ public class TableDao extends BaseDao {
         return sparseArray;
     }
 
+    /**
+     * 在启用单双周的情况下使用
+     */
+    @NonNull
+    public static SparseArray<ClassBean> getClasses(int currentWeek, boolean isDoubleWeek) {
+        int doubleWeek = isDoubleWeek ? 1 : 0;
+
+        SQLiteDatabase db = DBManager.getDb();
+        String selection = "? >= startWeek and ? <= endWeek and doubleWeek = ?";
+        String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(doubleWeek)};
+
+        Cursor cursor = query(db, TABLE_NAME, selection, selectionArgs);
+
+        int count = cursor.getCount();
+
+        if (count == 0) {
+            cursor.close();
+            return new SparseArray<>(0);
+        }
+
+        int idIndex = cursor.getColumnIndex("_id");
+        int weekIndex = cursor.getColumnIndex("week");
+        int sectionIndex = cursor.getColumnIndex("section");
+        int timeIndex = cursor.getColumnIndex("time");
+        int startWeekIndex = cursor.getColumnIndex("startWeek");
+        int endWeekIndex = cursor.getColumnIndex("endWeek");
+        int doubleWeekIndex = cursor.getColumnIndex("doubleWeek");
+        int courseIndex = cursor.getColumnIndex("course");
+        int classroomIndex = cursor.getColumnIndex("classroom");
+
+        SparseArray<ClassBean> sparseArray = new SparseArray<>(count);
+
+        while (cursor.moveToNext()) {
+            ClassBean bean = new ClassBean();
+            bean._id = cursor.getLong(idIndex);
+            bean.week = cursor.getInt(weekIndex);
+            bean.section = cursor.getInt(sectionIndex);
+            bean.time = cursor.getInt(timeIndex);
+            bean.startWeek = cursor.getInt(startWeekIndex);
+            bean.endWeek = cursor.getInt(endWeekIndex);
+            bean.doubleWeek = cursor.getInt(doubleWeekIndex);
+            bean.course = cursor.getString(courseIndex);
+            bean.classroom = cursor.getString(classroomIndex);
+
+            sparseArray.put(bean.week * 100 + bean.section * 10 + bean.time, bean);
+        }
+
+        cursor.close();
+        DBManager.close(db);
+        return sparseArray;
+    }
+
     public static void delete(ClassBean classBean) {
         SQLiteDatabase db = DBManager.getDb();
         delete(db, TABLE_NAME, "_id = ?", new String[]{String.valueOf(classBean._id)});
@@ -261,6 +314,7 @@ public class TableDao extends BaseDao {
         contentValues.put("time", bean.time);
         contentValues.put("startWeek", bean.startWeek);
         contentValues.put("endWeek", bean.endWeek);
+        contentValues.put("doubleWeek", bean.doubleWeek);
         update(db, TABLE_NAME, contentValues, "_id = ?", new String[]{String.valueOf(id)});
         DBManager.close(db);
     }
@@ -272,6 +326,18 @@ public class TableDao extends BaseDao {
                 updateClassTime(id, bean);
             }
         });
+    }
+
+    public static boolean existsDoubleWeek() {
+        SQLiteDatabase db = DBManager.getDb();
+        String selection = "doubleWeek = ?";
+        String[] selectionArgs = {"1"};
+        String[] columns = {"_id"};
+        Cursor cursor = queryComplex(db, TABLE_NAME, columns, selection, selectionArgs, null, null, null, "1");
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        DBManager.close(db);
+        return exists;
     }
 
     public static void clear() {
