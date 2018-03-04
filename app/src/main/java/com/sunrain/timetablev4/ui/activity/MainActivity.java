@@ -1,5 +1,6 @@
 package com.sunrain.timetablev4.ui.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,11 +10,16 @@ import com.sunrain.timetablev4.BuildConfig;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.base.BaseActivity;
+import com.sunrain.timetablev4.constants.SharedPreConstants;
 import com.sunrain.timetablev4.manager.FragmentChanger;
 import com.sunrain.timetablev4.manager.WallpaperManager;
+import com.sunrain.timetablev4.thread.DataCheckThread;
+import com.sunrain.timetablev4.ui.dialog.MessageDialog;
 import com.sunrain.timetablev4.ui.fragment.CourseFragment;
 import com.sunrain.timetablev4.ui.fragment.SettingsFragment;
 import com.sunrain.timetablev4.utils.ChannelHelper;
+import com.sunrain.timetablev4.utils.SharedPreUtils;
+import com.sunrain.timetablev4.utils.WebUtil;
 import com.sunrain.timetablev4.view.DrawerArrowDrawable;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -57,6 +63,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 initArrow();
                 setListener();
                 setBackground();
+                int lastVersionCode = SharedPreUtils.getInt(SharedPreConstants.VERSION_CODE, 0);
+                new DataCheckThread(MainActivity.this, lastVersionCode).start();
+                if (lastVersionCode != BuildConfig.VERSION_CODE) {
+                    SharedPreUtils.putInt(SharedPreConstants.VERSION_CODE, BuildConfig.VERSION_CODE);
+                }
+
             }
         });
     }
@@ -122,5 +134,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mFragmentChanger.showFragment(CourseFragment.class);
             mArrow.startHamburgerAnim();
         }
+    }
+
+    public void showTutorialDialog() {
+        new MessageDialog(mContext).setMessage("建议您先查看使用教程，或稍后在更多中重新查看。")
+                .setNegativeButton("关闭", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("查看使用教程", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        WebUtil.gotoWeb(mContext, "http://timetable.gujin.tech/tutorial.html");
+                    }
+                })
+                .show();
     }
 }
