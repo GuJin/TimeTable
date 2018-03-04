@@ -3,20 +3,23 @@ package com.sunrain.timetablev4.view.table;
 import android.util.SparseArray;
 
 import com.sunrain.timetablev4.bean.ClassBean;
+import com.sunrain.timetablev4.constants.SharedPreConstants;
 import com.sunrain.timetablev4.dao.TableDao;
+import com.sunrain.timetablev4.utils.CalendarUtil;
+import com.sunrain.timetablev4.utils.SharedPreUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class TableData {
 
     private static final int REFRESH_MEASURE = 1;
     private static final int REFRESH_DRAW = 2;
+    private final CopyOnWriteArraySet<OnTableDataChangedListener> mOnChangedListeners;
 
     private TableView mTableView;
+
     private int mCurrentWeek;
     private SparseArray<ClassBean> mClasses;
-    private List<Integer> mKeyList;
     private boolean isContentChange;
     private boolean isLayoutChange;
 
@@ -37,10 +40,17 @@ public class TableData {
 
     public void setContentChange() {
         isContentChange = true;
+        mCurrentWeek = CalendarUtil.getCurrentWeek();
+        for (OnTableDataChangedListener onChangedListener : mOnChangedListeners) {
+            onChangedListener.onContentChange();
+        }
     }
 
     public void setLayoutChange() {
         isLayoutChange = true;
+        for (OnTableDataChangedListener onChangedListener : mOnChangedListeners) {
+            onChangedListener.onLayoutChange();
+        }
     }
 
     public void refreshDataIfNeed() {
@@ -50,7 +60,9 @@ public class TableData {
 
         if (isLayoutChange) {
             mTableViewRefresh = REFRESH_MEASURE;
-            mTableView.refreshConfig();
+            if (mTableView != null) {
+                mTableView.refreshConfig();
+            }
         } else { // isContentChange : true
             mTableViewRefresh = REFRESH_DRAW;
         }
@@ -61,49 +73,33 @@ public class TableData {
         refreshData();
     }
 
-
-    public ClassBean getClassBean(int week, int section, int time) {
-        return mClasses.get(week * 100 + section * 10 + time);
+    public void registerOnSignStateListener(OnTableDataChangedListener listener) {
+        mOnChangedListeners.add(listener);
     }
 
-    public SparseArray<ClassBean> getClasses() {
-        return mClasses;
+    public void unregisterOnSignStateListener(OnTableDataChangedListener listener) {
+        mOnChangedListeners.remove(listener);
     }
 
-    public SparseArray<ClassBean> getClassesCopy() {
-        return mClasses.clone();
+    public interface OnTableDataChangedListener {
+        void onContentChange();
+
+        void onLayoutChange();
     }
 
-    public ClassBean getClassBean(int key) {
-        return mClasses.get(key);
-    }
+    public static class SimpleTableDataChangedListener implements OnTableDataChangedListener {
 
-    public List<Integer> getClassesKey() {
-        return mKeyList;
-    }
-
-    public void setWorkdays(int workdays) {
-        mTableView.setWorkdays(workdays);
-    }
-
-    public void setMorningClasses(int morningClasses) {
-        mTableView.setMorningClasses(morningClasses);
-    }
-
-    public void setAfternoonClasses(int afternoonClasses) {
-        mTableView.setAfternoonClasses(afternoonClasses);
-    }
-
-    public void setEveningClasses(int eveningClasses) {
-        mTableView.setEveningClasses(eveningClasses);
-    }
-
-    private void refreshClassesKey() {
-        int size = mClasses.size();
-        mKeyList = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            mKeyList.add(mClasses.keyAt(i));
+        @Override
+        public void onContentChange() {
         }
+
+        @Override
+        public void onLayoutChange() {
+        }
+    }
+
+    SparseArray<ClassBean> getClasses() {
+        return mClasses;
     }
 
     public void setCurrentWeek(int currentWeek) {
@@ -114,17 +110,25 @@ public class TableData {
     }
 
     public void refreshData() {
-        mClasses = TableDao.getClasses(mCurrentWeek);
-        refreshClassesKey();
-
-        if (mTableViewRefresh == REFRESH_MEASURE) {
-            mTableView.requestLayout();
+        boolean isDoubleWeekEnabled = SharedPreUtils.getInt(SharedPreConstants.DOUBLE_WEEK, SharedPreConstants.DEFAULT_DOUBLE_WEEK) == 1;
+        if (isDoubleWeekEnabled) {
+            mClasses = TableDao.getClasses(mCurrentWeek, CalendarUtil.isDoubleWeek(mCurrentWeek));
         } else {
-            mTableView.postInvalidateOnAnimation();
+            mClasses = TableDao.getClasses(mCurrentWeek);
+        }
+
+        if (mTableView != null) {
+            if (mTableViewRefresh == REFRESH_MEASURE) {
+                mTableView.requestLayout();
+            } else {
+                mTableView.postInvalidateOnAnimation();
+            }
         }
     }
 
     private TableData() {
+        mCurrentWeek = CalendarUtil.getCurrentWeek();
+        mOnChangedListeners = new CopyOnWriteArraySet<>();
     }
 
     private static final class TableDataHolder {
