@@ -31,6 +31,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
 
     private CourseClassroomBean mCourseClassroomBean;
     private ClassTimeDialog mClassTimeDialog;
+    private boolean isDoubleWeekEnabled;
 
     public ClassTimeAdapter(Context context, ListView listView) {
         mContext = context;
@@ -68,7 +69,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
     public void showAddDialog() {
 
         if (mClassTimeDialog == null) {
-            initClassTimeDialog(mContext);
+            initClassTimeDialog();
         }
 
         ClassBean classBean = new ClassBean();
@@ -82,7 +83,7 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
 
     private void showEditDialog(ClassBean classBean) {
         if (mClassTimeDialog == null) {
-            initClassTimeDialog(mContext);
+            initClassTimeDialog();
         }
 
         mClassTimeDialog.setClassBean(classBean);
@@ -106,8 +107,8 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
         }).show();
     }
 
-    private void initClassTimeDialog(Context context) {
-        mClassTimeDialog = new ClassTimeDialog(context);
+    private void initClassTimeDialog() {
+        mClassTimeDialog = new ClassTimeDialog(mContext, isDoubleWeekEnabled);
         mClassTimeDialog.setPositiveButton(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -132,6 +133,11 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
                 mListView.smoothScrollByOffset(mSmoothOffset);
             }
         });
+    }
+
+    public void setDoubleWeekEnabled(boolean doubleWeekEnabled) {
+        isDoubleWeekEnabled = doubleWeekEnabled;
+        mClassTimeDialog = null;
     }
 
     private class OnButtonClickListener implements View.OnClickListener {

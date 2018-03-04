@@ -9,9 +9,7 @@ public class ClassTimeBean {
     public int time;
     public int startWeek;
     public int endWeek;
-
-    public ClassTimeBean() {
-    }
+    public int doubleWeek;
 
     public ClassTimeBean(@NonNull ClassBean classBean) {
         this.week = classBean.week;
@@ -19,5 +17,6 @@ public class ClassTimeBean {
         this.time = classBean.time;
         this.startWeek = classBean.startWeek;
         this.endWeek = classBean.endWeek;
+        this.doubleWeek = classBean.doubleWeek;
     }
 }

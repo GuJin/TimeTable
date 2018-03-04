@@ -21,8 +21,7 @@ public class ClassBean {
     public int time;
     public int startWeek;
     public int endWeek;
-    //部分高中两个星期一轮
-    public int doubleWeek;
+    public int doubleWeek;//0 未设置或单周，1 双周
     public String course;
     public String classroom;
 
@@ -88,6 +87,9 @@ public class ClassBean {
             sSb.append(sSectionArray[classBean.section]).append(" ");
             sSb.append(sTimeArray[classBean.time]).append("\n");
             sSb.append(classBean.startWeek + 1).append(" ~ ").append(classBean.endWeek + 1).append(" 周");
+            if (classBean.doubleWeek == 1) {
+                sSb.append(" ").append("双周");
+            }
             return sSb.toString();
         }
 
@@ -97,6 +99,9 @@ public class ClassBean {
             sSb.append(sSectionArray[classBean.section]).append(" ");
             sSb.append(sTimeArray[classBean.time]).append("\n");
             sSb.append(classBean.startWeek + 1).append(" ~ ").append(classBean.endWeek + 1).append(" 周");
+            if (classBean.doubleWeek == 1) {
+                sSb.append(" ").append("双周");
+            }
             return sSb.toString();
         }
 
@@ -105,6 +110,9 @@ public class ClassBean {
             sSb.append(classBean.course).append("\n");
             sSb.append(classBean.classroom).append("\n");
             sSb.append(classBean.startWeek + 1).append(" ~ ").append(classBean.endWeek + 1).append(" 周");
+            if (classBean.doubleWeek == 1) {
+                sSb.append(" ").append("双周");
+            }
             return sSb.toString();
         }
 

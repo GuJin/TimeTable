@@ -9,10 +9,13 @@ public class SharedPreConstants {
     public static final String MORNING_CLASS_NUMBER = "morning_class_number";
     public static final String AFTERNOON_CLASS_NUMBER = "afternoon_class_number";
     public static final String EVENING_CLASS_NUMBER = "evening_class_number";
+    public static final String DOUBLE_WEEK = "double_week";
+    public static final String VERSION_CODE = "version_code";
 
     public static final int DEFAULT_MORNING_CLASS_NUMBER = 2;
     public static final int DEFAULT_AFTERNOON_CLASS_NUMBER = 2;
     public static final int DEFAULT_EVENING_CLASS_NUMBER = 0;
+    public static final int DEFAULT_DOUBLE_WEEK = 0;
     public static final int DEFAULT_WORK_DAY = 5;
     public static final int DEFAULT_SEMESTER_WEEK = 20;
 
