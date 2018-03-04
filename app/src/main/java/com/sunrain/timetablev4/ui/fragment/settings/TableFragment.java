@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.base.BaseFragment;
@@ -23,6 +24,7 @@ public class TableFragment extends BaseFragment implements CompoundButton.OnChec
     private UserSpinner mSpMorning;
     private UserSpinner mSpAfternoon;
     private UserSpinner mSpEvening;
+    private Switch mSwDoubleWeek;
     private CheckBox mCbSat;
     private CheckBox mCbSun;
     private Integer[] mClassIntegers;
@@ -38,6 +40,7 @@ public class TableFragment extends BaseFragment implements CompoundButton.OnChec
         mSpMorning = view.findViewById(R.id.sp_morning);
         mSpAfternoon = view.findViewById(R.id.sp_afternoon);
         mSpEvening = view.findViewById(R.id.sp_evening);
+        mSwDoubleWeek = view.findViewById(R.id.sw_double_week);
         mCbSat = view.findViewById(R.id.cb_sat);
         mCbSun = view.findViewById(R.id.cb_sun);
     }
@@ -45,8 +48,14 @@ public class TableFragment extends BaseFragment implements CompoundButton.OnChec
     @Override
     public void initData() {
         initSpinner();
+        initSwitch();
         initCheckBox();
         setListener();
+    }
+
+    private void initSwitch() {
+        int enabled = SharedPreUtils.getInt(SharedPreConstants.DOUBLE_WEEK, SharedPreConstants.DEFAULT_DOUBLE_WEEK);
+        mSwDoubleWeek.setChecked(enabled == 1);
     }
 
     private void initCheckBox() {
@@ -81,7 +90,6 @@ public class TableFragment extends BaseFragment implements CompoundButton.OnChec
                 .DEFAULT_AFTERNOON_CLASS_NUMBER) - 2);
         mSpEvening.setSelection(SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants
                 .DEFAULT_EVENING_CLASS_NUMBER));
-
     }
 
     private void setListener() {
@@ -89,10 +97,11 @@ public class TableFragment extends BaseFragment implements CompoundButton.OnChec
         mSpAfternoon.setOnItemSelectedByUserListener(this);
         mSpEvening.setOnItemSelectedByUserListener(this);
 
+        mSwDoubleWeek.setOnCheckedChangeListener(this);
+
         mCbSat.setOnCheckedChangeListener(this);
         mCbSun.setOnCheckedChangeListener(this);
     }
-
 
     @Override
     public void onItemSelectByUser(AdapterView<?> parent, View view, int position, long id) {
@@ -112,20 +121,22 @@ public class TableFragment extends BaseFragment implements CompoundButton.OnChec
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        int workday;
         switch (buttonView.getId()) {
+            case R.id.sw_double_week:
+                SharedPreUtils.putInt(SharedPreConstants.DOUBLE_WEEK, isChecked ? 1 : 0);
+                TableData.getInstance().setContentChange();
+                break;
             case R.id.cb_sat:
                 mCbSun.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
                 mCbSun.setChecked(false);
-                workday = isChecked ? 6 : 5;
-                SharedPreUtils.putInt(SharedPreConstants.WORK_DAY, workday);
+                SharedPreUtils.putInt(SharedPreConstants.WORK_DAY, isChecked ? 6 : 5);
+                TableData.getInstance().setLayoutChange();
                 break;
             case R.id.cb_sun:
-                workday = isChecked ? 7 : 6;
-                SharedPreUtils.putInt(SharedPreConstants.WORK_DAY, workday);
+                SharedPreUtils.putInt(SharedPreConstants.WORK_DAY, isChecked ? 7 : 6);
+                TableData.getInstance().setLayoutChange();
                 break;
         }
-        TableData.getInstance().setLayoutChange();
     }
 
 }
