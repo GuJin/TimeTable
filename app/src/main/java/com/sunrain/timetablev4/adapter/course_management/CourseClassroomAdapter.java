@@ -52,6 +52,10 @@ public class CourseClassroomAdapter extends BaseListAdapter<CourseClassroomBean,
         mClickPosition = clickPosition;
     }
 
+    public int getClickPosition() {
+        return mClickPosition;
+    }
+
     public static final class ViewHolder extends BaseListAdapter.ViewHolder {
 
         private TextView mTvCourseClassroom;
