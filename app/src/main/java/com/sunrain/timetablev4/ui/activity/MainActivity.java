@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void showTutorialDialog() {
-        new MessageDialog(mContext).setMessage("建议您先查看使用教程，或稍后在更多中重新查看。")
+        new MessageDialog(mContext).setMessage("建议您先查看使用教程，\n或稍后在更多中重新查看。")
                 .setNegativeButton("关闭", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
