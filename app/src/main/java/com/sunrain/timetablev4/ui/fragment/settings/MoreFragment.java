@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.zxing.client.android.CaptureActivity;
+import com.sunrain.timetablev4.BuildConfig;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.base.BaseFragment;
 import com.sunrain.timetablev4.bean.ClassBean;
@@ -71,6 +72,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
         view.findViewById(R.id.btn_share_course).setOnClickListener(this);
         view.findViewById(R.id.btn_clear_course).setOnClickListener(this);
         view.findViewById(R.id.btn_github).setOnClickListener(this);
+        view.findViewById(R.id.btn_version).setOnClickListener(this);
         view.findViewById(R.id.btn_praise).setOnClickListener(this);
         view.findViewById(R.id.btn_donation).setOnClickListener(this);
     }
@@ -95,6 +97,9 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.btn_clear_course:
                 showClearCourseDialog();
+                break;
+            case R.id.btn_version:
+                ToastUtil.show(BuildConfig.VERSION_NAME);
                 break;
             case R.id.btn_github:
                 WebUtil.gotoWeb(mActivity, "https://github.com/GuJin/TimeTable");
