@@ -21,10 +21,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
@@ -32,6 +30,7 @@ import android.widget.ImageView;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.manager.WallpaperManager;
+import com.sunrain.timetablev4.utils.DensityUtil;
 import com.sunrain.timetablev4.utils.FileUtil;
 import com.sunrain.timetablev4.utils.ImageUtil;
 import com.sunrain.timetablev4.view.CropImageView.animation.SimpleValueAnimator;
@@ -142,7 +141,7 @@ public class CropImageView extends ImageView {
         super(context, attrs, defStyle);
 
         mExecutor = Executors.newSingleThreadExecutor();
-        float density = getDensity();
+        float density = DensityUtil.getDensity();
         mHandleSize = (int) (density * HANDLE_SIZE_IN_DP);
         mMinFrameSize = density * MIN_FRAME_SIZE_IN_DP;
         mFrameStrokeWeight = density * FRAME_STROKE_WEIGHT_IN_DP;
@@ -828,12 +827,6 @@ public class CropImageView extends ImageView {
             default:
                 return 1;
         }
-    }
-
-    private float getDensity() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.density;
     }
 
     private float sq(float value) {
