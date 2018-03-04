@@ -21,14 +21,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -70,10 +67,9 @@ import tech.gujin.toast.ToastUtil;
  */
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback, View.OnClickListener {
 
-    private static final String TAG = CaptureActivity.class.getSimpleName();
-    private static final int PERMISSION_PICK_IMAGE = 10;
-    private final int REQUEST_PERMISSION_BACKGROUND = 1;
-    private final int REQUEST_SAF_PICK_IMAGE = 12;
+    private static final String TAG = "CaptureActivity";
+    private final int PERMISSION_PICK_IMAGE = 10;
+    private final int REQUEST_PICK_IMAGE = 12;
 
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
@@ -291,13 +287,17 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             mPermissionManager = new PermissionManager(new PermissionManager.OnRequestPermissionsListener() {
                 @Override
                 public void onGranted(int requestCode) {
-                    startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
-                            REQUEST_SAF_PICK_IMAGE);
+                    if (requestCode == PERMISSION_PICK_IMAGE) {
+                        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                                REQUEST_PICK_IMAGE);
+                    }
                 }
 
                 @Override
                 public void onDenied(int requestCode) {
-                    ToastUtil.show(getString(R.string.permission_read_fail_background), true);
+                    if (requestCode == PERMISSION_PICK_IMAGE) {
+                        ToastUtil.show(getString(R.string.permission_read_fail_background), true);
+                    }
                 }
             });
         }
@@ -311,7 +311,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             return;
         }
         switch (requestCode) {
-            case REQUEST_SAF_PICK_IMAGE:
+            case REQUEST_PICK_IMAGE:
                 analysisImage(data.getData());
                 break;
         }
@@ -340,25 +340,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
 
-    private String getPicturePath(Uri uri) {
-        String photoPath = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        String wholeID;
-        wholeID = DocumentsContract.getDocumentId(uri);
-        String id = wholeID.split(":")[1];
-        String sel = MediaStore.Images.Media._ID + "=?";
-        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, proj, sel, new String[]{id}, null);
-        if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(proj[0]);
-            if (cursor.moveToFirst()) {
-                photoPath = cursor.getString(columnIndex);
-            }
-            cursor.close();
-        }
-        Log.i(TAG, "photoPath:" + photoPath);
-        return photoPath;
-    }
-
     public Result syncDecodeQRCode(Bitmap bitmap) {
         HashMap<DecodeHintType, Object> hintTypeObjectHashMap = new HashMap<>();
         List<BarcodeFormat> allFormats = new ArrayList<>();
@@ -381,23 +362,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             return null;
         }
     }
-
-    private Bitmap getDecodeAbleBitmap(String picturePath) {
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(picturePath, options);
-            int sampleSize = options.outHeight / 500;
-            if (sampleSize <= 0)
-                sampleSize = 1;
-            options.inSampleSize = sampleSize;
-            options.inJustDecodeBounds = false;
-            return BitmapFactory.decodeFile(picturePath, options);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull final int[] grantResults) {
