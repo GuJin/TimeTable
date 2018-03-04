@@ -10,6 +10,10 @@ public class DensityUtil {
         sDensity = MyApplication.sContext.getResources().getDisplayMetrics().density;
     }
 
+    public static float getDensity() {
+        return sDensity;
+    }
+
     public static int dip2Px(float dpValue) {
         return (int) (dpValue * sDensity + 0.5f);
     }
