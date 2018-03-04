@@ -2,6 +2,8 @@ package com.sunrain.timetablev4.utils;
 
 import com.sunrain.timetablev4.constants.SharedPreConstants;
 
+import java.util.Calendar;
+
 public class CalendarUtil {
 
     public static int getCurrentWeek() {
@@ -14,7 +16,7 @@ public class CalendarUtil {
             return 0;
         }
 
-        long endDate = SharedPreUtils.getLong(SharedPreConstants.SEMESTER_START_DATE, 0);
+        long endDate = SharedPreUtils.getLong(SharedPreConstants.SEMESTER_END_DATE, 0);
         if (endDate == 0) {
             return 0;
         }
@@ -23,7 +25,35 @@ public class CalendarUtil {
             currentDateTime = System.currentTimeMillis();
         }
 
-        return (int) ((currentDateTime - startDateTime) / 604800000);
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+
+        start.setFirstDayOfWeek(Calendar.MONDAY);
+        end.setFirstDayOfWeek(Calendar.MONDAY);
+
+        start.setTimeInMillis(startDateTime);
+        end.setTimeInMillis(currentDateTime);
+
+        start.setMinimalDaysInFirstWeek(7);
+        end.setMinimalDaysInFirstWeek(7);
+
+        start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+
+        end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        end.set(Calendar.HOUR_OF_DAY, 0);
+        end.set(Calendar.MINUTE, 0);
+        end.set(Calendar.SECOND, 0);
+        end.set(Calendar.MILLISECOND, 0);
+
+        return (int) ((end.getTimeInMillis() - start.getTimeInMillis()) / 604800000);
+    }
+
+    public static boolean isDoubleWeek(int currentWeek) {
+        // 周数从0开始
+        return (currentWeek + 1) % 2 == 0;
     }
 
 }
