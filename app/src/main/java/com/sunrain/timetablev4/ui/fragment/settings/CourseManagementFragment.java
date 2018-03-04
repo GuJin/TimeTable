@@ -18,10 +18,12 @@ import com.sunrain.timetablev4.adapter.course_management.ClassTimeAdapter;
 import com.sunrain.timetablev4.adapter.course_management.CourseClassroomAdapter;
 import com.sunrain.timetablev4.base.BaseFragment;
 import com.sunrain.timetablev4.bean.CourseClassroomBean;
+import com.sunrain.timetablev4.constants.SharedPreConstants;
 import com.sunrain.timetablev4.dao.CourseClassroomDao;
 import com.sunrain.timetablev4.dao.TableDao;
 import com.sunrain.timetablev4.ui.dialog.MessageDialog;
 import com.sunrain.timetablev4.utils.DensityUtil;
+import com.sunrain.timetablev4.utils.SharedPreUtils;
 import com.sunrain.timetablev4.utils.SystemUiUtil;
 import com.sunrain.timetablev4.view.table.TableData;
 
@@ -41,6 +43,8 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     private CourseClassroomAdapter mCourseClassroomAdapter;
     private ClassTimeAdapter mClassTimeAdapter;
     private int mSmoothOffset;
+    private boolean needRefresh;
+    private OnContentChangedListener mOnContentChangedListener;
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
@@ -60,6 +64,8 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         initClassTimeListView();
         setListener();
         mSmoothOffset = DensityUtil.dip2Px(60);
+        mOnContentChangedListener = new OnContentChangedListener();
+        TableData.getInstance().registerOnSignStateListener(mOnContentChangedListener);
     }
 
     private void initCourseClassroomListView() {
@@ -76,6 +82,8 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
 
     private void initClassTimeListView() {
         mClassTimeAdapter = new ClassTimeAdapter(mActivity, mLvClassTime);
+        mClassTimeAdapter.setDoubleWeekEnabled(SharedPreUtils.getInt(SharedPreConstants.DOUBLE_WEEK, SharedPreConstants
+                .DEFAULT_DOUBLE_WEEK) == 1);
         mLvClassTime.setAdapter(mClassTimeAdapter);
 
         View view = View.inflate(mActivity, R.layout.footer_class_time_listview, null);
@@ -139,7 +147,15 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     private void save(CourseClassroomBean bean) {
         CourseClassroomDao.insertInBackground(bean);
         mCourseClassroomList.add(bean);
+        mCourseClassroomAdapter.setClickPosition(mCourseClassroomAdapter.getCount() - 1);
         mCourseClassroomAdapter.notifyDataSetChanged();
+        mClassTimeAdapter.setCourseClassroom(bean);
+        if (mLvClassTime.getVisibility() == View.INVISIBLE) {
+            mLvClassTime.setVisibility(View.VISIBLE);
+        }
+
+
+
         mLvCourseClassroom.smoothScrollByOffset(mSmoothOffset);
 
         mEtCourse.setText("");
@@ -148,6 +164,10 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mCourseClassroomAdapter.getClickPosition() == position) {
+            return;
+        }
+
         CourseClassroomBean classroomBean = mCourseClassroomAdapter.getItem(position);
         mClassTimeAdapter.setCourseClassroom(classroomBean);
         mCourseClassroomAdapter.setClickPosition(position);
@@ -183,9 +203,41 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
                         TableDao.deleteInBackground(bean);
                         mCourseClassroomList.remove(bean);
                         mCourseClassroomAdapter.notifyDataSetChanged();
+                        mLvClassTime.setVisibility(View.INVISIBLE);
                         TableData.getInstance().setContentChange();
                     }
                 })
                 .show();
+    }
+
+    private class OnContentChangedListener extends TableData.SimpleTableDataChangedListener {
+        @Override
+        public void onContentChange() {
+            needRefresh = true;
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (hidden) {
+            return;
+        }
+
+        if (needRefresh) {
+            needRefresh = false;
+            mCourseClassroomList.clear();
+            mCourseClassroomList.addAll(CourseClassroomDao.getAll());
+            mCourseClassroomAdapter.setClickPosition(-1);
+            mCourseClassroomAdapter.notifyDataSetChanged();
+            mLvClassTime.setVisibility(View.INVISIBLE);
+            mClassTimeAdapter.setDoubleWeekEnabled(SharedPreUtils.getInt(SharedPreConstants.DOUBLE_WEEK, SharedPreConstants
+                    .DEFAULT_DOUBLE_WEEK) == 1);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        TableData.getInstance().unregisterOnSignStateListener(mOnContentChangedListener);
+        super.onDestroyView();
     }
 }
