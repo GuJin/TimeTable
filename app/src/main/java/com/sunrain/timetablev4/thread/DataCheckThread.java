@@ -29,7 +29,7 @@ public class DataCheckThread extends Thread {
     public void run() {
         final MainActivity mainActivity = mMainActivityWeakReference.get();
 
-        if (mLastVersionCode < 23) {
+        if (mLastVersionCode == 0) {
             if (mainActivity == null) {
                 ToastUtil.postShow("请在更多中查看使用教程", true);
                 return;
