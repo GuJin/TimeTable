@@ -59,12 +59,12 @@ public class DataCheckThread extends Thread {
 
         final int week = SharedPreUtils.getInt(SharedPreConstants.SEMESTER_WEEK, SharedPreConstants.DEFAULT_SEMESTER_WEEK);
         int currentWeek = CalendarUtil.getCurrentWeek();
-        if (currentWeek < 0 || currentWeek > week) {
-            ToastUtil.postShow("当前日期已超出学期时间", true);
+        if (currentWeek < 0 || currentWeek > week - 1) {
+            ToastUtil.postShow("当前周数已超出学期总周数", true);
             return;
         }
 
-        if (TableDao.existsOutOfWeek(week)) {
+        if (TableDao.existsOutOfWeek(week - 1)) {
             if (mainActivity == null) {
                 ToastUtil.postShow("存在上课时间超出" + week + "周的课程", true);
                 return;
@@ -115,13 +115,14 @@ public class DataCheckThread extends Thread {
     }
 
     private void showOutOfWeekDialog(MainActivity mainActivity, int week) {
-        new MessageDialog(mainActivity).setMessage("当前学期周数为" + week + "周，存在上课时间超出" + week + "周的课程，请注意处理。")
+        new MessageDialog(mainActivity).setMessage("当前学期总周数为" + week + "周，存在上课时间超出" + week + "周的课程，请注意处理。")
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
+                .hideNegativeButton()
                 .show();
     }
 }

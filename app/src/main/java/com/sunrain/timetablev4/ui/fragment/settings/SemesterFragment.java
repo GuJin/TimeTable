@@ -276,20 +276,21 @@ public class SemesterFragment extends BaseFragment implements View.OnClickListen
 
         if (isWeekChanged) {
             isWeekChanged = false;
-            if (TableDao.existsOutOfWeek(mWeek)) {
+            if (TableDao.existsOutOfWeek(mWeek - 1)) {
                 showOutOfWeekDialog(mWeek);
             }
         }
     }
 
     private void showOutOfWeekDialog(int week) {
-        new MessageDialog(mActivity).setMessage("当前学期周数为" + week + "周，存在上课时间超出" + week + "周的课程，请注意处理。")
+        new MessageDialog(mActivity).setMessage("当前学期总周数为" + week + "周，存在上课时间超出" + week + "周的课程，请注意处理。")
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
+                .hideNegativeButton()
                 .show();
     }
 }
