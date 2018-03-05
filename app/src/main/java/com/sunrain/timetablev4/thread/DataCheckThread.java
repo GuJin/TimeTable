@@ -66,7 +66,7 @@ public class DataCheckThread extends Thread {
 
         if (TableDao.existsOutOfWeek(week - 1)) {
             if (mainActivity == null) {
-                ToastUtil.postShow("存在上课时间超出" + week + "周的课程", true);
+                ToastUtil.postShow("存在上课时间超出学期总周数" + week + "周的课程", true);
                 return;
             } else {
                 mainActivity.runOnUiThread(new Runnable() {
