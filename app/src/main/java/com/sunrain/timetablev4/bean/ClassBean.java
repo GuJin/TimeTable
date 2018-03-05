@@ -39,7 +39,7 @@ public class ClassBean {
         this.classroom = jsonObject.getString("h");
     }
 
-    public JSONObject toJsonObject() throws JSONException {
+    private JSONObject toJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("a", week);
         jsonObject.put("b", section);
