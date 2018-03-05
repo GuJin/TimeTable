@@ -4,7 +4,7 @@ public class SharedPreConstants {
 
     public static final String SEMESTER_START_DATE = "semester_start_date";
     public static final String SEMESTER_END_DATE = "semester_end_date";
-    public static final String SEMESTER_WEEK = "semester_week";
+    public static final String SEMESTER_WEEK = "semester_week"; //从1开始
     public static final String WORK_DAY = "work_day";
     public static final String MORNING_CLASS_NUMBER = "morning_class_number";
     public static final String AFTERNOON_CLASS_NUMBER = "afternoon_class_number";
