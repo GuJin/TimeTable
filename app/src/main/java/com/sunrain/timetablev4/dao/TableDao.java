@@ -340,6 +340,21 @@ public class TableDao extends BaseDao {
         return exists;
     }
 
+    /**
+     * 是否存在课程周数超出学期周数
+     */
+    public static boolean existsOutOfWeek(int week) {
+        SQLiteDatabase db = DBManager.getDb();
+        String selection = "endWeek > ?";
+        String[] selectionArgs = {String.valueOf(week)};
+        String[] columns = {"_id"};
+        Cursor cursor = queryComplex(db, TABLE_NAME, columns, selection, selectionArgs, null, null, null, "1");
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        DBManager.close(db);
+        return exists;
+    }
+
     public static void clear() {
         SQLiteDatabase db = DBManager.getDb();
         delete(db, TABLE_NAME, null, null);

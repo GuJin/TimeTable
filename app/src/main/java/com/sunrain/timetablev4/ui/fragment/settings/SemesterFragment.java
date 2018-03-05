@@ -13,7 +13,9 @@ import android.widget.TextView;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.base.BaseFragment;
 import com.sunrain.timetablev4.constants.SharedPreConstants;
+import com.sunrain.timetablev4.dao.TableDao;
 import com.sunrain.timetablev4.ui.dialog.CalendarDialog;
+import com.sunrain.timetablev4.ui.dialog.MessageDialog;
 import com.sunrain.timetablev4.utils.SharedPreUtils;
 import com.sunrain.timetablev4.view.UserSpinner;
 import com.sunrain.timetablev4.view.table.TableData;
@@ -41,6 +43,7 @@ public class SemesterFragment extends BaseFragment implements View.OnClickListen
     private long mEndDate;
     private boolean isEndWeekRefresh;
     private SimpleDateFormat mSimpleDateFormat;
+    private boolean isWeekChanged;
 
 
     @Override
@@ -220,9 +223,14 @@ public class SemesterFragment extends BaseFragment implements View.OnClickListen
         mWeek = weeks;
         isEndWeekRefresh = true;
         mSpWeek.setSelection(mWeek - 1, true);
+        saveWeek();
         return SAVE_SUCCEED;
     }
 
+    private void saveWeek() {
+        SharedPreUtils.putInt(SharedPreConstants.SEMESTER_WEEK, mWeek);
+        isWeekChanged = true;
+    }
 
     private void calculateEndDate(long startDate) {
         if (startDate != 0) {
@@ -252,11 +260,36 @@ public class SemesterFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onItemSelectByUser(AdapterView<?> parent, View view, int position, long id) {
         mWeek = position + 1;
-        SharedPreUtils.putInt(SharedPreConstants.SEMESTER_WEEK, mWeek);
+        saveWeek();
         if (isEndWeekRefresh) {
             isEndWeekRefresh = false;
             return;
         }
         calculateEndDate(mStartDate);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden && isWeekChanged) {
+            return;
+        }
+
+        if (isWeekChanged) {
+            isWeekChanged = false;
+            if (TableDao.existsOutOfWeek(mWeek)) {
+                showOutOfWeekDialog(mWeek);
+            }
+        }
+    }
+
+    private void showOutOfWeekDialog(int week) {
+        new MessageDialog(mActivity).setMessage("当前学期周数为" + week + "周，存在上课时间超出" + week + "周的课程，请注意处理。")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 }
