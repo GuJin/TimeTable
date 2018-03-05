@@ -105,7 +105,9 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         int screenHeight = mRootView.getRootView().getHeight();
         int keypadHeight = screenHeight - r.bottom;
         if (keypadHeight < screenHeight * 0.15) {
-            SystemUiUtil.setSystemUi(getActivity().getWindow().getDecorView());
+            if (mActivity != null) {
+                SystemUiUtil.setSystemUi(mActivity.getWindow().getDecorView());
+            }
         }
     }
 
@@ -153,8 +155,6 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         if (mLvClassTime.getVisibility() == View.INVISIBLE) {
             mLvClassTime.setVisibility(View.VISIBLE);
         }
-
-
 
         mLvCourseClassroom.smoothScrollByOffset(mSmoothOffset);
 
