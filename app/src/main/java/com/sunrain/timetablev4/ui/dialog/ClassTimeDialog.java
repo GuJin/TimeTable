@@ -125,20 +125,27 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
     }
 
     private void refreshSpinner() {
-        mSpWeek.setSelection(mClassBean.week);
-        mSpSection.setSelection(mClassBean.section);
+        // 增加判断是防止修改学期或表格属性后，课程属性数组越界
 
-        if (mClassBean.section == TableConstants.MORNING) {
+        int week = mSpWeek.getAdapter().getCount() - 1;
+        mSpWeek.setSelection(mClassBean.week > week ? week : mClassBean.week);
+
+        int section = mSpSection.getAdapter().getCount() - 1;
+        mSpSection.setSelection(mClassBean.section > section ? section : mClassBean.section);
+
+        if (mSpSection.getSelectedItemPosition() == TableConstants.MORNING) {
             mSpTime.setAdapter(mMorningClassAdapter);
-        } else if (mClassBean.section == TableConstants.AFTERNOON) {
+        } else if (mSpSection.getSelectedItemPosition() == TableConstants.AFTERNOON) {
             mSpTime.setAdapter(mAfternoonClassAdapter);
         } else {
             mSpTime.setAdapter(mEveningClassAdapter);
         }
-        mSpTime.setSelection(mClassBean.time);
+        int time = mSpTime.getAdapter().getCount() - 1;
+        mSpTime.setSelection(mClassBean.time > time ? time : mClassBean.time);
 
-        mSpStartWeek.setSelection(mClassBean.startWeek);
-        mSpEndWeek.setSelection(mClassBean.endWeek);
+        int semesterWeek = mSpEndWeek.getAdapter().getCount() - 1;
+        mSpStartWeek.setSelection(mClassBean.startWeek > semesterWeek ? semesterWeek : mClassBean.startWeek);
+        mSpEndWeek.setSelection(mClassBean.endWeek > semesterWeek ? semesterWeek : mClassBean.endWeek);
     }
 
     private void prepareSpinnerData() {

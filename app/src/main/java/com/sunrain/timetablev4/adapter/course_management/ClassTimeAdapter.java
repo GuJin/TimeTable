@@ -137,6 +137,12 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
 
     public void setDoubleWeekEnabled(boolean doubleWeekEnabled) {
         isDoubleWeekEnabled = doubleWeekEnabled;
+    }
+
+    public void setDialogNull() {
+        if (mClassTimeDialog != null && mClassTimeDialog.isShowing()) {
+            mClassTimeDialog.dismiss();
+        }
         mClassTimeDialog = null;
     }
 
@@ -160,7 +166,6 @@ public class ClassTimeAdapter extends BaseListAdapter<ClassBean, ClassTimeAdapte
                     break;
             }
         }
-
     }
 
     protected static final class ViewHolder extends BaseListAdapter.ViewHolder {
