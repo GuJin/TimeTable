@@ -255,14 +255,14 @@ public class TableView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mClassBoxHeight = (getHeight() - WEEK_BOX_HEIGHT) / 4;
+        mClassBoxHeight = (getMeasuredHeight() - WEEK_BOX_HEIGHT) / 4;
         mClassBoxWidth = (getMeasuredWidth() - TIME_BOX_WIDTH) / mWorkdays;
         mBoxTextMaxWidth = mClassBoxWidth - DensityUtil.dip2Px(15);
 
         mTotalClasses = mMorningClasses + mAfternoonClasses + mEveningClasses;
 
         mRangeHeight = mTotalClasses * mClassBoxHeight + WEEK_BOX_HEIGHT;
-        mScrollRange = mRangeHeight - getHeight();
+        mScrollRange = mRangeHeight - getMeasuredHeight();
 
         mMorningHeight = mClassBoxHeight * mMorningClasses;
         mAfternoonHeight = mClassBoxHeight * mAfternoonClasses;
