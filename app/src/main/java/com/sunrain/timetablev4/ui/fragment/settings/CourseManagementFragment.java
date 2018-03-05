@@ -43,7 +43,8 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     private CourseClassroomAdapter mCourseClassroomAdapter;
     private ClassTimeAdapter mClassTimeAdapter;
     private int mSmoothOffset;
-    private boolean needRefresh;
+    private boolean needContentRefresh;
+    private boolean needLayoutRefresh;
     private OnContentChangedListener mOnContentChangedListener;
 
     @Override
@@ -181,6 +182,9 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.lv_course_classroom:
+                if (position == mCourseClassroomAdapter.getCount()) {
+                    return false;
+                }
                 showDeleteCourseClassroomDialog(mCourseClassroomAdapter.getItem(position));
                 return true;
         }
@@ -213,7 +217,12 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     private class OnContentChangedListener extends TableData.SimpleTableDataChangedListener {
         @Override
         public void onContentChange() {
-            needRefresh = true;
+            needContentRefresh = true;
+        }
+
+        @Override
+        public void onLayoutChange() {
+            needLayoutRefresh = true;
         }
     }
 
@@ -223,8 +232,8 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
             return;
         }
 
-        if (needRefresh) {
-            needRefresh = false;
+        if (needContentRefresh) {
+            needContentRefresh = false;
             mCourseClassroomList.clear();
             mCourseClassroomList.addAll(CourseClassroomDao.getAll());
             mCourseClassroomAdapter.setClickPosition(-1);
@@ -232,6 +241,12 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
             mLvClassTime.setVisibility(View.INVISIBLE);
             mClassTimeAdapter.setDoubleWeekEnabled(SharedPreUtils.getInt(SharedPreConstants.DOUBLE_WEEK, SharedPreConstants
                     .DEFAULT_DOUBLE_WEEK) == 1);
+            mClassTimeAdapter.setDialogNull();
+        }
+
+        if (needLayoutRefresh) {
+            needLayoutRefresh = false;
+            mClassTimeAdapter.setDialogNull();
         }
     }
 
