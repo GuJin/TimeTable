@@ -270,7 +270,7 @@ public class SemesterFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        if (!hidden && isWeekChanged) {
+        if (!hidden) {
             return;
         }
 
