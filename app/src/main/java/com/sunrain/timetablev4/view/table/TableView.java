@@ -166,7 +166,7 @@ public class TableView extends View {
             if (classBean.section == 1) {
                 y += mMorningHeight;
             } else if (classBean.section == 2) {
-                y += mAfternoonHeight;
+                y += mMorningHeight + mAfternoonHeight;
             }
 
             if (mTextPaint.measureText(classBean.course) > mBoxTextMaxWidth) {
