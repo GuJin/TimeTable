@@ -29,7 +29,7 @@
     <string name="work_day">上课日</string>
     <string name="donation_hint">点击支付宝二维码可跳转至支付宝\n长按二维码可保存至本地</string>
     <string name="msg_camera_framework_bug">未获得相机权限</string>
-    <string name="msg_default_status">请将二维码置于取景框内扫描</string>
+    <string name="msg_default_status">请扫描分享课表生成的二维码</string>
     <string name="msg_pick_from_photo">从相册中选取</string>
 
     <string name="permission_carema_fail">未获得相机权限，无法扫描二维码</string>
