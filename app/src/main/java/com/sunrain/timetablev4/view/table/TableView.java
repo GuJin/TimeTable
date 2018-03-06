@@ -357,7 +357,7 @@ public class TableView extends View {
 
         private void getClickClass(MotionEvent e, int[] index) {
             index[0] = ((int) e.getX() - TIME_BOX_WIDTH) / mClassBoxWidth;
-            int boxIndex = ((int) e.getY() - WEEK_BOX_HEIGHT) / mClassBoxHeight;
+            int boxIndex = ((int) e.getY() + getScrollY() - WEEK_BOX_HEIGHT) / mClassBoxHeight;
 
             if (boxIndex < mMorningClasses) {
                 index[1] = TableConstants.MORNING;
