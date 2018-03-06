@@ -33,14 +33,31 @@ public class DataCheckThread extends Thread {
             if (mainActivity == null) {
                 ToastUtil.postShow("请在更多中查看使用教程", true);
                 return;
-            } else {
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showTutorialDialog(mainActivity);
-                    }
-                });
             }
+
+            mainActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showTutorialDialog(mainActivity);
+                }
+            });
+            return;
+        }
+
+        // 23 开始加入双周，25 更改了双周规则
+        if ((mLastVersionCode == 23 || mLastVersionCode == 24) && SharedPreUtils.getInt(SharedPreConstants.DOUBLE_WEEK,
+                SharedPreConstants.DEFAULT_DOUBLE_WEEK) == 1) {
+            if (mainActivity == null) {
+                ToastUtil.postShow("请检查单周课程配置", true);
+                return;
+            }
+
+            mainActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showDoubleWeekDialog(mainActivity);
+                }
+            });
             return;
         }
 
@@ -68,14 +85,15 @@ public class DataCheckThread extends Thread {
             if (mainActivity == null) {
                 ToastUtil.postShow("存在上课时间超出学期总周数" + week + "周的课程", true);
                 return;
-            } else {
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showOutOfWeekDialog(mainActivity, week);
-                    }
-                });
             }
+
+            mainActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showOutOfWeekDialog(mainActivity, week);
+                }
+            });
+            return;
         }
 
         // 课程检查
@@ -93,7 +111,18 @@ public class DataCheckThread extends Thread {
                 .existsDoubleWeek()) {
             ToastUtil.postShow("存在双周课程，但未启用单双周功能", true);
         }
+    }
 
+    private void showDoubleWeekDialog(final MainActivity mainActivity) {
+        new MessageDialog(mainActivity).setMessage("单双周功能进行了优化，单周的规则发生了变化，请查看并及时调整课表中的单周课程。")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .hideNegativeButton()
+                .show();
     }
 
     private void showTutorialDialog(final MainActivity mainActivity) {
