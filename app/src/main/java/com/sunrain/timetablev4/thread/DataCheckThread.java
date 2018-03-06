@@ -114,7 +114,7 @@ public class DataCheckThread extends Thread {
     }
 
     private void showDoubleWeekDialog(final MainActivity mainActivity) {
-        new MessageDialog(mainActivity).setMessage("单双周功能进行了优化，单周的规则发生了变化，请查看并及时调整课表中的单周课程。")
+        new MessageDialog(mainActivity).setMessage("单双周功能进行了优化，单周的规则发生了变化，请及时调整课表中的单周课程。")
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
