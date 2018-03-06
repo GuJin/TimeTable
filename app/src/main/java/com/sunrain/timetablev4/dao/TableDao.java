@@ -229,11 +229,11 @@ public class TableDao extends BaseDao {
      */
     @NonNull
     public static SparseArray<ClassBean> getClasses(int currentWeek, boolean isDoubleWeek) {
-        int doubleWeek = isDoubleWeek ? 1 : 0;
+        int doubleWeek = isDoubleWeek ? 1 : 2;
 
         SQLiteDatabase db = DBManager.getDb();
-        String selection = "? >= startWeek and ? <= endWeek and doubleWeek = ?";
-        String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(doubleWeek)};
+        String selection = "? >= startWeek and ? <= endWeek and ( doubleWeek = ? or doubleWeek = ?)";
+        String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(doubleWeek), "0"};
 
         Cursor cursor = query(db, TABLE_NAME, selection, selectionArgs);
 

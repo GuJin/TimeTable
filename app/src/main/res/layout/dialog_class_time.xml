@@ -5,7 +5,7 @@
     android:layout_width="340dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:paddingBottom="20dp"
+    android:paddingBottom="10dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="20dp">
@@ -68,13 +68,37 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/sp_start_week"
         app:layout_constraintStart_toEndOf="@+id/sp_end_week"/>
 
-    <CheckBox
-        android:id="@+id/cb_double_week"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/rg_double_week"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:text="双周"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintBaseline_toBaselineOf="@+id/sp_start_week"
-        app:layout_constraintStart_toEndOf="@+id/tv_week"/>
+        app:layout_constraintLeft_toLeftOf="@+id/sp_week"
+        app:layout_constraintRight_toRightOf="@+id/sp_time"
+        app:layout_constraintTop_toBottomOf="@+id/sp_start_week">
+
+        <RadioButton
+            android:id="@+id/rb_double_week_all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="单双周"/>
+
+        <RadioButton
+            android:id="@+id/rb_double_week_odd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="单周"/>
+
+        <RadioButton
+            android:id="@+id/rb_double_week_double"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="双周"/>
+    </RadioGroup>
+
 </android.support.constraint.ConstraintLayout>

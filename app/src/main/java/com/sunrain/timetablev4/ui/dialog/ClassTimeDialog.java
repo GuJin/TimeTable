@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
+import android.widget.RadioGroup;
 
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
@@ -32,7 +32,7 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
     private UserSpinner mSpTime;
     private UserSpinner mSpStartWeek;
     private UserSpinner mSpEndWeek;
-    private CheckBox mCbDoubleWeek;
+    private RadioGroup mRgDoubleWeek;
 
     private ArrayAdapter<String> mMorningClassAdapter;
     private ArrayAdapter<String> mAfternoonClassAdapter;
@@ -46,7 +46,7 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
         this.isDoubleWeekEnabled = isDoubleWeekEnabled;
 
         if (isDoubleWeekEnabled) {
-            mCbDoubleWeek.setVisibility(View.VISIBLE);
+            mRgDoubleWeek.setVisibility(View.VISIBLE);
         }
 
         mSpStartWeek.setOnItemSelectedByUserListener(this);
@@ -73,7 +73,7 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
         mSpTime = view.findViewById(R.id.sp_time);
         mSpStartWeek = view.findViewById(R.id.sp_start_week);
         mSpEndWeek = view.findViewById(R.id.sp_end_week);
-        mCbDoubleWeek = view.findViewById(R.id.cb_double_week);
+        mRgDoubleWeek = view.findViewById(R.id.rg_double_week);
 
         return view;
     }
@@ -87,7 +87,13 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
     }
 
     private void refreshCheckBox() {
-        mCbDoubleWeek.setChecked(mClassBean.doubleWeek == 1);
+        if (mClassBean.doubleWeek == 1) {
+            mRgDoubleWeek.check(R.id.rb_double_week_double);
+        } else if (mClassBean.doubleWeek == 2) {
+            mRgDoubleWeek.check(R.id.rb_double_week_odd);
+        } else {
+            mRgDoubleWeek.check(R.id.rb_double_week_all);
+        }
     }
 
     public ClassBean getClassBean() {
@@ -101,7 +107,14 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
         classBean.startWeek = mSpStartWeek.getSelectedItemPosition();
         classBean.endWeek = mSpEndWeek.getSelectedItemPosition();
         if (isDoubleWeekEnabled) {
-            classBean.doubleWeek = mCbDoubleWeek.isChecked() ? 1 : 0;
+            int id = mRgDoubleWeek.getCheckedRadioButtonId();
+            if (id == R.id.rb_double_week_double) {
+                classBean.doubleWeek = 1;
+            } else if (id == R.id.rb_double_week_odd) {
+                classBean.doubleWeek = 2;
+            } else {
+                classBean.doubleWeek = 0;
+            }
         }
         return classBean;
     }
