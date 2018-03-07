@@ -51,7 +51,7 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
 
         mSpStartWeek.setOnItemSelectedByUserListener(this);
         mSpEndWeek.setOnItemSelectedByUserListener(this);
-
+        mSpSection.setOnItemSelectedByUserListener(this);
         prepareSpinnerData();
 
         setNegativeButton(new OnClickListener() {
@@ -132,6 +132,15 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
                 mClassBean.endWeek = position;
                 if (position < mSpStartWeek.getSelectedItemPosition()) {
                     mSpStartWeek.setSelection(position);
+                }
+                break;
+            case R.id.sp_section:
+                if (position == TableConstants.MORNING) {
+                    mSpTime.setAdapter(mMorningClassAdapter);
+                } else if (position == TableConstants.AFTERNOON) {
+                    mSpTime.setAdapter(mAfternoonClassAdapter);
+                } else {
+                    mSpTime.setAdapter(mEveningClassAdapter);
                 }
                 break;
         }
