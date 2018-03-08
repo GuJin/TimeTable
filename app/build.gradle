@@ -10,8 +10,8 @@ android {
         applicationId "com.sunrain.timetablev4"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 25
-        versionName "2.1.2"
+        versionCode 26
+        versionName "2.1.3"
         resConfigs "zh"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
