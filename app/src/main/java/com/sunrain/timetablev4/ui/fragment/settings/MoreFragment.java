@@ -21,8 +21,8 @@ import com.sunrain.timetablev4.base.BaseFragment;
 import com.sunrain.timetablev4.bean.ClassBean;
 import com.sunrain.timetablev4.dao.CourseClassroomDao;
 import com.sunrain.timetablev4.dao.TableDao;
-import com.sunrain.timetablev4.manager.PermissionManager;
 import com.sunrain.timetablev4.manager.WallpaperManager;
+import com.sunrain.timetablev4.manager.permission.PermissionManager;
 import com.sunrain.timetablev4.thread.input_course.InputCourseAnalysisThread;
 import com.sunrain.timetablev4.thread.input_course.InputCourseSaveThread;
 import com.sunrain.timetablev4.ui.activity.CropActivity;
@@ -41,6 +41,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
 
     private final int REQUEST_BACKGROUND_PICK_IMG = 1;
     private final int REQUEST_INPUT_COURSE = 2;
+    @SuppressWarnings("FieldCanBeLocal")
     private final int REQUEST_BACKGROUND_CROP_IMG = 3;
 
     private final int REQUEST_PERMISSION_BACKGROUND = 1;
@@ -60,7 +61,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void initData() {
-        mPermissionManager = new PermissionManager(this);
+        mPermissionManager = PermissionManager.Factory.get(this, this);
         setListener();
     }
 
@@ -137,13 +138,15 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void checkInputCoursePermission() {
-        mPermissionManager.checkPermission(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                REQUEST_PERMISSION_INPUT_COURSE, R.string.permission_carema_message);
+        mPermissionManager
+                .checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                        REQUEST_PERMISSION_INPUT_COURSE, 0, R.string.permission_carema_message);
     }
 
     private void checkSaveQrCodePermission() {
-        mPermissionManager.checkPermission(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                REQUEST_PERMISSION_SAVE_QR_CODE, R.string.permission_write_message_qr_code);
+        mPermissionManager
+                .checkPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_SAVE_QR_CODE, 0, R.string
+                        .permission_write_message_qr_code);
     }
 
     private void goPraise() {
@@ -161,7 +164,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onGranted(int requestCode) {
+    public void onPermissionGranted(int requestCode) {
         if (requestCode == REQUEST_PERMISSION_BACKGROUND) {
             startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
                     REQUEST_BACKGROUND_PICK_IMG);
@@ -173,7 +176,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onDenied(int requestCode) {
+    public void onPermissionDenied(int requestCode, boolean neverAskAgainChecked) {
         if (requestCode == REQUEST_PERMISSION_BACKGROUND) {
             ToastUtil.show(R.string.permission_read_fail_background);
         } else if (requestCode == REQUEST_PERMISSION_INPUT_COURSE) {
@@ -223,12 +226,13 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void checkBackGroundPermission() {
-        mPermissionManager.checkPermission(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission
-                .WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_BACKGROUND, R.string.permission_read_message);
+        mPermissionManager
+                .checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION_BACKGROUND, 0, R.string.permission_read_message);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mPermissionManager.onRequestPermissionsResult(requestCode, grantResults);
+        mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

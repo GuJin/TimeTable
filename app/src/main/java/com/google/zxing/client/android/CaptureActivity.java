@@ -47,7 +47,7 @@ import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.common.HybridBinarizer;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
-import com.sunrain.timetablev4.manager.PermissionManager;
+import com.sunrain.timetablev4.manager.permission.PermissionManager;
 import com.sunrain.timetablev4.view.CropImageView.util.Utils;
 
 import java.io.IOException;
@@ -301,9 +301,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     private void checkPhotoPermission() {
         if (mPermissionManager == null) {
-            mPermissionManager = new PermissionManager(new PermissionManager.OnRequestPermissionsListener() {
+            mPermissionManager = PermissionManager.Factory.get(this, new PermissionManager.OnRequestPermissionsListener() {
                 @Override
-                public void onGranted(int requestCode) {
+                public void onPermissionGranted(int requestCode) {
                     if (requestCode == PERMISSION_PICK_IMAGE) {
                         startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
                                 REQUEST_PICK_IMAGE);
@@ -311,15 +311,16 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 }
 
                 @Override
-                public void onDenied(int requestCode) {
+                public void onPermissionDenied(int requestCode, boolean neverAskAgainChecked) {
                     if (requestCode == PERMISSION_PICK_IMAGE) {
                         ToastUtil.show(getString(R.string.permission_read_fail_background), true);
                     }
                 }
             });
         }
-        mPermissionManager.checkPermission(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_PICK_IMAGE, R.string
-                .permission_read_message);
+        mPermissionManager
+                .checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_PICK_IMAGE, 0, R.string
+                        .permission_read_message);
     }
 
     @Override
@@ -382,7 +383,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull final int[] grantResults) {
-        mPermissionManager.onRequestPermissionsResult(requestCode, grantResults);
+        mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }
