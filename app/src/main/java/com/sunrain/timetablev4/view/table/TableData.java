@@ -73,29 +73,19 @@ public class TableData {
         refreshData();
     }
 
-    public void registerOnSignStateListener(OnTableDataChangedListener listener) {
+    public void registerOnTableDataChangedListener(OnTableDataChangedListener listener) {
         mOnChangedListeners.add(listener);
     }
 
-    public void unregisterOnSignStateListener(OnTableDataChangedListener listener) {
+    public void unregisterOnTableDataChangedListener(OnTableDataChangedListener listener) {
         mOnChangedListeners.remove(listener);
     }
 
     public interface OnTableDataChangedListener {
+
         void onContentChange();
 
         void onLayoutChange();
-    }
-
-    public static class SimpleTableDataChangedListener implements OnTableDataChangedListener {
-
-        @Override
-        public void onContentChange() {
-        }
-
-        @Override
-        public void onLayoutChange() {
-        }
     }
 
     SparseArray<ClassBean> getClasses() {
@@ -107,6 +97,10 @@ public class TableData {
             return;
         }
         mCurrentWeek = currentWeek;
+    }
+
+    public int getCurrentWeek() {
+        return mCurrentWeek;
     }
 
     public void refreshData() {
@@ -132,6 +126,7 @@ public class TableData {
     }
 
     private static final class TableDataHolder {
+
         private static final TableData sInstance = new TableData();
     }
 

@@ -65,7 +65,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (lastVersionCode != BuildConfig.VERSION_CODE) {
                     SharedPreUtils.putInt(SharedPreConstants.VERSION_CODE, BuildConfig.VERSION_CODE);
                 }
-
             }
         });
     }
@@ -132,6 +131,4 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mArrow.startHamburgerAnim();
         }
     }
-
-
 }

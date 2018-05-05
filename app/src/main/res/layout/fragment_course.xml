@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/imgBtn_switch_week"
+    <TextView
+        android:id="@+id/tv_week"
         android:layout_width="@dimen/leftBar_width"
         android:layout_height="@dimen/leftBar_width"
         android:layout_marginTop="80dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_today"/>
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
     <ImageButton
         android:id="@+id/imgBtn_restore"

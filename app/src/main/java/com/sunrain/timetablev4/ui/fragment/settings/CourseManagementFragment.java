@@ -66,7 +66,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         setListener();
         mSmoothOffset = DensityUtil.dip2Px(60);
         mOnContentChangedListener = new OnContentChangedListener();
-        TableData.getInstance().registerOnSignStateListener(mOnContentChangedListener);
+        TableData.getInstance().registerOnTableDataChangedListener(mOnContentChangedListener);
     }
 
     private void initCourseClassroomListView() {
@@ -214,7 +214,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
                 .show();
     }
 
-    private class OnContentChangedListener extends TableData.SimpleTableDataChangedListener {
+    private class OnContentChangedListener implements TableData.OnTableDataChangedListener {
         @Override
         public void onContentChange() {
             needContentRefresh = true;
@@ -252,7 +252,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
 
     @Override
     public void onDestroyView() {
-        TableData.getInstance().unregisterOnSignStateListener(mOnContentChangedListener);
+        TableData.getInstance().unregisterOnTableDataChangedListener(mOnContentChangedListener);
         super.onDestroyView();
     }
 }

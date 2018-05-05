@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.base.BaseFragment;
@@ -28,11 +29,12 @@ import java.util.List;
 import tech.gujin.toast.ToastUtil;
 
 
-public class CourseFragment extends BaseFragment implements View.OnClickListener, TableView.OnBoxClickListener {
+public class CourseFragment extends BaseFragment implements View.OnClickListener, TableView.OnBoxClickListener, TableData
+        .OnTableDataChangedListener {
 
     private MessageDialog mClassDialog;
     private ImageButton mImgBtnRestore;
-    private ImageButton mImgBtnSwitchWeek;
+    private TextView mTvWeek;
     private long mJumpDate;
     private TableData mTableData;
     private OnJumpDateDialogPositiveClickListener mJumpDateDialogPositiveClickListener;
@@ -44,7 +46,7 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        mImgBtnSwitchWeek = view.findViewById(R.id.imgBtn_switch_week);
+        mTvWeek = view.findViewById(R.id.tv_week);
         mImgBtnRestore = view.findViewById(R.id.imgBtn_restore);
     }
 
@@ -52,7 +54,12 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
     public void initData() {
         initTableView();
         mTableData = TableData.getInstance();
+        setShowingWeek();
         setListener();
+    }
+
+    private void setShowingWeek() {
+        mTvWeek.setText(String.valueOf(mTableData.getCurrentWeek()));
     }
 
     private void initTableView() {
@@ -67,13 +74,14 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
 
     private void setListener() {
         mImgBtnRestore.setOnClickListener(this);
-        mImgBtnSwitchWeek.setOnClickListener(this);
+        mTvWeek.setOnClickListener(this);
+        mTableData.registerOnTableDataChangedListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.imgBtn_switch_week:
+            case R.id.tv_week:
                 showJumpDateDialog();
                 break;
             case R.id.imgBtn_restore:
@@ -88,12 +96,19 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
         }
 
         CalendarDialog calendarDialog = new CalendarDialog(mActivity).setPositiveButton(mJumpDateDialogPositiveClickListener)
-                .setDateRange(SharedPreUtils.getLong(SharedPreConstants.SEMESTER_START_DATE, 0), SharedPreUtils.getLong
-                        (SharedPreConstants.SEMESTER_END_DATE, 0))
-                .setDate(mJumpDate);
+                .setDateRange(SharedPreUtils.getLong(SharedPreConstants.SEMESTER_START_DATE, 0), SharedPreUtils
+                        .getLong(SharedPreConstants.SEMESTER_END_DATE, 0)).setDate(mJumpDate);
         mJumpDateDialogPositiveClickListener.setDialog(calendarDialog);
         calendarDialog.show();
     }
+
+    @Override
+    public void onContentChange() {
+        setShowingWeek();
+    }
+
+    @Override
+    public void onLayoutChange() {}
 
     private class OnJumpDateDialogPositiveClickListener implements DialogInterface.OnClickListener {
 
@@ -116,6 +131,7 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
             mTableData.setCurrentWeek(CalendarUtil.getCurrentWeek(mJumpDate));
             mTableData.refreshData();
             mImgBtnRestore.setVisibility(DateUtils.isToday(jumpDate) ? View.INVISIBLE : View.VISIBLE);
+            setShowingWeek();
         }
     }
 
@@ -124,6 +140,7 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
         mTableData.setCurrentWeek(CalendarUtil.getCurrentWeek());
         mTableData.refreshData();
         mJumpDate = 0;
+        setShowingWeek();
     }
 
     @Override
