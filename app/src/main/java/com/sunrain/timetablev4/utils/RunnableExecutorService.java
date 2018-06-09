@@ -30,7 +30,6 @@ public class RunnableExecutorService {
 
     public static <V> DaoFutureTask<V> when(Callable<V> callable) {
         DaoFutureTask<V> futureTask = new DaoFutureTask<>(callable);
-        sExecutorService.submit(callable);
         return futureTask;
     }
 
