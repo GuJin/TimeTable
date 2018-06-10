@@ -28,17 +28,16 @@ public class RunnableExecutorService {
         sExecutorService.execute(runnable);
     }
 
-    public static <V> DaoFutureTask<V> when(Callable<V> callable) {
-        DaoFutureTask<V> futureTask = new DaoFutureTask<>(callable);
-        return futureTask;
+    public static <V> RunnableFutureTask<V> when(Callable<V> callable) {
+        return new RunnableFutureTask<>(callable);
     }
 
-    public static class DaoFutureTask<V> extends FutureTask<V> {
+    public static class RunnableFutureTask<V> extends FutureTask<V> {
 
         private DoneCallback<V> mDoneCallback;
         private FailCallback mFailCallback;
 
-        DaoFutureTask(@NonNull Callable<V> callable) {
+        RunnableFutureTask(@NonNull Callable<V> callable) {
             super(callable);
         }
 
@@ -72,12 +71,12 @@ public class RunnableExecutorService {
             sExecutorService.submit(this);
         }
 
-        public DaoFutureTask done(DoneCallback<V> doneCallback) {
+        public RunnableFutureTask done(DoneCallback<V> doneCallback) {
             mDoneCallback = doneCallback;
             return this;
         }
 
-        public DaoFutureTask fail(FailCallback failCallback) {
+        public RunnableFutureTask fail(FailCallback failCallback) {
             mFailCallback = failCallback;
             return this;
         }
