@@ -11,7 +11,7 @@ import com.sunrain.timetablev4.application.MyApplication;
 
 public class MaxHeightFrameLayout extends FrameLayout {
 
-    protected static final int MAX_HEIGHT;
+    private static final int MAX_HEIGHT;
 
     static {
         DisplayMetrics displayMetrics = MyApplication.sContext.getResources().getDisplayMetrics();
