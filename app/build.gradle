@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply from: '../properties-util.gradle'
-//apply plugin: 'walle'
+apply plugin: 'walle'
 
 android {
     compileSdkVersion 27
@@ -68,6 +68,7 @@ dependencies {
     })
     implementation 'tech.gujin:toast-util:1.1.1'
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+    implementation 'com.meituan.android.walle:library:1.1.6'
     implementation 'com.android.support:exifinterface:' + versions.support
     implementation 'com.android.support:support-compat:' + versions.support
     implementation 'com.android.support:support-v13:' + versions.support
