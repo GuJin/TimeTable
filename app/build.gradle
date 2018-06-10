@@ -71,7 +71,7 @@ dependencies {
     implementation 'com.android.support:exifinterface:' + versions.support
     implementation 'com.android.support:support-compat:' + versions.support
     implementation 'com.android.support:support-v13:' + versions.support
-    implementation 'com.android.support:support-annotations:'+ versions.support
+    implementation 'com.android.support:support-annotations:' + versions.support
     implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
