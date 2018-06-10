@@ -59,7 +59,7 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void setShowingWeek() {
-        mTvWeek.setText(String.valueOf(mTableData.getCurrentWeek()));
+        mTvWeek.setText(String.valueOf(mTableData.getCurrentWeek() + 1));
     }
 
     private void initTableView() {
@@ -96,8 +96,9 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
         }
 
         CalendarDialog calendarDialog = new CalendarDialog(mActivity).setPositiveButton(mJumpDateDialogPositiveClickListener)
-                .setDateRange(SharedPreUtils.getLong(SharedPreConstants.SEMESTER_START_DATE, 0), SharedPreUtils
-                        .getLong(SharedPreConstants.SEMESTER_END_DATE, 0)).setDate(mJumpDate);
+                .setDateRange(SharedPreUtils.getLong(SharedPreConstants.SEMESTER_START_DATE, 0), SharedPreUtils.getLong
+                        (SharedPreConstants.SEMESTER_END_DATE, 0))
+                .setDate(mJumpDate);
         mJumpDateDialogPositiveClickListener.setDialog(calendarDialog);
         calendarDialog.show();
     }
@@ -108,7 +109,8 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
-    public void onLayoutChange() {}
+    public void onLayoutChange() {
+    }
 
     private class OnJumpDateDialogPositiveClickListener implements DialogInterface.OnClickListener {
 
