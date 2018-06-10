@@ -54,7 +54,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
 
     @Override
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
-        mRootView = view.findViewById(R.id.cl_root);
+        mRootView = view.findViewById(R.id.ll_root);
         mLvCourseClassroom = view.findViewById(R.id.lv_course_classroom);
         mLvClassTime = view.findViewById(R.id.lv_class_time);
     }
