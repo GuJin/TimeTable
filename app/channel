@@ -10,3 +10,5 @@ samsung
 tencent
 vivo
 xiaomi
+
+#gradlew clean assembleReleaseChannels
