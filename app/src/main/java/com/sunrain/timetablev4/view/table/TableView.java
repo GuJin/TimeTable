@@ -24,7 +24,7 @@ import com.sunrain.timetablev4.utils.SharedPreUtils;
 
 public class TableView extends View {
 
-    private static final int COLOR_WHITE = 0XFFFFFFFF;
+    private static final int COLOR_WHITE = 0xFFFFFFFF;
     private static final int LINE_WIDTH = 1;
 
     private final OverScroller mScroller;
