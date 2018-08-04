@@ -42,7 +42,7 @@ public class DaoExecutorService {
 
         @Override
         protected void done() {
-            V result = null;
+            V result;
             try {
                 result = get();
             } catch (InterruptedException | ExecutionException e) {
@@ -55,15 +55,18 @@ public class DaoExecutorService {
                         }
                     });
                 }
+                return;
             }
 
-            final V finalResult = result;
-            postOnMainThread(new Runnable() {
-                @Override
-                public void run() {
-                    mDoneCallback.done(finalResult);
-                }
-            });
+            if (mDoneCallback != null) {
+                final V finalResult = result;
+                postOnMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDoneCallback.done(finalResult);
+                    }
+                });
+            }
         }
 
         public void execute() {
