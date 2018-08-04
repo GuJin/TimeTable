@@ -48,6 +48,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.manager.permission.PermissionManager;
+import com.sunrain.timetablev4.utils.RunnableExecutorService;
 import com.sunrain.timetablev4.view.CropImageView.util.Utils;
 
 import java.io.IOException;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import tech.gujin.toast.ToastUtil;
 
@@ -318,9 +320,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 }
             });
         }
-        mPermissionManager
-                .checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_PICK_IMAGE, 0, R.string
-                        .permission_read_message);
+        mPermissionManager.checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_PICK_IMAGE, 0, R.string
+                .permission_read_message);
     }
 
     @Override
@@ -342,21 +343,19 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             return;
         }
         //解析图片
-        new Thread(new Runnable() {
+        RunnableExecutorService.when(new Callable<Result>() {
             @Override
-            public void run() {
-                final Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(MyApplication.sContext, uri, 600);
-                final Result result = syncDecodeQRCode(sampledBitmap);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleDecode(result);
-                    }
-                });
+            public Result call() {
+                Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(MyApplication.sContext, uri, 600);
+                return syncDecodeQRCode(sampledBitmap);
             }
-        }).start();
+        }).done(new RunnableExecutorService.DoneCallback<Result>() {
+            @Override
+            public void done(Result result) {
+                handleDecode(result);
+            }
+        }).execute();
     }
-
 
     public Result syncDecodeQRCode(Bitmap bitmap) {
         HashMap<DecodeHintType, Object> hintTypeObjectHashMap = new HashMap<>();
