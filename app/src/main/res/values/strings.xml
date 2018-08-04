@@ -11,8 +11,8 @@
     <string name="more">更 多</string>
     <string name="donation">捐赠作者</string>
 
-    <string name="confrim">确 认</string>
-    <string name="cancle">取 消</string>
+    <string name="confirm">确 认</string>
+    <string name="cancel">取 消</string>
 
     <string name="course">课程名称</string>
     <string name="classroom">上课地点</string>
@@ -23,7 +23,7 @@
     <string name="end_date">结束日期</string>
     <string name="semester_week">周数</string>
     <string name="click_edit">点击更改</string>
-    <string name="course_morining">上午课程</string>
+    <string name="course_morning">上午课程</string>
     <string name="afternoon_course">下午课程</string>
     <string name="course_evening">晚上课程</string>
     <string name="work_day">上课日</string>
@@ -32,8 +32,8 @@
     <string name="msg_default_status">请扫描分享课表生成的二维码</string>
     <string name="msg_pick_from_photo">从相册中选取</string>
 
-    <string name="permission_carema_fail">未获得相机权限，无法扫描二维码</string>
-    <string name="permission_carema_message">扫描二维码需要使用相机，因此要获得相机权限</string>
+    <string name="permission_camera_fail">未获得相机权限，无法扫描二维码</string>
+    <string name="permission_camera_message">扫描二维码需要使用相机，因此要获得相机权限</string>
     <string name="permission_write_fail_qr_code">未获得写入权限，无法存储二维码</string>
     <string name="permission_write_message_qr_code">将二维码保存到手机中需要获得写入权限</string>
     <string name="permission_read_fail_background">未获得读取权限，无法加载图片</string>
