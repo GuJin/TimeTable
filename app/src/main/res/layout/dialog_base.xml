@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:background="@drawable/dialog_btn_negative"
             android:minHeight="35dp"
-            android:text="@string/cancle"
+            android:text="@string/cancel"
             android:textColor="@android:color/white"/>
 
         <View
@@ -45,7 +45,7 @@
             android:layout_weight="1"
             android:background="@drawable/dialog_btn_positive"
             android:minHeight="35dp"
-            android:text="@string/confrim"
+            android:text="@string/confirm"
             android:textColor="@android:color/white"/>
     </LinearLayout>
 </LinearLayout>

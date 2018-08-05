@@ -140,7 +140,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     private void checkInputCoursePermission() {
         mPermissionManager
                 .checkPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                        REQUEST_PERMISSION_INPUT_COURSE, 0, R.string.permission_carema_message);
+                        REQUEST_PERMISSION_INPUT_COURSE, 0, R.string.permission_camera_message);
     }
 
     private void checkSaveQrCodePermission() {
@@ -180,7 +180,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
         if (requestCode == REQUEST_PERMISSION_BACKGROUND) {
             ToastUtil.show(R.string.permission_read_fail_background);
         } else if (requestCode == REQUEST_PERMISSION_INPUT_COURSE) {
-            ToastUtil.show(R.string.permission_carema_fail);
+            ToastUtil.show(R.string.permission_camera_fail);
         } else if (requestCode == REQUEST_PERMISSION_SAVE_QR_CODE) {
             ToastUtil.show(R.string.permission_write_fail_qr_code);
         }

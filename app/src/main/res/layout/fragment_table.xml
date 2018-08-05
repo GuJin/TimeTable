@@ -8,7 +8,7 @@
         android:id="@+id/tv_morning"
         style="@style/SettingsItem.LargeText"
         android:layout_marginTop="0dp"
-        android:text="@string/course_morining"
+        android:text="@string/course_morning"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
