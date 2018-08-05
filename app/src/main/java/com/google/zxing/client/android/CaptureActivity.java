@@ -284,7 +284,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private void displayFrameworkBugMessageAndExit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.msg_camera_framework_bug));
-        builder.setPositiveButton(R.string.confrim, new FinishListener(this));
+        builder.setPositiveButton(R.string.confirm, new FinishListener(this));
         builder.show();
     }
 
