@@ -44,6 +44,26 @@
             android:name=".ui.activity.CropActivity"
             android:screenOrientation="landscape"/>
 
+        <activity
+            android:name=".appwidget.AppWidgetConfigureActivity"
+            android:label="配置桌面控件"
+            android:theme="@android:style/Theme.Material.Light">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".appwidget.DayAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/day_appwidget_info"/>
+        </receiver>
+        <service
+            android:name=".appwidget.DayAppWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>

@@ -109,6 +109,13 @@ public class ClassBean {
             return sSb.toString();
         }
 
+        /**
+         * 小控件用
+         */
+        public static String getFormatTimeInDay(int time) {
+            return sTimeArray[time];
+        }
+
         public static String getFormatCourseClassroom(@NonNull ClassBean classBean) {
             sSb.setLength(0);
             sSb.append(classBean.course).append("\n");
@@ -119,6 +126,16 @@ public class ClassBean {
             } else if (classBean.doubleWeek == 2) {
                 sSb.append(" ").append("单周");
             }
+            return sSb.toString();
+        }
+
+        /**
+         * 小控件用
+         */
+        public static String getFormatCourseClassroomInDay(@NonNull ClassBean classBean) {
+            sSb.setLength(0);
+            sSb.append(classBean.course).append(" ");
+            sSb.append(classBean.classroom).append("\n");
             return sSb.toString();
         }
     }

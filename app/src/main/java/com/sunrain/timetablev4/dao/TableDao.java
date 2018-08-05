@@ -179,49 +179,9 @@ public class TableDao extends BaseDao {
 
     @NonNull
     public static SparseArray<ClassBean> getClasses(int currentWeek) {
-        SQLiteDatabase db = DBManager.getDb();
         String selection = "? >= startWeek and ? <= endWeek";
         String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek)};
-
-        Cursor cursor = query(db, TABLE_NAME, selection, selectionArgs);
-
-        int count = cursor.getCount();
-
-        if (count == 0) {
-            cursor.close();
-            return new SparseArray<>(0);
-        }
-
-        int idIndex = cursor.getColumnIndex("_id");
-        int weekIndex = cursor.getColumnIndex("week");
-        int sectionIndex = cursor.getColumnIndex("section");
-        int timeIndex = cursor.getColumnIndex("time");
-        int startWeekIndex = cursor.getColumnIndex("startWeek");
-        int endWeekIndex = cursor.getColumnIndex("endWeek");
-        int doubleWeekIndex = cursor.getColumnIndex("doubleWeek");
-        int courseIndex = cursor.getColumnIndex("course");
-        int classroomIndex = cursor.getColumnIndex("classroom");
-
-        SparseArray<ClassBean> sparseArray = new SparseArray<>(count);
-
-        while (cursor.moveToNext()) {
-            ClassBean bean = new ClassBean();
-            bean._id = cursor.getLong(idIndex);
-            bean.week = cursor.getInt(weekIndex);
-            bean.section = cursor.getInt(sectionIndex);
-            bean.time = cursor.getInt(timeIndex);
-            bean.startWeek = cursor.getInt(startWeekIndex);
-            bean.endWeek = cursor.getInt(endWeekIndex);
-            bean.doubleWeek = cursor.getInt(doubleWeekIndex);
-            bean.course = cursor.getString(courseIndex);
-            bean.classroom = cursor.getString(classroomIndex);
-
-            sparseArray.put(bean.week * 100 + bean.section * 10 + bean.time, bean);
-        }
-
-        cursor.close();
-        DBManager.close(db);
-        return sparseArray;
+        return getClasses(selection, selectionArgs);
     }
 
     /**
@@ -231,12 +191,36 @@ public class TableDao extends BaseDao {
     public static SparseArray<ClassBean> getClasses(int currentWeek, boolean isDoubleWeek) {
         int doubleWeek = isDoubleWeek ? 1 : 2;
 
-        SQLiteDatabase db = DBManager.getDb();
         String selection = "? >= startWeek and ? <= endWeek and ( doubleWeek = ? or doubleWeek = ?)";
         String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(doubleWeek), "0"};
 
-        Cursor cursor = query(db, TABLE_NAME, selection, selectionArgs);
+        return getClasses(selection, selectionArgs);
+    }
 
+    @NonNull
+    public static SparseArray<ClassBean> getClassesInDay(int currentWeek, int dayOfWeek) {
+        String selection = "? >= startWeek and ? <= endWeek and week = ?";
+        String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(dayOfWeek)};
+        return getClasses(selection, selectionArgs);
+    }
+
+    /**
+     * 在启用单双周的情况下使用
+     */
+    @NonNull
+    public static SparseArray<ClassBean> getClassesInDay(int currentWeek, boolean isDoubleWeek) {
+        int doubleWeek = isDoubleWeek ? 1 : 2;
+
+        String selection = "? >= startWeek and ? <= endWeek and ( doubleWeek = ? or doubleWeek = ?)";
+        String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(doubleWeek), "0"};
+
+        return getClasses(selection, selectionArgs);
+    }
+
+    @NonNull
+    public static SparseArray<ClassBean> getClasses(String selection, String[] selectionArgs) {
+        SQLiteDatabase db = DBManager.getDb();
+        Cursor cursor = query(db, TABLE_NAME, selection, selectionArgs);
         int count = cursor.getCount();
 
         if (count == 0) {
@@ -244,6 +228,15 @@ public class TableDao extends BaseDao {
             return new SparseArray<>(0);
         }
 
+        SparseArray<ClassBean> sparseArray = getClassBeanSparseArray(cursor, count);
+
+        cursor.close();
+        DBManager.close(db);
+        return sparseArray;
+    }
+
+    @NonNull
+    private static SparseArray<ClassBean> getClassBeanSparseArray(Cursor cursor, int count) {
         int idIndex = cursor.getColumnIndex("_id");
         int weekIndex = cursor.getColumnIndex("week");
         int sectionIndex = cursor.getColumnIndex("section");
@@ -270,11 +263,9 @@ public class TableDao extends BaseDao {
 
             sparseArray.put(bean.week * 100 + bean.section * 10 + bean.time, bean);
         }
-
-        cursor.close();
-        DBManager.close(db);
         return sparseArray;
     }
+
 
     public static void delete(ClassBean classBean) {
         SQLiteDatabase db = DBManager.getDb();

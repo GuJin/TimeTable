@@ -5,9 +5,18 @@ import com.sunrain.timetablev4.constants.SharedPreConstants;
 import java.util.Calendar;
 
 public class CalendarUtil {
+    /**
+     * @return 0：星期一
+     */
+    public static int getDayOfWeek(long time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.setTimeInMillis(time);
+        return cal.get(Calendar.DAY_OF_WEEK) - 1;
+    }
 
     public static int getCurrentWeek() {
-        return getCurrentWeek(0);
+        return getCurrentWeek(System.currentTimeMillis());
     }
 
     public static int getCurrentWeek(long currentDateTime) {
@@ -54,6 +63,9 @@ public class CalendarUtil {
     public static boolean isDoubleWeek(int currentWeek) {
         // 周数从0开始
         return (currentWeek + 1) % 2 == 0;
+    }
+
+    private CalendarUtil() {
     }
 
 }

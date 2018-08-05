@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/imgBtn_yesterday"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:rotation="180"
+            android:src="@drawable/ic_go"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"/>
+
+        <ImageButton
+            android:id="@+id/imgBtn_tomorrow"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_go"/>
+
+        <ImageButton
+            android:id="@+id/imgBtn_restore"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_restore"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_day_appwidget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:divider="@null"/>
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="无课程"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+</FrameLayout>
