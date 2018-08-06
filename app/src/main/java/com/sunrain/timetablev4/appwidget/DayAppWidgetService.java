@@ -52,10 +52,12 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         mEveningClasses = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants.DEFAULT_EVENING_CLASS_NUMBER);
         mClassCount = mMorningClasses + mAfternoonClasses + mEveningClasses;
 
-        int currentWeek = CalendarUtil.getCurrentWeek();
-        mDayOfWeek = CalendarUtil.getDayOfWeek(System.currentTimeMillis());
+        long currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
+        mDayOfWeek = CalendarUtil.getDayOfWeek(currentTime);
+
         mSparseArray.clear();
-        SparseArray<ClassBean> classesInDay = TableDao.getClassesInDay(currentWeek, mDayOfWeek);
+        SparseArray<ClassBean> classesInDay = TableDao.getClassesInDay(CalendarUtil.getCurrentWeek(currentTime), mDayOfWeek);
+
         for (int i = 0; i < classesInDay.size(); i++) {
             int key = classesInDay.keyAt(i);
             mSparseArray.put(key, classesInDay.get(key));
@@ -83,23 +85,23 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         String sectionTime;
         if (position < mMorningClasses) {
             // 上午
-            sectionTime = "上午 " + ClassBean.Format.getFormatTimeInDay(position);
+            sectionTime = ClassBean.Format.getFormatTimeInDay(0, position);
             key += position;
         } else if (position < mMorningClasses + mAfternoonClasses) {
             // 下午
             time = position - mMorningClasses;
-            sectionTime = "下午 " + ClassBean.Format.getFormatTimeInDay(time);
+            sectionTime = ClassBean.Format.getFormatTimeInDay(1, time);
             key += (10 + time);
         } else {
             // 晚上
             time = position - mMorningClasses - mAfternoonClasses;
-            sectionTime = "晚上 " + ClassBean.Format.getFormatTimeInDay(time);
+            sectionTime = ClassBean.Format.getFormatTimeInDay(2, time);
             key += (20 + time);
         }
 
+        ClassBean classBean = mSparseArray.get(key);
         rv.setTextViewText(R.id.tv_time, sectionTime);
 
-        ClassBean classBean = mSparseArray.get(key);
         if (classBean != null) {
             rv.setTextViewText(R.id.tv_course, classBean.course);
             rv.setTextViewText(R.id.tv_classroom, classBean.classroom);

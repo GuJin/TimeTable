@@ -6,16 +6,22 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
+import com.sunrain.timetablev4.constants.SharedPreConstants;
+import com.sunrain.timetablev4.utils.SharedPreUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class DayAppWidgetProvider extends AppWidgetProvider {
+
     private static final String ACTION_RESTORE = "ACTION_RESTORE";
+    private static final String ACTION_YESTERDAY = "ACTION_YESTERDAY";
+    private static final String ACTION_TOMORROW = "ACTION_TOMORROW";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -26,30 +32,64 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             Intent intent = new Intent(context, DayAppWidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.day_appwidget);
             rv.setRemoteAdapter(R.id.lv_day_appwidget, intent);
             rv.setEmptyView(R.id.lv_day_appwidget, R.id.empty_view);
             rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(System.currentTimeMillis()));
 
-            Intent restoreIntent = new Intent(context, DayAppWidgetProvider.class);
-            restoreIntent.setAction(ACTION_RESTORE);
-            restoreIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            PendingIntent restorePendingIntent = PendingIntent.getBroadcast(context, 0, restoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setOnClickPendingIntent(R.id.imgBtn_restore, restorePendingIntent);
+            rv.setOnClickPendingIntent(R.id.imgBtn_restore, makePendingIntent(context, appWidgetId, ACTION_RESTORE));
+            rv.setOnClickPendingIntent(R.id.imgBtn_yesterday, makePendingIntent(context, appWidgetId, ACTION_YESTERDAY));
+            rv.setOnClickPendingIntent(R.id.imgBtn_tomorrow, makePendingIntent(context, appWidgetId, ACTION_TOMORROW));
+
             appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
         }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+        // 除了自己的action 还有系统的
         String action = intent.getAction();
-        if (ACTION_RESTORE.equals(action)) {
+
+        if (ACTION_RESTORE.equals(action) || ACTION_YESTERDAY.equals(action) || ACTION_TOMORROW.equals(action)) {
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M月d日 E", Locale.getDefault());
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.day_appwidget);
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-            mgr.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_day_appwidget);
+
+            long currentTime;
+            long newTime;
+
+            if (ACTION_RESTORE.equals(action)) {
+                rv.setViewVisibility(R.id.imgBtn_restore, View.INVISIBLE);
+                newTime = System.currentTimeMillis();
+            } else if (ACTION_YESTERDAY.equals(action)) {
+                rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
+                currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
+                newTime = currentTime - 86400000;
+            } else { //ACTION_TOMORROW
+                rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
+                currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
+                newTime = currentTime + 86400000;
+            }
+
+            SharedPreUtils.putLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, newTime);
+            rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(newTime));
+
+            appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_day_appwidget);
         }
+
         super.onReceive(context, intent);
+    }
+
+    private PendingIntent makePendingIntent(Context context, int appWidgetId, String action) {
+        Intent intent = new Intent(context, DayAppWidgetProvider.class);
+        intent.setAction(action);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     static void updateAppWidget(AppWidgetManager appWidgetManager, int appWidgetId, int color) {

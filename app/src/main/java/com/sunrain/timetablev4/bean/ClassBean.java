@@ -112,8 +112,11 @@ public class ClassBean {
         /**
          * 小控件用
          */
-        public static String getFormatTimeInDay(int time) {
-            return sTimeArray[time];
+        public static String getFormatTimeInDay(int section, int time) {
+            sSb.setLength(0);
+            sSb.append(sSectionArray[section]).append(" ");
+            sSb.append(sTimeArray[time]);
+            return sSb.toString();
         }
 
         public static String getFormatCourseClassroom(@NonNull ClassBean classBean) {

@@ -8,12 +8,14 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="24.5dp"
         android:gravity="center_vertical">
 
         <ImageButton
             android:id="@+id/imgBtn_yesterday"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:background="?android:selectableItemBackgroundBorderless"
             android:rotation="180"
             android:src="@drawable/ic_go"/>
@@ -26,23 +28,24 @@
 
         <ImageButton
             android:id="@+id/imgBtn_tomorrow"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:background="?android:selectableItemBackgroundBorderless"
             android:src="@drawable/ic_go"/>
 
         <ImageButton
             android:id="@+id/imgBtn_restore"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="4dp"
             android:background="?android:selectableItemBackgroundBorderless"
             android:src="@drawable/ic_restore"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
     </LinearLayout>
 
     <ListView
         android:id="@+id/lv_day_appwidget"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="42dp"
         android:divider="@null"/>
