@@ -7,19 +7,21 @@
 
     <TextView
         android:id="@+id/tv_week"
-        android:layout_width="@dimen/leftBar_width"
-        android:layout_height="@dimen/leftBar_width"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="80dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/bg_week"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:textStyle="bold"/>
 
     <ImageButton
         android:id="@+id/imgBtn_restore"
-        android:layout_width="@dimen/leftBar_width"
-        android:layout_height="@dimen/leftBar_width"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="130dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_restore"
