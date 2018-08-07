@@ -12,7 +12,7 @@ public class CalendarUtil {
         Calendar cal = Calendar.getInstance();
         cal.setFirstDayOfWeek(Calendar.MONDAY);
         cal.setTimeInMillis(time);
-        return cal.get(Calendar.DAY_OF_WEEK) - 1;
+        return androidWeekToCustomWeek(cal.get(Calendar.DAY_OF_WEEK));
     }
 
     public static int getCurrentWeek() {
@@ -63,6 +63,27 @@ public class CalendarUtil {
     public static boolean isDoubleWeek(int currentWeek) {
         // 周数从0开始
         return (currentWeek + 1) % 2 == 0;
+    }
+
+    private static int androidWeekToCustomWeek(int week) {
+        switch (week) {
+            case Calendar.MONDAY:
+                return 0;
+            case Calendar.TUESDAY:
+                return 1;
+            case Calendar.WEDNESDAY:
+                return 2;
+            case Calendar.THURSDAY:
+                return 3;
+            case Calendar.FRIDAY:
+                return 4;
+            case Calendar.SATURDAY:
+                return 5;
+            case Calendar.SUNDAY:
+                return 6;
+            default:
+                throw new IllegalArgumentException("can not find week : " + week);
+        }
     }
 
     private CalendarUtil() {
