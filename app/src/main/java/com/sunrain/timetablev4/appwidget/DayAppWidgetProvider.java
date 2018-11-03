@@ -23,6 +23,8 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     private static final String ACTION_YESTERDAY = "ACTION_YESTERDAY";
     private static final String ACTION_TOMORROW = "ACTION_TOMORROW";
 
+    private static final int ONE_DAY_MILLIS = 86400000;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
@@ -67,11 +69,11 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             } else if (ACTION_YESTERDAY.equals(action)) {
                 rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
                 currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
-                newTime = currentTime - 86400000;
+                newTime = currentTime - ONE_DAY_MILLIS;
             } else { //ACTION_TOMORROW
                 rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
                 currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
-                newTime = currentTime + 86400000;
+                newTime = currentTime + ONE_DAY_MILLIS;
             }
 
             SharedPreUtils.putLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, newTime);
@@ -82,6 +84,12 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         }
 
         super.onReceive(context, intent);
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        for (int appWidgetId : appWidgetIds) {
+        }
     }
 
     private PendingIntent makePendingIntent(Context context, int appWidgetId, String action) {
