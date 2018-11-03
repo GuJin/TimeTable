@@ -3,9 +3,9 @@ package com.sunrain.timetablev4.appwidget;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
@@ -16,8 +16,6 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
     private int mAppWidgetId;
     private RadioGroup mRgBgColor;
     private SeekBar mSbTransparent;
-    private Button mBtnConfirm;
-    private Button mBtnCancel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,12 +40,9 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
         setListener();
     }
 
-
     private void initView() {
         mRgBgColor = findViewById(R.id.rg_bg_color);
         mSbTransparent = findViewById(R.id.sb_transparent);
-        mBtnConfirm = findViewById(R.id.btn_confirm);
-        mBtnCancel = findViewById(R.id.btn_cancel);
     }
 
     private void setListener() {
@@ -62,8 +57,10 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
                 finish();
                 break;
             case R.id.btn_confirm:
+                int color = getSettingColor();
+
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-                DayAppWidgetProvider.updateAppWidget(appWidgetManager, mAppWidgetId, 0x33000000);
+                DayAppWidgetProvider.updateAppWidget(appWidgetManager, mAppWidgetId, color);
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
                 setResult(RESULT_OK, resultValue);
@@ -75,5 +72,16 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    public int getSettingColor() {
+        int progress = mSbTransparent.getProgress();
+        int alpha = progress * 255 / 100;
+
+        if (mRgBgColor.getCheckedRadioButtonId() == R.id.rb_black) {
+            return Color.argb(alpha, 0, 0, 0);
+        } else {
+            return Color.argb(alpha, 255, 255, 255);
+        }
     }
 }
