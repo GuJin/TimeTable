@@ -8,7 +8,7 @@ import com.sunrain.timetablev4.application.MyApplication;
 class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "class_table.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     private DataBaseHelper() {
         super(MyApplication.sContext, DB_NAME, null, DB_VERSION);
@@ -43,9 +43,16 @@ class DataBaseHelper extends SQLiteOpenHelper {
             case 2:
                 upgradeFrom1To2(db);
                 break;
+            case 3:
+                upgradeFrom2To3(db);
+                break;
             default:
                 throw new IllegalStateException("Don't know how to upgrade to " + version);
         }
+    }
+
+    private void upgradeFrom2To3(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE app_widget(_id INTEGER PRIMARY KEY AUTOINCREMENT , appWidgetId INTEGER , currentTime INTEGER , backgroundColor INTEGER , UNIQUE(appWidgetId))");
     }
 
     private void upgradeFrom1To2(SQLiteDatabase db) {
@@ -58,7 +65,7 @@ class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE table_1_backup");
 
         // 创建 course_classroom 表
-        db.execSQL("CREATE TABLE course_classroom(_id INTEGER PRIMARY KEY AUTOINCREMENT , course CHAR , classroom CHAR , UNIQUE(course , classroom))");
+        db.execSQL("CREATE TABLE course_classroom(_id INTEGER PRIMARY KEY AUTOINCREMENT , course CHAR , classroom CHAR)");
         // 初始化 course_classroom 表数据
         db.execSQL("INSERT OR IGNORE INTO course_classroom (course , classroom) SELECT course , classroom FROM table_1");
 
@@ -75,12 +82,19 @@ class DataBaseHelper extends SQLiteOpenHelper {
 
     private void downgrade(SQLiteDatabase db, int version) {
         switch (version) {
+            case 2:
+                downgradeFrom3To2(db);
+                break;
             case 1:
                 downgradeFrom2To1(db);
                 break;
             default:
                 throw new IllegalStateException("Don't know how to downgrade to " + version);
         }
+    }
+
+    private void downgradeFrom3To2(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS app_widget");
     }
 
     private void downgradeFrom2To1(SQLiteDatabase db) {
@@ -91,5 +105,6 @@ class DataBaseHelper extends SQLiteOpenHelper {
     private void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE table_1(_id INTEGER PRIMARY KEY AUTOINCREMENT , week INTEGER , section INTEGER , time INTEGER , startWeek INTEGER , endWeek INTEGER , doubleWeek INTEGER , course CHAR , classroom CHAR)");
         db.execSQL("CREATE TABLE course_classroom(_id INTEGER PRIMARY KEY AUTOINCREMENT , course CHAR , classroom CHAR)");
+        db.execSQL("CREATE TABLE app_widget(_id INTEGER PRIMARY KEY AUTOINCREMENT , appWidgetId INTEGER , currentTime INTEGER , backgroundColor INTEGER , UNIQUE(appWidgetId))");
     }
 }
