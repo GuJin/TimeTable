@@ -5,14 +5,14 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
-import com.sunrain.timetablev4.constants.SharedPreConstants;
-import com.sunrain.timetablev4.utils.SharedPreUtils;
+import com.sunrain.timetablev4.dao.AppWidgetDao;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -39,6 +39,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             rv.setRemoteAdapter(R.id.lv_day_appwidget, intent);
             rv.setEmptyView(R.id.lv_day_appwidget, R.id.empty_view);
             rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(System.currentTimeMillis()));
+            rv.setInt(R.id.fl_root, "setBackgroundColor", AppWidgetDao.getAppWidgetBackgroundColor(appWidgetId, Color.TRANSPARENT));
 
             rv.setOnClickPendingIntent(R.id.imgBtn_restore, makePendingIntent(context, appWidgetId, ACTION_RESTORE));
             rv.setOnClickPendingIntent(R.id.imgBtn_yesterday, makePendingIntent(context, appWidgetId, ACTION_YESTERDAY));
@@ -68,15 +69,15 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
                 newTime = System.currentTimeMillis();
             } else if (ACTION_YESTERDAY.equals(action)) {
                 rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
-                currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
+                currentTime = AppWidgetDao.getAppWidgetCurrentTime(appWidgetId, System.currentTimeMillis());
                 newTime = currentTime - ONE_DAY_MILLIS;
             } else { //ACTION_TOMORROW
                 rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
-                currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
+                currentTime = AppWidgetDao.getAppWidgetCurrentTime(appWidgetId, System.currentTimeMillis());
                 newTime = currentTime + ONE_DAY_MILLIS;
             }
 
-            SharedPreUtils.putLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, newTime);
+            AppWidgetDao.saveAppWidgetCurrentTime(appWidgetId, newTime);
             rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(newTime));
 
             appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
@@ -89,6 +90,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
+            AppWidgetDao.deleteAppWidget(appWidgetId);
         }
     }
 
@@ -101,6 +103,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     }
 
     static void updateAppWidget(AppWidgetManager appWidgetManager, int appWidgetId, int color) {
+        AppWidgetDao.saveAppWidgetBackgroundColor(appWidgetId, color);
         RemoteViews views = new RemoteViews(MyApplication.sContext.getPackageName(), R.layout.day_appwidget);
         views.setInt(R.id.fl_root, "setBackgroundColor", color);
         appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);

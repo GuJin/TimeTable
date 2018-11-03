@@ -11,7 +11,6 @@ public class SharedPreConstants {
     public static final String EVENING_CLASS_NUMBER = "evening_class_number";
     public static final String DOUBLE_WEEK = "double_week";
     public static final String VERSION_CODE = "version_code";
-    public static final String APPWIDGET_CURRENT_TIME_1 = "appwidget_current_time_1";
 
     public static final int DEFAULT_MORNING_CLASS_NUMBER = 2;
     public static final int DEFAULT_AFTERNOON_CLASS_NUMBER = 2;

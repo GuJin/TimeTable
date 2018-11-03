@@ -17,7 +17,7 @@ public class AppWidgetDao extends BaseDao {
         DBManager.close(database);
     }
 
-    public static int getAppWidgetBackgroundColor(int appWidgetId) {
+    public static int getAppWidgetBackgroundColor(int appWidgetId, int defaultColor) {
         SQLiteDatabase db = DBManager.getDb();
         String selection = "appWidgetId = ?";
         String[] selectionArgs = {String.valueOf(appWidgetId)};
@@ -27,7 +27,7 @@ public class AppWidgetDao extends BaseDao {
 
         if (count == 0) {
             cursor.close();
-            return 0;
+            return defaultColor;
         }
 
         int backgroundColorIndex = cursor.getColumnIndex("backgroundColor");
@@ -36,7 +36,7 @@ public class AppWidgetDao extends BaseDao {
         if (cursor.moveToNext()) {// id只存在一个，所以不用while
             backgroundColor = cursor.getInt(backgroundColorIndex);
         } else {
-            backgroundColor = 0;
+            backgroundColor = defaultColor;
         }
 
         cursor.close();
@@ -53,7 +53,7 @@ public class AppWidgetDao extends BaseDao {
         DBManager.close(database);
     }
 
-    public static long getAppWidgetCurrentTime(int appWidgetId) {
+    public static long getAppWidgetCurrentTime(int appWidgetId, long defaultTime) {
         SQLiteDatabase db = DBManager.getDb();
         String selection = "appWidgetId = ?";
         String[] selectionArgs = {String.valueOf(appWidgetId)};
@@ -63,7 +63,7 @@ public class AppWidgetDao extends BaseDao {
 
         if (count == 0) {
             cursor.close();
-            return 0;
+            return defaultTime;
         }
 
         int currentTimeIndex = cursor.getColumnIndex("currentTime");
@@ -72,7 +72,7 @@ public class AppWidgetDao extends BaseDao {
         if (cursor.moveToNext()) {// id只存在一个，所以不用while
             currentTime = cursor.getLong(currentTimeIndex);
         } else {
-            currentTime = 0;
+            currentTime = defaultTime;
         }
 
         cursor.close();

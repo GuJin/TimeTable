@@ -10,6 +10,7 @@ import android.widget.RemoteViewsService;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.bean.ClassBean;
 import com.sunrain.timetablev4.constants.SharedPreConstants;
+import com.sunrain.timetablev4.dao.AppWidgetDao;
 import com.sunrain.timetablev4.dao.TableDao;
 import com.sunrain.timetablev4.utils.CalendarUtil;
 import com.sunrain.timetablev4.utils.SharedPreUtils;
@@ -52,7 +53,7 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         mEveningClasses = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants.DEFAULT_EVENING_CLASS_NUMBER);
         mClassCount = mMorningClasses + mAfternoonClasses + mEveningClasses;
 
-        long currentTime = SharedPreUtils.getLong(SharedPreConstants.APPWIDGET_CURRENT_TIME_1, System.currentTimeMillis());
+        long currentTime = AppWidgetDao.getAppWidgetCurrentTime(mAppWidgetId, System.currentTimeMillis());
         mDayOfWeek = CalendarUtil.getDayOfWeek(currentTime);
 
         mSparseArray.clear();
