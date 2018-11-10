@@ -12,15 +12,13 @@ import android.widget.TextView;
 
 import com.sunrain.timetablev4.R;
 
-import java.util.Locale;
-
 public class AppWidgetConfigureActivity extends Activity implements View.OnClickListener, SeekBar
         .OnSeekBarChangeListener {
 
     private int mAppWidgetId;
     private RadioGroup mRgBgColor;
-    private SeekBar mSbTransparent;
-    private TextView mTvTransparent;
+    private SeekBar mSbIntensity;
+    private TextView mTvIntensity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,14 +46,14 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
 
     private void initView() {
         mRgBgColor = findViewById(R.id.rg_bg_color);
-        mTvTransparent = findViewById(R.id.tv_transparent);
-        mSbTransparent = findViewById(R.id.sb_transparent);
+        mTvIntensity = findViewById(R.id.tv_intensity);
+        mSbIntensity = findViewById(R.id.sb_intensity);
     }
 
     private void setListener() {
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         findViewById(R.id.btn_cancel).setOnClickListener(this);
-        mSbTransparent.setOnSeekBarChangeListener(this);
+        mSbIntensity.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
     }
 
     public int getSettingColor() {
-        int progress = mSbTransparent.getProgress();
+        int progress = mSbIntensity.getProgress();
         int alpha = progress * 255 / 100;
 
         if (mRgBgColor.getCheckedRadioButtonId() == R.id.rb_black) {
@@ -91,8 +89,8 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (seekBar.getId() == R.id.sb_transparent) {
-            mTvTransparent.setText(getString(R.string.app_widget_configure_transparent, progress));
+        if (seekBar.getId() == R.id.sb_intensity) {
+            mTvIntensity.setText(getString(R.string.app_widget_configure_transparent, progress));
         }
     }
 
