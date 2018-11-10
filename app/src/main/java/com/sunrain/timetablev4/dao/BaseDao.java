@@ -58,8 +58,8 @@ class BaseDao {
         db.delete(tableName, whereClause, whereArgs);
     }
 
-    static void update(SQLiteDatabase db, String tableName, ContentValues values, String whereClause, String[] whereArgs) {
-        db.update(tableName, values, whereClause, whereArgs);
+    static int update(SQLiteDatabase db, String tableName, ContentValues values, String whereClause, String[] whereArgs) {
+        return db.update(tableName, values, whereClause, whereArgs);
     }
 
     /**
