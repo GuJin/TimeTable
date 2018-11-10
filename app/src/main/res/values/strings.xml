@@ -43,5 +43,7 @@
 
     <string name="dialog_delete">确认删除？</string>
 
+    <string name="app_widget_configure_transparent">透明度（%d%%）</string>
+
 
 </resources>

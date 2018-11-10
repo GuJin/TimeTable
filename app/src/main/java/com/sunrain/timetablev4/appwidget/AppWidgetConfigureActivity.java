@@ -8,14 +8,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.sunrain.timetablev4.R;
 
-public class AppWidgetConfigureActivity extends Activity implements View.OnClickListener {
+import java.util.Locale;
+
+public class AppWidgetConfigureActivity extends Activity implements View.OnClickListener, SeekBar
+        .OnSeekBarChangeListener {
 
     private int mAppWidgetId;
     private RadioGroup mRgBgColor;
     private SeekBar mSbTransparent;
+    private TextView mTvTransparent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,8 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
             return;
         }
 
-        mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager
+                .INVALID_APPWIDGET_ID);
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
             return;
@@ -42,12 +48,14 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
 
     private void initView() {
         mRgBgColor = findViewById(R.id.rg_bg_color);
+        mTvTransparent = findViewById(R.id.tv_transparent);
         mSbTransparent = findViewById(R.id.sb_transparent);
     }
 
     private void setListener() {
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         findViewById(R.id.btn_cancel).setOnClickListener(this);
+        mSbTransparent.setOnSeekBarChangeListener(this);
     }
 
     @Override
@@ -59,7 +67,8 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
             case R.id.btn_confirm:
                 int color = getSettingColor();
 
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance
+                        (getApplicationContext());
                 DayAppWidgetProvider.updateAppWidget(appWidgetManager, mAppWidgetId, color);
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -67,11 +76,6 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
                 finish();
                 break;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     public int getSettingColor() {
@@ -83,5 +87,27 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
         } else {
             return Color.argb(alpha, 255, 255, 255);
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar.getId() == R.id.sb_transparent) {
+            mTvTransparent.setText(getString(R.string.app_widget_configure_transparent, progress));
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
