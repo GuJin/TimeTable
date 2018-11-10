@@ -9,12 +9,23 @@ public class AppWidgetDao extends BaseDao {
     private static final String TABLE_NAME = "app_widget";
 
     public static void saveAppWidgetBackgroundColor(int appWidgetId, int backgroundColor) {
-        SQLiteDatabase database = DBManager.getDb();
+        SQLiteDatabase db = DBManager.getDb();
+
         ContentValues values = new ContentValues(2);
-        values.put("appWidgetId", appWidgetId);
         values.put("backgroundColor", backgroundColor);
-        insertOrReplace(database, TABLE_NAME, values);
-        DBManager.close(database);
+
+        String whereClause = "appWidgetId = ?";
+        String[] whereArgs = {String.valueOf(appWidgetId)};
+
+        int number = update(db, TABLE_NAME, values, whereClause, whereArgs);
+
+        if (number == 0) {
+            // 使用insertOrReplace会重置其他列的数据
+            values.put("appWidgetId", appWidgetId);
+            insert(db, TABLE_NAME, values);
+        }
+
+        DBManager.close(db);
     }
 
     public static int getAppWidgetBackgroundColor(int appWidgetId, int defaultColor) {
@@ -45,12 +56,23 @@ public class AppWidgetDao extends BaseDao {
     }
 
     public static void saveAppWidgetCurrentTime(int appWidgetId, long currentTime) {
-        SQLiteDatabase database = DBManager.getDb();
+        SQLiteDatabase db = DBManager.getDb();
+
         ContentValues values = new ContentValues(2);
-        values.put("appWidgetId", appWidgetId);
         values.put("currentTime", currentTime);
-        insertOrReplace(database, TABLE_NAME, values);
-        DBManager.close(database);
+
+        String whereClause = "appWidgetId = ?";
+        String[] whereArgs = {String.valueOf(appWidgetId)};
+
+        int number = update(db, TABLE_NAME, values, whereClause, whereArgs);
+
+        if (number == 0) {
+            // 使用insertOrReplace会重置其他列的数据
+            values.put("appWidgetId", appWidgetId);
+            insert(db, TABLE_NAME, values);
+        }
+
+        DBManager.close(db);
     }
 
     public static long getAppWidgetCurrentTime(int appWidgetId, long defaultTime) {
@@ -67,11 +89,13 @@ public class AppWidgetDao extends BaseDao {
         }
 
         int currentTimeIndex = cursor.getColumnIndex("currentTime");
-        long currentTime;
+        long currentTime = 0;
 
         if (cursor.moveToNext()) {// id只存在一个，所以不用while
             currentTime = cursor.getLong(currentTimeIndex);
-        } else {
+        }
+
+        if (currentTime == 0) {
             currentTime = defaultTime;
         }
 
