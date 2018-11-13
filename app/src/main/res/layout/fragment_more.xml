@@ -11,28 +11,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_donation"
-            style="@style/SettingsButton"
-            android:text="@string/donation"
-            app:layout_constraintStart_toEndOf="@+id/btn_praise"
-            app:layout_constraintTop_toTopOf="@+id/btn_praise"/>
-
-        <Button
-            android:id="@+id/btn_version"
-            style="@style/SettingsButton"
-            android:layout_marginTop="8dp"
-            android:text="软件版本"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_share_course"/>
-
-        <Button
-            android:id="@+id/btn_praise"
-            style="@style/SettingsButton"
-            android:text="给个好评"
-            app:layout_constraintStart_toEndOf="@+id/btn_version"
-            app:layout_constraintTop_toTopOf="@+id/btn_version"/>
-
-        <Button
             android:id="@+id/btn_tutorial"
             style="@style/SettingsButton"
             android:layout_width="wrap_content"
@@ -72,12 +50,42 @@
             app:layout_constraintTop_toTopOf="@+id/btn_input_course"/>
 
         <Button
-            android:id="@+id/btn_github"
+            android:id="@+id/btn_version"
             style="@style/SettingsButton"
-            android:text="Github"
-            android:textAllCaps="false"
+            android:layout_marginTop="8dp"
+            android:text="软件版本"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_share_course"/>
+
+        <Button
+            android:id="@+id/btn_praise"
+            style="@style/SettingsButton"
+            android:text="给个好评"
+            app:layout_constraintStart_toEndOf="@+id/btn_version"
+            app:layout_constraintTop_toTopOf="@+id/btn_version"/>
+
+        <Button
+            android:id="@+id/btn_donation"
+            style="@style/SettingsButton"
+            android:text="@string/donation"
+            app:layout_constraintStart_toEndOf="@+id/btn_praise"
+            app:layout_constraintTop_toTopOf="@+id/btn_praise"/>
+
+        <Button
+            android:id="@+id/btn_say"
+            style="@style/SettingsButton"
+            android:text="说点什么"
             app:layout_constraintStart_toEndOf="@+id/btn_donation"
             app:layout_constraintTop_toTopOf="@+id/btn_donation"/>
+
+        <Button
+            android:id="@+id/btn_github"
+            style="@style/SettingsButton"
+            android:layout_marginTop="8dp"
+            android:text="Github"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_version"/>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

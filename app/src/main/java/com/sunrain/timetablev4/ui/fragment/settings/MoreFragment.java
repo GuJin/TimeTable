@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.google.zxing.client.android.CaptureActivity;
 import com.sunrain.timetablev4.BuildConfig;
 import com.sunrain.timetablev4.R;
+import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.base.BaseFragment;
 import com.sunrain.timetablev4.bean.ClassBean;
 import com.sunrain.timetablev4.dao.CourseClassroomDao;
@@ -76,6 +77,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
         view.findViewById(R.id.btn_version).setOnClickListener(this);
         view.findViewById(R.id.btn_praise).setOnClickListener(this);
         view.findViewById(R.id.btn_donation).setOnClickListener(this);
+        view.findViewById(R.id.btn_say).setOnClickListener(this);
     }
 
     @Override
@@ -105,10 +107,29 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.btn_github:
                 WebUtil.gotoWeb(mActivity, "https://github.com/GuJin/TimeTable");
                 break;
+            case R.id.btn_say:
+                sendEmail();
+                break;
             case R.id.btn_tutorial:
                 WebUtil.gotoWeb(mActivity, "http://timetable.gujin.tech/tutorial.html");
                 break;
         }
+    }
+
+    private void sendEmail() {
+        Intent data = new Intent(Intent.ACTION_SENDTO);
+        data.setData(Uri.parse("mailto:itimetable@foxmail.com"));
+        data.putExtra(Intent.EXTRA_SUBJECT, "来自：我是课程表");
+        data.putExtra(Intent.EXTRA_TEXT, getFeedBackInfo());
+        if (data.resolveActivity(MyApplication.sContext.getPackageManager()) != null) {
+            startActivity(data);
+        } else {
+            ToastUtil.show("邮箱：itimetable@foxmail.com", true);
+        }
+    }
+
+    private String getFeedBackInfo() {
+        return "版本:" + BuildConfig.VERSION_NAME + "\n\n";
     }
 
     private void showClearCourseDialog() {
