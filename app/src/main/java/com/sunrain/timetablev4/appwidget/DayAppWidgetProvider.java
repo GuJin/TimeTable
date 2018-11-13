@@ -3,6 +3,7 @@ package com.sunrain.timetablev4.appwidget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -102,10 +103,24 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    static void updateAppWidget(AppWidgetManager appWidgetManager, int appWidgetId, int color) {
+    static void updateAppWidgetBackground(AppWidgetManager appWidgetManager, int appWidgetId, int color) {
         AppWidgetDao.saveAppWidgetBackgroundColor(appWidgetId, color);
         RemoteViews views = new RemoteViews(MyApplication.sContext.getPackageName(), R.layout.day_appwidget);
         views.setInt(R.id.fl_root, "setBackgroundColor", color);
         appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
     }
+
+    public static void noticeAppWidgetUpdate() {
+        Intent intent = new Intent(MyApplication.sContext, DayAppWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(MyApplication.sContext);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(MyApplication.sContext, DayAppWidgetProvider.class));
+
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_day_appwidget);
+        //        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        //        MyApplication.sContext.sendBroadcast(intent);
+    }
+
+
 }

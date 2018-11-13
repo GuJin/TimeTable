@@ -67,7 +67,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
 
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance
                         (getApplicationContext());
-                DayAppWidgetProvider.updateAppWidget(appWidgetManager, mAppWidgetId, color);
+                DayAppWidgetProvider.updateAppWidgetBackground(appWidgetManager, mAppWidgetId, color);
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
                 setResult(RESULT_OK, resultValue);

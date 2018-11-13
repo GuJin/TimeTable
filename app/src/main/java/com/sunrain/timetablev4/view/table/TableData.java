@@ -2,6 +2,7 @@ package com.sunrain.timetablev4.view.table;
 
 import android.util.SparseArray;
 
+import com.sunrain.timetablev4.appwidget.DayAppWidgetProvider;
 import com.sunrain.timetablev4.bean.ClassBean;
 import com.sunrain.timetablev4.constants.SharedPreConstants;
 import com.sunrain.timetablev4.dao.TableDao;
@@ -44,6 +45,7 @@ public class TableData {
         for (OnTableDataChangedListener onChangedListener : mOnChangedListeners) {
             onChangedListener.onContentChange();
         }
+        DayAppWidgetProvider.noticeAppWidgetUpdate();
     }
 
     public void setLayoutChange() {
@@ -51,6 +53,7 @@ public class TableData {
         for (OnTableDataChangedListener onChangedListener : mOnChangedListeners) {
             onChangedListener.onLayoutChange();
         }
+        DayAppWidgetProvider.noticeAppWidgetUpdate();
     }
 
     public void refreshDataIfNeed() {
