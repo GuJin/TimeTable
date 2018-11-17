@@ -36,15 +36,22 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
+            long currentTimeMillis = System.currentTimeMillis();
+            AppWidgetDao.saveAppWidgetCurrentTime(appWidgetId, currentTimeMillis);
+
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.day_appwidget);
             rv.setRemoteAdapter(R.id.lv_day_appwidget, intent);
             rv.setEmptyView(R.id.lv_day_appwidget, R.id.empty_view);
-            rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(System.currentTimeMillis()));
-            rv.setInt(R.id.fl_root, "setBackgroundColor", AppWidgetDao.getAppWidgetBackgroundColor(appWidgetId, Color.TRANSPARENT));
+            rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(currentTimeMillis));
+            rv.setInt(R.id.fl_root, "setBackgroundColor", AppWidgetDao
+                    .getAppWidgetBackgroundColor(appWidgetId, Color.TRANSPARENT));
 
-            rv.setOnClickPendingIntent(R.id.imgBtn_restore, makePendingIntent(context, appWidgetId, ACTION_RESTORE));
-            rv.setOnClickPendingIntent(R.id.imgBtn_yesterday, makePendingIntent(context, appWidgetId, ACTION_YESTERDAY));
-            rv.setOnClickPendingIntent(R.id.imgBtn_tomorrow, makePendingIntent(context, appWidgetId, ACTION_TOMORROW));
+            rv.setOnClickPendingIntent(R.id.imgBtn_restore, makePendingIntent(context,
+                    appWidgetId, ACTION_RESTORE));
+            rv.setOnClickPendingIntent(R.id.imgBtn_yesterday, makePendingIntent(context,
+                    appWidgetId, ACTION_YESTERDAY));
+            rv.setOnClickPendingIntent(R.id.imgBtn_tomorrow, makePendingIntent(context,
+                    appWidgetId, ACTION_TOMORROW));
 
             appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
         }
@@ -55,12 +62,14 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         // 除了自己的action 还有系统的
         String action = intent.getAction();
 
-        if (ACTION_RESTORE.equals(action) || ACTION_YESTERDAY.equals(action) || ACTION_TOMORROW.equals(action)) {
+        if (ACTION_RESTORE.equals(action) || ACTION_YESTERDAY.equals(action) || ACTION_TOMORROW
+                .equals(action)) {
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M月d日 E", Locale.getDefault());
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.day_appwidget);
-            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
 
             long currentTime;
             long newTime;
@@ -70,11 +79,13 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
                 newTime = System.currentTimeMillis();
             } else if (ACTION_YESTERDAY.equals(action)) {
                 rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
-                currentTime = AppWidgetDao.getAppWidgetCurrentTime(appWidgetId, System.currentTimeMillis());
+                currentTime = AppWidgetDao.getAppWidgetCurrentTime(appWidgetId, System
+                        .currentTimeMillis());
                 newTime = currentTime - ONE_DAY_MILLIS;
             } else { //ACTION_TOMORROW
                 rv.setViewVisibility(R.id.imgBtn_restore, View.VISIBLE);
-                currentTime = AppWidgetDao.getAppWidgetCurrentTime(appWidgetId, System.currentTimeMillis());
+                currentTime = AppWidgetDao.getAppWidgetCurrentTime(appWidgetId, System
+                        .currentTimeMillis());
                 newTime = currentTime + ONE_DAY_MILLIS;
             }
 
@@ -103,9 +114,11 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    static void updateAppWidgetBackground(AppWidgetManager appWidgetManager, int appWidgetId, int color) {
+    static void updateAppWidgetBackground(AppWidgetManager appWidgetManager, int appWidgetId, int
+            color) {
         AppWidgetDao.saveAppWidgetBackgroundColor(appWidgetId, color);
-        RemoteViews views = new RemoteViews(MyApplication.sContext.getPackageName(), R.layout.day_appwidget);
+        RemoteViews views = new RemoteViews(MyApplication.sContext.getPackageName(), R.layout
+                .day_appwidget);
         views.setInt(R.id.fl_root, "setBackgroundColor", color);
         appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
     }
@@ -115,12 +128,9 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(MyApplication.sContext);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(MyApplication.sContext, DayAppWidgetProvider.class));
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(MyApplication
+                .sContext, DayAppWidgetProvider.class));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_day_appwidget);
-        //        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-        //        MyApplication.sContext.sendBroadcast(intent);
     }
-
-
 }
