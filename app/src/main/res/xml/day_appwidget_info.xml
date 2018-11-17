@@ -1,5 +1,4 @@
-<appwidget-provider
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="com.sunrain.timetablev4.appwidget.AppWidgetConfigureActivity"
     android:initialLayout="@layout/day_appwidget"
     android:minHeight="110dp"
@@ -7,5 +6,5 @@
     android:minWidth="250dp"
     android:previewImage="@drawable/bg_wallpaper_default"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="43200000"
-    android:widgetCategory="home_screen"/>
+    android:updatePeriodMillis="10800000"
+    android:widgetCategory="home_screen" />
