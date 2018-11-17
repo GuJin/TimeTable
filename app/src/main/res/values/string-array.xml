@@ -16,6 +16,12 @@
         <item>晚上</item>
     </string-array>
 
+    <string-array name="section_simple">
+        <item>上</item>
+        <item>下</item>
+        <item>晚</item>
+    </string-array>
+
     <string-array name="time">
         <item>第一节</item>
         <item>第二节</item>
@@ -27,6 +33,32 @@
         <item>第八节</item>
         <item>第九节</item>
         <item>第十节</item>
+    </string-array>
+
+    <string-array name="time_simple">
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+        <item>七</item>
+        <item>八</item>
+        <item>九</item>
+        <item>十</item>
+    </string-array>
+
+    <string-array name="time_number">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 
 </resources>

@@ -55,6 +55,54 @@ public class AppWidgetDao extends BaseDao {
         return backgroundColor;
     }
 
+    public static void saveAppWidgetConfig(int appWidgetId, int backgroundColor, int timeStyle) {
+        SQLiteDatabase db = DBManager.getDb();
+
+        ContentValues values = new ContentValues(3);
+        values.put("backgroundColor", backgroundColor);
+        values.put("timeStyle", timeStyle);
+
+        String whereClause = "appWidgetId = ?";
+        String[] whereArgs = {String.valueOf(appWidgetId)};
+
+        int number = update(db, TABLE_NAME, values, whereClause, whereArgs);
+
+        if (number == 0) {
+            // 使用insertOrReplace会重置其他列的数据
+            values.put("appWidgetId", appWidgetId);
+            insert(db, TABLE_NAME, values);
+        }
+
+        DBManager.close(db);
+    }
+
+    public static int getAppWidgetTimeStyle(int appWidgetId, int defaultTimeStyle) {
+        SQLiteDatabase db = DBManager.getDb();
+        String selection = "appWidgetId = ?";
+        String[] selectionArgs = {String.valueOf(appWidgetId)};
+        String[] columns = {"timeStyle"};
+        Cursor cursor = queryComplex(db, TABLE_NAME, columns, selection, selectionArgs, null, null, null, null);
+        int count = cursor.getCount();
+
+        if (count == 0) {
+            cursor.close();
+            return defaultTimeStyle;
+        }
+
+        int timeStyleIndex = cursor.getColumnIndex("timeStyle");
+        int timeStyle;
+
+        if (cursor.moveToNext()) {// id只存在一个，所以不用while
+            timeStyle = cursor.getInt(timeStyleIndex);
+        } else {
+            timeStyle = defaultTimeStyle;
+        }
+
+        cursor.close();
+
+        return timeStyle;
+    }
+
     public static void saveAppWidgetCurrentTime(int appWidgetId, long currentTime) {
         SQLiteDatabase db = DBManager.getDb();
 

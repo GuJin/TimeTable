@@ -13,7 +13,7 @@
         android:layout_marginTop="12dp"
         android:text="背景颜色"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
         android:id="@+id/rg_bg_color"
@@ -30,13 +30,13 @@
             android:id="@+id/rb_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="黑色"/>
+            android:text="黑色" />
 
         <RadioButton
             android:id="@+id/rb_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="白色"/>
+            android:text="白色" />
 
     </RadioGroup>
 
@@ -48,7 +48,7 @@
         android:layout_marginTop="12dp"
         android:text="背景颜色强度（15%）"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rg_bg_color"/>
+        app:layout_constraintTop_toBottomOf="@+id/rg_bg_color" />
 
     <SeekBar
         android:id="@+id/sb_intensity"
@@ -61,7 +61,49 @@
         android:progress="15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_intensity"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_intensity" />
+
+    <TextView
+        android:id="@+id/tv_time_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="时间样式（上午 第一节）"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_intensity" />
+
+    <RadioGroup
+        android:id="@+id/rg_time_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:checkedButton="@id/rb_black"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_time_style">
+
+        <RadioButton
+            android:id="@+id/rb_time_style_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="样式一" />
+
+        <RadioButton
+            android:id="@+id/rb_time_style_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样式二" />
+
+        <RadioButton
+            android:id="@+id/rb_time_style_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样式三" />
+
+    </RadioGroup>
 
     <Button
         android:id="@+id/btn_confirm"
@@ -71,7 +113,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btn_cancel"
@@ -81,5 +123,5 @@
         android:layout_marginEnd="8dp"
         android:text="@string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_confirm"/>
+        app:layout_constraintEnd_toStartOf="@+id/btn_confirm" />
 </android.support.constraint.ConstraintLayout>

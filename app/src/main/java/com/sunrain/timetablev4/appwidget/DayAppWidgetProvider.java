@@ -114,6 +114,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         unregisterNewDayBroadcast(context);
+        AppWidgetDao.clear();
     }
 
     private PendingIntent makePendingIntent(Context context, int appWidgetId, String action) {
@@ -124,17 +125,21 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    static void updateAppWidgetBackground(AppWidgetManager appWidgetManager, int appWidgetId, int color) {
-        AppWidgetDao.saveAppWidgetBackgroundColor(appWidgetId, color);
+    static void updateAppWidgetConfig(AppWidgetManager appWidgetManager, int appWidgetId, int color, int timeStyle) {
+        AppWidgetDao.saveAppWidgetConfig(appWidgetId, color, timeStyle);
+
+        Intent intent = new Intent(MyApplication.sContext, DayAppWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+
         RemoteViews views = new RemoteViews(MyApplication.sContext.getPackageName(), R.layout.day_appwidget);
+        views.setRemoteAdapter(R.id.lv_day_appwidget, intent);
+        views.setEmptyView(R.id.lv_day_appwidget, R.id.empty_view);
         views.setInt(R.id.fl_root, "setBackgroundColor", color);
         appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
     }
 
     public static void noticeAppWidgetUpdate() {
-        Intent intent = new Intent(MyApplication.sContext, DayAppWidgetProvider.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(MyApplication.sContext);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(MyApplication.sContext,
                 DayAppWidgetProvider.class));

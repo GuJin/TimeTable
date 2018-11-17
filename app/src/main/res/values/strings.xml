@@ -43,7 +43,8 @@
 
     <string name="dialog_delete">确认删除？</string>
 
-    <string name="app_widget_configure_transparent">背景颜色强度（%d%%）</string>
+    <string name="app_widget_configure_intensity">背景颜色强度（%d%%）</string>
+    <string name="app_widget_configure_time_style">时间样式（%s）</string>
 
 
 </resources>

@@ -26,6 +26,7 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
     private final Context mContext;
     private final int mAppWidgetId;
+    private final int mAppWidgetTimeStyle;
 
     private int mMorningClasses;
     private int mAfternoonClasses;
@@ -37,6 +38,7 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
     DayAppWidgetRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
         mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        mAppWidgetTimeStyle = AppWidgetDao.getAppWidgetTimeStyle(mAppWidgetId, 0);
     }
 
     @Override
@@ -47,17 +49,20 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
     @Override
     public void onDataSetChanged() {
 
-        mMorningClasses = SharedPreUtils.getInt(SharedPreConstants.MORNING_CLASS_NUMBER, SharedPreConstants.DEFAULT_MORNING_CLASS_NUMBER);
+        mMorningClasses = SharedPreUtils.getInt(SharedPreConstants.MORNING_CLASS_NUMBER, SharedPreConstants
+                .DEFAULT_MORNING_CLASS_NUMBER);
         mAfternoonClasses = SharedPreUtils.getInt(SharedPreConstants.AFTERNOON_CLASS_NUMBER, SharedPreConstants
                 .DEFAULT_AFTERNOON_CLASS_NUMBER);
-        mEveningClasses = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants.DEFAULT_EVENING_CLASS_NUMBER);
+        mEveningClasses = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants
+                .DEFAULT_EVENING_CLASS_NUMBER);
         mClassCount = mMorningClasses + mAfternoonClasses + mEveningClasses;
 
         long currentTime = AppWidgetDao.getAppWidgetCurrentTime(mAppWidgetId, System.currentTimeMillis());
         mDayOfWeek = CalendarUtil.getDayOfWeek(currentTime);
 
         mSparseArray.clear();
-        SparseArray<ClassBean> classesInDay = TableDao.getClassesInDay(CalendarUtil.getCurrentWeek(currentTime), mDayOfWeek);
+        SparseArray<ClassBean> classesInDay = TableDao.getClassesInDay(CalendarUtil.getCurrentWeek(currentTime),
+                mDayOfWeek);
 
         for (int i = 0; i < classesInDay.size(); i++) {
             int key = classesInDay.keyAt(i);
@@ -86,17 +91,17 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         String sectionTime;
         if (position < mMorningClasses) {
             // 上午
-            sectionTime = ClassBean.Format.getFormatTimeInDay(0, position);
+            sectionTime = ClassBean.Format.getFormatTimeInDay(0, position, mAppWidgetTimeStyle);
             key += position;
         } else if (position < mMorningClasses + mAfternoonClasses) {
             // 下午
             time = position - mMorningClasses;
-            sectionTime = ClassBean.Format.getFormatTimeInDay(1, time);
+            sectionTime = ClassBean.Format.getFormatTimeInDay(1, time, mAppWidgetTimeStyle);
             key += (10 + time);
         } else {
             // 晚上
             time = position - mMorningClasses - mAfternoonClasses;
-            sectionTime = ClassBean.Format.getFormatTimeInDay(2, time);
+            sectionTime = ClassBean.Format.getFormatTimeInDay(2, time, mAppWidgetTimeStyle);
             key += (20 + time);
         }
 

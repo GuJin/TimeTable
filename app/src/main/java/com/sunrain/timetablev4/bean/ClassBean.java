@@ -69,6 +69,9 @@ public class ClassBean {
         private static final String[] sWeekArray;
         private static final String[] sSectionArray;
         private static final String[] sTimeArray;
+        private static String[] sSectionSimpleArray;
+        private static String[] sTimeSimpleArray;
+        private static String[] sTimeNumberArray;
         private static final StringBuilder sSb;
 
         static {
@@ -111,12 +114,46 @@ public class ClassBean {
 
         /**
          * 小控件用
+         * <p>
+         * timeStyle:
+         * 0: 上午 第一节
+         * 1：上 一
+         * 2：上 1
          */
-        public static String getFormatTimeInDay(int section, int time) {
+        public static String getFormatTimeInDay(int section, int time, int timeStyle) {
             sSb.setLength(0);
-            sSb.append(sSectionArray[section]).append(" ");
-            sSb.append(sTimeArray[time]);
+
+            initTimeStyleArray(timeStyle);
+
+            if (timeStyle == 1) { // 注意 条件0 在最后
+                sSb.append(sSectionSimpleArray[section]).append(" ");
+                sSb.append(sTimeSimpleArray[time]);
+            } else if (timeStyle == 2) {
+                sSb.append(sSectionSimpleArray[section]).append(" ");
+                sSb.append(sTimeNumberArray[time]);
+            } else {
+                sSb.append(sSectionArray[section]).append(" ");
+                sSb.append(sTimeArray[time]);
+            }
+
             return sSb.toString();
+        }
+
+        private static void initTimeStyleArray(int timeStyle) {
+            // 0 不用判断
+            if (timeStyle == 0) {
+                return;
+            }
+
+            Resources resources = MyApplication.sContext.getResources();
+
+            if (timeStyle == 1 && (sSectionSimpleArray == null || sTimeSimpleArray == null)) {
+                sSectionSimpleArray = resources.getStringArray(R.array.section_simple);
+                sTimeSimpleArray = resources.getStringArray(R.array.time_simple);
+            } else if (timeStyle == 2 && (sSectionSimpleArray == null || sTimeNumberArray == null)) {
+                sSectionSimpleArray = resources.getStringArray(R.array.section_simple);
+                sTimeNumberArray = resources.getStringArray(R.array.time_number);
+            }
         }
 
         public static String getFormatCourseClassroom(@NonNull ClassBean classBean) {
