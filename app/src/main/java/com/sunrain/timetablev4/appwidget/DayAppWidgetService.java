@@ -3,6 +3,7 @@ package com.sunrain.timetablev4.appwidget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.util.SparseArray;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -59,6 +60,9 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
         long currentTime = AppWidgetDao.getAppWidgetCurrentTime(mAppWidgetId, System.currentTimeMillis());
         mDayOfWeek = CalendarUtil.getDayOfWeek(currentTime);
+
+        Log.i("DayAppWidgetProvider", "onDataSetChanged " + mAppWidgetId);
+        Log.i("DayAppWidgetProvider", "onDataSetChanged " + currentTime + " " + mDayOfWeek);
 
         mSparseArray.clear();
         SparseArray<ClassBean> classesInDay = TableDao.getClassesInDay(CalendarUtil.getCurrentWeek(currentTime),

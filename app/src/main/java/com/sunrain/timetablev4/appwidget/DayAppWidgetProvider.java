@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -38,6 +39,12 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
+        Log.i("DayAppWidgetProvider", "onUpdate");
+
+        if (isAlarmManagerNotSet()) {
+            registerNewDayBroadcast(context);
+        }
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M月d日 E", Locale.getDefault());
 
         for (int appWidgetId : appWidgetIds) {
@@ -60,7 +67,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
                     ACTION_YESTERDAY));
             rv.setOnClickPendingIntent(R.id.imgBtn_tomorrow, makePendingIntent(context, appWidgetId, ACTION_TOMORROW));
 
-            appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
+            appWidgetManager.updateAppWidget(appWidgetId, rv);
         }
     }
 
@@ -68,6 +75,8 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         // 除了自己的action 还有系统的
         String action = intent.getAction();
+
+        Log.i("DayAppWidgetProvider", "onReceive + " + action);
 
         if (ACTION_RESTORE.equals(action) || ACTION_YESTERDAY.equals(action) || ACTION_TOMORROW.equals(action) ||
                 ACTION_NEW_DAY.equals(action)) {
@@ -82,6 +91,8 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             long newTime;
 
             if (ACTION_RESTORE.equals(action) || ACTION_NEW_DAY.equals(action)) {
+                Log.i("DayAppWidgetProvider", "onReceive ACTION_NEW_DAY");
+                Log.i("DayAppWidgetProvider", "onReceive appWidgetId" + appWidgetId);
                 rv.setViewVisibility(R.id.imgBtn_restore, View.INVISIBLE);
                 newTime = System.currentTimeMillis();
             } else if (ACTION_YESTERDAY.equals(action)) {
@@ -94,6 +105,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
                 newTime = currentTime + ONE_DAY_MILLIS;
             }
 
+            Log.i("DayAppWidgetProvider", "onReceive ACTION_NEW_DAY" + newTime);
             AppWidgetDao.saveAppWidgetCurrentTime(appWidgetId, newTime);
             rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(newTime));
 
@@ -148,6 +160,8 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     }
 
     private void registerNewDayBroadcast(Context context) {
+        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast start");
+
         AlarmManager alarmManager = (AlarmManager) MyApplication.sContext.getSystemService(Context.ALARM_SERVICE);
 
         if (alarmManager == null) {
@@ -166,6 +180,8 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         midnight.add(Calendar.DAY_OF_YEAR, 1); // 设置为明天
 
         alarmManager.setRepeating(AlarmManager.RTC, midnight.getTimeInMillis(), ONE_DAY_MILLIS, pendingIntent);
+
+        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast succeed");
     }
 
     private void unregisterNewDayBroadcast(Context context) {
@@ -181,4 +197,9 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
 
         alarmManager.cancel(pendingIntent);
     }
+
+    private boolean isAlarmManagerNotSet() {
+        return PendingIntent.getBroadcast(MyApplication.sContext, 0, new Intent(ACTION_NEW_DAY), PendingIntent.FLAG_NO_CREATE) == null;
+    }
+
 }
