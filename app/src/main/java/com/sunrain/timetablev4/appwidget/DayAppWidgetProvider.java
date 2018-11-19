@@ -24,16 +24,16 @@ import java.util.Locale;
 
 public class DayAppWidgetProvider extends AppWidgetProvider {
 
-    private static final String ACTION_RESTORE = BuildConfig.APPLICATION_ID + "ACTION_RESTORE";
-    private static final String ACTION_YESTERDAY = BuildConfig.APPLICATION_ID + "ACTION_YESTERDAY";
-    private static final String ACTION_TOMORROW = BuildConfig.APPLICATION_ID + "ACTION_TOMORROW";
-    private static final String ACTION_NEW_DAY = BuildConfig.APPLICATION_ID + "ACTION_NEW_DAY";
+    private static final String ACTION_RESTORE = BuildConfig.APPLICATION_ID + ".ACTION_RESTORE";
+    private static final String ACTION_YESTERDAY = BuildConfig.APPLICATION_ID + ".ACTION_YESTERDAY";
+    private static final String ACTION_TOMORROW = BuildConfig.APPLICATION_ID + ".ACTION_TOMORROW";
+    private static final String ACTION_NEW_DAY = BuildConfig.APPLICATION_ID + ".ACTION_NEW_DAY";
 
     private static final int ONE_DAY_MILLIS = 86400000;
 
     @Override
     public void onEnabled(Context context) {
-        registerNewDayBroadcast(context);
+        registerNewDayBroadcast();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         Log.i("DayAppWidgetProvider", "onUpdate");
 
         if (isAlarmManagerNotSet()) {
-            registerNewDayBroadcast(context);
+            registerNewDayBroadcast();
         }
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M月d日 E", Locale.getDefault());
@@ -126,7 +126,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDisabled(Context context) {
-        unregisterNewDayBroadcast(context);
+        unregisterNewDayBroadcast();
         AppWidgetDao.clear();
     }
 
@@ -160,7 +160,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_day_appwidget);
     }
 
-    private void registerNewDayBroadcast(Context context) {
+    private void registerNewDayBroadcast() {
         Log.i("DayAppWidgetProvider", "registerNewDayBroadcast start");
 
         AlarmManager alarmManager = (AlarmManager) MyApplication.sContext.getSystemService(Context.ALARM_SERVICE);
@@ -169,9 +169,9 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        Intent intent = new Intent(context, AppWidgetProvider.class);
+        Intent intent = new Intent(MyApplication.sContext, DayAppWidgetProvider.class);
         intent.setAction(ACTION_NEW_DAY);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MyApplication.sContext, 0, intent, 0);
 
         Calendar midnight = Calendar.getInstance();
         midnight.set(Calendar.HOUR_OF_DAY, 0);
@@ -185,22 +185,26 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         Log.i("DayAppWidgetProvider", "registerNewDayBroadcast succeed");
     }
 
-    private void unregisterNewDayBroadcast(Context context) {
+    private void unregisterNewDayBroadcast() {
         AlarmManager alarmManager = (AlarmManager) MyApplication.sContext.getSystemService(Context.ALARM_SERVICE);
 
         if (alarmManager == null) {
             return;
         }
 
-        Intent intent = new Intent(context, AppWidgetProvider.class);
+        Intent intent = new Intent(MyApplication.sContext, DayAppWidgetProvider.class);
         intent.setAction(ACTION_NEW_DAY);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-        alarmManager.cancel(pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MyApplication.sContext, 0, intent, PendingIntent.FLAG_NO_CREATE);
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        }
     }
 
     private boolean isAlarmManagerNotSet() {
-        return PendingIntent.getBroadcast(MyApplication.sContext, 0, new Intent(ACTION_NEW_DAY), PendingIntent.FLAG_NO_CREATE) == null;
+        Intent intent = new Intent(MyApplication.sContext, DayAppWidgetProvider.class);
+        intent.setAction(ACTION_NEW_DAY);
+        return PendingIntent.getBroadcast(MyApplication.sContext, 0, intent, PendingIntent.FLAG_NO_CREATE) == null;
     }
 
 }
