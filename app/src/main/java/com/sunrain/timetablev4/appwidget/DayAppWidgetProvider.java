@@ -67,6 +67,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
                     ACTION_YESTERDAY));
             rv.setOnClickPendingIntent(R.id.imgBtn_tomorrow, makePendingIntent(context, appWidgetId, ACTION_TOMORROW));
 
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_day_appwidget);
             appWidgetManager.updateAppWidget(appWidgetId, rv);
         }
     }
@@ -109,8 +110,8 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             AppWidgetDao.saveAppWidgetCurrentTime(appWidgetId, newTime);
             rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(newTime));
 
-            appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_day_appwidget);
+            appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
         }
 
         super.onReceive(context, intent);
