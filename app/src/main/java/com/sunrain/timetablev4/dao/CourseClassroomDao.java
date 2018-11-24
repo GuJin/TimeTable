@@ -32,6 +32,17 @@ public class CourseClassroomDao extends BaseDao {
         });
     }
 
+    public static void update(CourseClassroomBean oldBean, CourseClassroomBean newBean) {
+        SQLiteDatabase database = DBManager.getDb();
+        ContentValues values = new ContentValues(2);
+        values.put("course", newBean.course);
+        values.put("classroom", newBean.classroom);
+        String whereClause = "course = ? and classroom = ?";
+        String[] whereArgs = {oldBean.course, oldBean.classroom};
+        update(database, TABLE_NAME, values, whereClause, whereArgs);
+        DBManager.close(database);
+    }
+
     public static void delete(CourseClassroomBean bean) {
         SQLiteDatabase database = DBManager.getDb();
         delete(database, TABLE_NAME, "course = ? and classroom = ?", new String[]{bean.course, bean.classroom});
