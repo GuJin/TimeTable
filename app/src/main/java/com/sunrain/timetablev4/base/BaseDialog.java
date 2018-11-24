@@ -112,6 +112,7 @@ public class BaseDialog<T extends BaseDialog> extends Dialog {
 
     public T hideButton() {
         findViewById(R.id.ll_button).setVisibility(View.GONE);
+        findViewById(R.id.view).setVisibility(View.GONE);
         return (T) this;
     }
 
@@ -151,5 +152,9 @@ public class BaseDialog<T extends BaseDialog> extends Dialog {
         SystemUiUtil.setSystemUi(window.getDecorView());
         super.show();
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+    }
+
+    public void superShow() {
+        super.show();
     }
 }
