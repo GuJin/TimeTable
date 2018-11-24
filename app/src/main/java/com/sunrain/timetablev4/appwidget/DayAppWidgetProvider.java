@@ -12,13 +12,13 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-
 import com.sunrain.timetablev4.BuildConfig;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.dao.AppWidgetDao;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -39,7 +39,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        Log.i("DayAppWidgetProvider", "onUpdate");
+        Log.i("DayAppWidgetProvider", "onUpdate appWidgetId" + Arrays.toString(appWidgetIds));
 
         if (isAlarmManagerNotSet()) {
             registerNewDayBroadcast();
@@ -79,8 +79,13 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
 
         Log.i("DayAppWidgetProvider", "onReceive + " + action);
 
-        if (ACTION_RESTORE.equals(action) || ACTION_YESTERDAY.equals(action) || ACTION_TOMORROW.equals(action) ||
-                ACTION_NEW_DAY.equals(action)) {
+        if (ACTION_NEW_DAY.equals(action)) {
+            Log.i("DayAppWidgetProvider", "onReceive ACTION_NEW_DAY");
+            notifyUpdate(context);
+            return;
+        }
+
+        if (ACTION_RESTORE.equals(action) || ACTION_YESTERDAY.equals(action) || ACTION_TOMORROW.equals(action)) {
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M月d日 E", Locale.getDefault());
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -91,9 +96,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             long currentTime;
             long newTime;
 
-            if (ACTION_RESTORE.equals(action) || ACTION_NEW_DAY.equals(action)) {
-                Log.i("DayAppWidgetProvider", "onReceive ACTION_NEW_DAY");
-                Log.i("DayAppWidgetProvider", "onReceive appWidgetId" + appWidgetId);
+            if (ACTION_RESTORE.equals(action)) {
                 rv.setViewVisibility(R.id.imgBtn_restore, View.INVISIBLE);
                 newTime = System.currentTimeMillis();
             } else if (ACTION_YESTERDAY.equals(action)) {
@@ -152,12 +155,20 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
     }
 
-    public static void noticeAppWidgetUpdate() {
+    public static void noticeAppWidgetViewDataChanger() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(MyApplication.sContext);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(MyApplication.sContext,
                 DayAppWidgetProvider.class));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_day_appwidget);
+    }
+
+    public void notifyUpdate(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(MyApplication.sContext,
+                DayAppWidgetProvider.class));
+        Log.i("DayAppWidgetProvider", "notifyUpdate appWidgetId" + Arrays.toString(appWidgetIds));
+        onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     private void registerNewDayBroadcast() {
@@ -173,15 +184,17 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         intent.setAction(ACTION_NEW_DAY);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MyApplication.sContext, 0, intent, 0);
 
-        Calendar midnight = Calendar.getInstance();
+        Calendar midnight = Calendar.getInstance(Locale.getDefault());
         midnight.set(Calendar.HOUR_OF_DAY, 0);
         midnight.set(Calendar.MINUTE, 0);
         midnight.set(Calendar.SECOND, 1); // 只是为了确保肯定在明天
         midnight.set(Calendar.MILLISECOND, 0);
         midnight.add(Calendar.DAY_OF_YEAR, 1); // 设置为明天
 
-        alarmManager.setRepeating(AlarmManager.RTC, midnight.getTimeInMillis(), ONE_DAY_MILLIS, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, midnight.getTimeInMillis(), ONE_DAY_MILLIS, pendingIntent);
 
+        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast midnight.getTimeInMillis()is " + midnight.getTimeInMillis());
+        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast System.currentTimeMillis()is " + System.currentTimeMillis());
         Log.i("DayAppWidgetProvider", "registerNewDayBroadcast succeed");
     }
 
