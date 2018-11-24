@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.sunrain.timetablev4.bean.ClassBean;
 import com.sunrain.timetablev4.ui.fragment.settings.MoreFragment;
+import com.sunrain.timetablev4.utils.ClassQrCodeHelper;
 import com.sunrain.timetablev4.utils.ZipUtil;
 
 import org.json.JSONArray;
@@ -35,13 +36,46 @@ public class InputCourseAnalysisThread extends Thread {
             return;
         }
 
+        List<ClassBean> list;
+        if (json.startsWith("[")) {
+            // 一代二维码
+            list = getGenerationOneList(json);
+        } else {
+            try {
+                list = ClassQrCodeHelper.decodeJson(json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                list = null;
+            }
+        }
+
+        if (list == null) {
+            ToastUtil.postShow("解析二维码错误");
+            return;
+        }
+
+        final MoreFragment moreFragment = mAboutFragmentWeakReference.get();
+        if (moreFragment == null) {
+            ToastUtil.postShow("异常请重试");
+            return;
+        }
+
+        final List<ClassBean> finalList = list;
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                moreFragment.showImportClassDialog(finalList);
+            }
+        });
+    }
+
+    private List<ClassBean> getGenerationOneList(String json) {
         JSONArray jsonArray;
         try {
             jsonArray = new JSONArray(json);
         } catch (JSONException e) {
             e.printStackTrace();
-            ToastUtil.postShow("解析二维码错误");
-            return;
+            return null;
         }
 
         int length = jsonArray.length();
@@ -52,18 +86,6 @@ public class InputCourseAnalysisThread extends Thread {
             } catch (JSONException ignore) {
             }
         }
-
-        final MoreFragment moreFragment = mAboutFragmentWeakReference.get();
-        if (moreFragment == null) {
-            ToastUtil.postShow("异常请重试");
-            return;
-        }
-
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                moreFragment.showImportClassDialog(list);
-            }
-        });
+        return list;
     }
 }

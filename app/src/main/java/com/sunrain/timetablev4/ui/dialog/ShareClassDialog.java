@@ -23,9 +23,12 @@ import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.bean.ClassBean;
 import com.sunrain.timetablev4.dao.TableDao;
+import com.sunrain.timetablev4.utils.ClassQrCodeHelper;
 import com.sunrain.timetablev4.utils.DensityUtil;
 import com.sunrain.timetablev4.utils.ImageUtil;
 import com.sunrain.timetablev4.utils.ZipUtil;
+
+import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -96,7 +99,14 @@ public class ShareClassDialog extends Dialog implements View.OnClickListener {
             List<ClassBean> classes = TableDao.getClasses();
             publishProgress(8);
 
-            String json = ClassBean.toJsonArray(classes).toString();
+            String json;
+            try {
+                json = ClassQrCodeHelper.toJSONObject(classes).toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
             publishProgress(12);
 
             String zip = ZipUtil.zipString(json);

@@ -42,6 +42,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
+import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.common.HybridBinarizer;
@@ -368,7 +369,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             int height = bitmap.getHeight();
             int[] pixels = new int[width * height];
             bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
-            com.google.zxing.RGBLuminanceSource source = new com.google.zxing.RGBLuminanceSource(width, height, pixels);
+            RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
             Result result = new MultiFormatReader().decode(new BinaryBitmap(new HybridBinarizer(source)), hintTypeObjectHashMap);
             if (result != null) {
                 return result;
@@ -376,6 +377,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 return null;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
