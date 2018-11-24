@@ -56,6 +56,7 @@
         <receiver android:name=".appwidget.DayAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.sunrain.timetablev4.ACTION_NEW_DAY" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

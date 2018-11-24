@@ -40,11 +40,13 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         mContext = context;
         mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         mAppWidgetTimeStyle = AppWidgetDao.getAppWidgetTimeStyle(mAppWidgetId, 0);
+        Log.i("DayAppWidgetProvider", "DayAppWidgetRemoteViewsFactory onCreate" + mAppWidgetId);
     }
 
     @Override
     public void onCreate() {
         mSparseArray = new SparseArray<>();
+        Log.i("DayAppWidgetProvider", "DayAppWidgetRemoteViewsFactory onCreate" + mAppWidgetId);
     }
 
     @Override
