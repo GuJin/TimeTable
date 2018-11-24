@@ -21,6 +21,8 @@ import com.sunrain.timetablev4.bean.CourseClassroomBean;
 import com.sunrain.timetablev4.constants.SharedPreConstants;
 import com.sunrain.timetablev4.dao.CourseClassroomDao;
 import com.sunrain.timetablev4.dao.TableDao;
+import com.sunrain.timetablev4.ui.dialog.CourseClassroomEditDialog;
+import com.sunrain.timetablev4.ui.dialog.CourseClassroomLongClickDialog;
 import com.sunrain.timetablev4.ui.dialog.MessageDialog;
 import com.sunrain.timetablev4.utils.DensityUtil;
 import com.sunrain.timetablev4.utils.SharedPreUtils;
@@ -185,10 +187,57 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
                 if (position == mCourseClassroomAdapter.getCount()) {
                     return false;
                 }
-                showDeleteCourseClassroomDialog(mCourseClassroomAdapter.getItem(position));
+                showCourseClassroomLongClickDialog(mCourseClassroomAdapter.getItem(position));
                 return true;
         }
         return false;
+    }
+
+    private void showCourseClassroomLongClickDialog(final CourseClassroomBean bean) {
+        new CourseClassroomLongClickDialog(mActivity, bean, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+                if (which == 0) {//edit
+                    showCourseClassroomEditDialog(bean);
+                } else if (which == 1) {//delete
+                    showDeleteCourseClassroomDialog(bean);
+                }
+            }
+        }).show();
+    }
+
+    private void showCourseClassroomEditDialog(final CourseClassroomBean bean) {
+        final CourseClassroomEditDialog editDialog = new CourseClassroomEditDialog(mActivity, bean)
+                .setNegativeButton(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        editDialog.setPositiveButton(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                CourseClassroomBean newBean = new CourseClassroomBean(editDialog.getCourse(), editDialog.getClassroom());
+                if (CourseClassroomDao.exists(newBean)) {
+                    ToastUtil.show("已有相同条目");
+                } else {
+                    dialog.dismiss();
+                    updateCourseClassroom(bean, newBean);
+                }
+            }
+        }).show();
+    }
+
+    private void updateCourseClassroom(CourseClassroomBean oldBean, CourseClassroomBean newBean) {
+        CourseClassroomDao.update(oldBean, newBean);
+        TableDao.update(oldBean, newBean);
+        int index = mCourseClassroomList.indexOf(oldBean);
+        mCourseClassroomList.remove(index);
+        mCourseClassroomList.add(index, newBean);
+        mCourseClassroomAdapter.notifyDataSetChanged();
+        TableData.getInstance().setContentChange();
     }
 
     private void showDeleteCourseClassroomDialog(final CourseClassroomBean bean) {
