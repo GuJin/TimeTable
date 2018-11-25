@@ -31,19 +31,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Result;
+import android.view.*;
+import com.google.zxing.*;
 import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.common.HybridBinarizer;
 import com.sunrain.timetablev4.R;
@@ -51,6 +40,7 @@ import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.manager.permission.PermissionManager;
 import com.sunrain.timetablev4.utils.RunnableExecutorService;
 import com.sunrain.timetablev4.view.CropImageView.util.Utils;
+import tech.gujin.toast.ToastUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,8 +48,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
-
-import tech.gujin.toast.ToastUtil;
 
 /**
  * This activity opens the camera and does the actual scanning on a background thread. It draws a
@@ -348,7 +336,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             @Override
             public Result call() {
                 Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(MyApplication.sContext, uri, 600);
-                return syncDecodeQRCode(sampledBitmap);
+                return syncDecodeQRCode(sampledBitmap, false);
             }
         }).done(new RunnableExecutorService.DoneCallback<Result>() {
             @Override
@@ -358,12 +346,17 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }).execute();
     }
 
-    public Result syncDecodeQRCode(Bitmap bitmap) {
+    public Result syncDecodeQRCode(Bitmap bitmap, boolean retry) {
         HashMap<DecodeHintType, Object> hintTypeObjectHashMap = new HashMap<>();
-        List<BarcodeFormat> allFormats = new ArrayList<>();
+        List<BarcodeFormat> allFormats = new ArrayList<>(1);
         allFormats.add(BarcodeFormat.QR_CODE);
         hintTypeObjectHashMap.put(DecodeHintType.POSSIBLE_FORMATS, allFormats);
         hintTypeObjectHashMap.put(DecodeHintType.CHARACTER_SET, "UTF-8");
+        if (retry) {
+            hintTypeObjectHashMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+            hintTypeObjectHashMap.put(DecodeHintType.PURE_BARCODE, Boolean.FALSE);
+        }
+
         try {
             int width = bitmap.getWidth();
             int height = bitmap.getHeight();
@@ -378,7 +371,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            if (e instanceof NotFoundException && !retry) {
+                return syncDecodeQRCode(bitmap, true);
+            } else {
+                return null;
+            }
         }
     }
 
