@@ -76,21 +76,21 @@ public class ClassQrCodeHelper {
 
         Iterator<String> courseKeys = courseJsonObject.keys();
         while (courseKeys.hasNext()) {
-            ClassBean classBean = new ClassBean();
-            classBean.course = courseKeys.next();
-            JSONObject classroomJsonObject = courseJsonObject.getJSONObject(classBean.course);
-
+            String course = courseKeys.next();
+            JSONObject classroomJsonObject = courseJsonObject.getJSONObject(course);
             Iterator<String> classroomKeys = classroomJsonObject.keys();
             while (classroomKeys.hasNext()) {
-                classBean.classroom = classroomKeys.next();
-                JSONArray classBeanJsonArray = classroomJsonObject.getJSONArray(classBean.classroom);
+                String classroom = classroomKeys.next();
+                JSONArray classBeanJsonArray = classroomJsonObject.getJSONArray(classroom);
                 for (int i = 0; i < classBeanJsonArray.length(); i++) {
                     int zip = classBeanJsonArray.getInt(i);
+                    ClassBean classBean = new ClassBean();
+                    classBean.course = course;
+                    classBean.classroom = classroom;
                     unzipForVersion2(classBean, zip);
+                    classBeanList.add(classBean);
                 }
             }
-
-            classBeanList.add(classBean);
         }
 
         return classBeanList;
@@ -100,13 +100,14 @@ public class ClassQrCodeHelper {
      * 不含有course classroom信息
      */
     private static int zipForVersion2(ClassBean classBean) {
-        return classBean.doubleWeek * 1000000 + classBean.endWeek * 100000 + classBean.startWeek * 1000 + classBean.week * 100 +
+        // 如果还要增加字段的话需要留意int最大值
+        return classBean.doubleWeek * 10000000 + classBean.endWeek * 100000 + classBean.startWeek * 1000 + classBean.week * 100 +
                 classBean.section * 10 + classBean.time;
     }
 
     private static void unzipForVersion2(ClassBean classBean, int zip) {
-        classBean.doubleWeek = zip / 1000000;
-        zip = zip - classBean.doubleWeek * 1000000;
+        classBean.doubleWeek = zip / 10000000;
+        zip = zip - classBean.doubleWeek * 10000000;
 
         classBean.endWeek = zip / 100000;
         zip = zip - classBean.endWeek * 100000;
