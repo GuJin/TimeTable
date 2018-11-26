@@ -40,13 +40,11 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         mContext = context;
         mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         mAppWidgetTimeStyle = AppWidgetDao.getAppWidgetTimeStyle(mAppWidgetId, 0);
-        Log.i("DayAppWidgetProvider", "DayAppWidgetRemoteViewsFactory onCreate" + mAppWidgetId);
     }
 
     @Override
     public void onCreate() {
         mSparseArray = new SparseArray<>();
-        Log.i("DayAppWidgetProvider", "DayAppWidgetRemoteViewsFactory onCreate" + mAppWidgetId);
     }
 
     @Override
@@ -62,9 +60,6 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
         long currentTime = AppWidgetDao.getAppWidgetCurrentTime(mAppWidgetId, System.currentTimeMillis());
         mDayOfWeek = CalendarUtil.getDayOfWeek(currentTime);
-
-        Log.i("DayAppWidgetProvider", "onDataSetChanged " + mAppWidgetId);
-        Log.i("DayAppWidgetProvider", "onDataSetChanged " + currentTime + " " + mDayOfWeek);
 
         mSparseArray.clear();
         SparseArray<ClassBean> classesInDay = TableDao.getClassesInDay(CalendarUtil.getCurrentWeek(currentTime),

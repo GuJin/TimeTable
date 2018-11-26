@@ -39,8 +39,6 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        Log.i("DayAppWidgetProvider", "onUpdate appWidgetId" + Arrays.toString(appWidgetIds));
-
         if (isAlarmManagerNotSet()) {
             registerNewDayBroadcast();
         }
@@ -77,10 +75,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         // 除了自己的action 还有系统的
         String action = intent.getAction();
 
-        Log.i("DayAppWidgetProvider", "onReceive + " + action);
-
         if (ACTION_NEW_DAY.equals(action)) {
-            Log.i("DayAppWidgetProvider", "onReceive ACTION_NEW_DAY");
             notifyUpdate(context);
             return;
         }
@@ -109,7 +104,6 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
                 newTime = currentTime + ONE_DAY_MILLIS;
             }
 
-            Log.i("DayAppWidgetProvider", "onReceive ACTION_NEW_DAY" + newTime);
             AppWidgetDao.saveAppWidgetCurrentTime(appWidgetId, newTime);
             rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(newTime));
 
@@ -167,13 +161,10 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(MyApplication.sContext,
                 DayAppWidgetProvider.class));
-        Log.i("DayAppWidgetProvider", "notifyUpdate appWidgetId" + Arrays.toString(appWidgetIds));
         onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     private void registerNewDayBroadcast() {
-        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast start");
-
         AlarmManager alarmManager = (AlarmManager) MyApplication.sContext.getSystemService(Context.ALARM_SERVICE);
 
         if (alarmManager == null) {
@@ -192,10 +183,6 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         midnight.add(Calendar.DAY_OF_YEAR, 1); // 设置为明天
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, midnight.getTimeInMillis(), ONE_DAY_MILLIS, pendingIntent);
-
-        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast midnight.getTimeInMillis()is " + midnight.getTimeInMillis());
-        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast System.currentTimeMillis()is " + System.currentTimeMillis());
-        Log.i("DayAppWidgetProvider", "registerNewDayBroadcast succeed");
     }
 
     private void unregisterNewDayBroadcast() {
