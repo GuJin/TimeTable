@@ -46,7 +46,7 @@ public class CourseClassroomEditDialog extends BaseDialog<CourseClassroomEditDia
         Window window = getWindow();
         if (window != null) {
             // dialog 内 editText 不会自动弹出输入框
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         }
         superShow();
     }

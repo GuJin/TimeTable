@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/course"
-        android:imeOptions="flagNoFullscreen|actionDone"
+        android:imeOptions="flagNoFullscreen|flagNoExtractUi|actionDone"
         android:inputType="text"
         android:textSize="14sp"/>
 
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/classroom"
-        android:imeOptions="flagNoFullscreen|actionDone"
+        android:imeOptions="flagNoFullscreen|flagNoExtractUi|actionDone"
         android:inputType="text"
         android:textSize="14sp"/>
 
