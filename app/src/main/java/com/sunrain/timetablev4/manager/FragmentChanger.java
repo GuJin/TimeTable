@@ -23,6 +23,10 @@ public class FragmentChanger {
 
     @SuppressLint("CommitTransaction")
     public void showFragment(Class<? extends Fragment> toFragmentClass) {
+        if (toFragmentClass == null) {
+            return;
+        }
+
         String currentFragmentName = toFragmentClass.getSimpleName();
         if (!TextUtils.isEmpty(mLastFragmentName) && mLastFragmentName.equals(currentFragmentName)) {
             return;
