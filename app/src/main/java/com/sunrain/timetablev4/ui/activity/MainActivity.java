@@ -50,14 +50,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void initData(Bundle savedInstanceState) {
         initBugly();
         initFragment();
-        initPost();
+        initPost(savedInstanceState);
     }
 
-    private void initPost() {
+    private void initPost(final Bundle savedInstanceState) {
         getWindow().getDecorView().post(new Runnable() {
             @Override
             public void run() {
-                initArrow();
+                initArrow(savedInstanceState);
                 setListener();
                 setBackground();
                 int lastVersionCode = SharedPreUtils.getInt(SharedPreConstants.VERSION_CODE, 0);
@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mImgBtnSettings.setOnClickListener(this);
     }
 
-    private void initArrow() {
+    private void initArrow(Bundle savedInstanceState) {
         mArrow = new DrawerArrowDrawable();
         mArrow.setAnimationListener(new DrawerArrowDrawable.AnimationListener() {
             @Override
@@ -105,6 +105,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         mImgBtnSettings.setImageDrawable(mArrow);
+
+        // 注意这里的equals条件和changeFragment()方法中的条件相反
+        if (savedInstanceState != null && SettingsFragment.class.getSimpleName().equals(mFragmentChanger.getLastFragmentName())) {
+            mArrow.startArrowAnim();
+        }
     }
 
     @Override
