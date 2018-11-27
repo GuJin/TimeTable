@@ -209,6 +209,9 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     }
 
     private void showCourseClassroomEditDialog(final CourseClassroomBean bean) {
+        mEtCourse.clearFocus();
+        mEtClassroom.clearFocus();
+
         final CourseClassroomEditDialog editDialog = new CourseClassroomEditDialog(mActivity, bean)
                 .setNegativeButton(new DialogInterface.OnClickListener() {
                     @Override
