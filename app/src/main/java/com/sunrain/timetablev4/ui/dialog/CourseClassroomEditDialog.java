@@ -47,6 +47,9 @@ public class CourseClassroomEditDialog extends BaseDialog<CourseClassroomEditDia
         if (window != null) {
             // dialog 内 editText 不会自动弹出输入框
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            // fix : dialog 移动到屏幕上半部分后，status bar 重叠部分不会显示
+            // https://stackoverflow.com/questions/20121711/dialog-on-android-kitkat-seems-to-be-cut
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         superShow();
     }
