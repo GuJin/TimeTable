@@ -64,6 +64,12 @@ public class ClassBean {
         return jsonArray;
     }
 
+    @Override
+    public String toString() {
+        return "ClassBean{" + "week=" + week + ", section=" + section + ", time=" + time + ", startWeek=" + startWeek + ", endWeek=" +
+                endWeek + ", doubleWeek=" + doubleWeek + ", course='" + course + '\'' + ", classroom='" + classroom + '\'' + '}';
+    }
+
     public static class Format {
 
         private static final String[] sWeekArray;
