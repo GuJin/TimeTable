@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sunrain.timetablev4.R;
 
 public class FragmentChanger {
+
     private final FragmentManager mFragmentManager;
     private final int mContentId;
 
@@ -45,6 +47,18 @@ public class FragmentChanger {
     private void hideFragment(Fragment hideFragment, FragmentTransaction ft) {
         if (hideFragment != null && hideFragment.isVisible()) {
             ft.hide(hideFragment);
+        }
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        if (mLastFragmentName != null) {
+            outState.putString("LastFragmentName", mLastFragmentName);
+        }
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mLastFragmentName = savedInstanceState.getString("LastFragmentName");
         }
     }
 

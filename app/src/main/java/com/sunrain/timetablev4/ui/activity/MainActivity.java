@@ -22,23 +22,23 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String KEY_SAVE_FRAGMENT = "fragment";
     private FragmentChanger mFragmentChanger;
 
     private ImageButton mImgBtnSettings;
     private DrawerArrowDrawable mArrow;
 
     @Override
-    protected int getContentView() {
-        return R.layout.activity_main;
+    protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mFragmentChanger = new FragmentChanger(getFragmentManager(), R.id.fl_main);
+            mFragmentChanger.onRestoreInstanceState(savedInstanceState);
+        }
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        String lastFragmentName = mFragmentChanger == null ? null : mFragmentChanger.getLastFragmentName();
-        if (!TextUtils.isEmpty(lastFragmentName)) {
-            outState.putString(KEY_SAVE_FRAGMENT, lastFragmentName);
-        }
+    protected int getContentView() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initData(Bundle savedInstanceState) {
         initBugly();
-        initFragment(savedInstanceState);
+        initFragment();
         initPost();
     }
 
@@ -84,16 +84,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         CrashReport.initCrashReport(MyApplication.sContext, BuildConfig.BUGLY_ID, BuildConfig.DEBUG, strategy);
     }
 
-    private void initFragment(Bundle savedInstanceState) {
-        mFragmentChanger = new FragmentChanger(getFragmentManager(), R.id.fl_main);
-        String fragment = savedInstanceState == null ? null : savedInstanceState.getString(KEY_SAVE_FRAGMENT);
-        if (TextUtils.isEmpty(fragment) || CourseFragment.class.getSimpleName().equals(fragment)) {
+    private void initFragment() {
+        if (mFragmentChanger == null) {
+            // 如果mFragmentChanger不为null，则代表在onCreate方法中恢复过，系统会帮助我们显示对应的fragment
+            mFragmentChanger = new FragmentChanger(getFragmentManager(), R.id.fl_main);
             mFragmentChanger.showFragment(CourseFragment.class);
-            return;
-        }
-        //can not use switch there,has constant expression required error
-        if (SettingsFragment.class.getSimpleName().equals(fragment)) {
-            mFragmentChanger.showFragment(SettingsFragment.class);
         }
     }
 
@@ -130,5 +125,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mFragmentChanger.showFragment(CourseFragment.class);
             mArrow.startHamburgerAnim();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (mFragmentChanger != null) {
+            mFragmentChanger.onSaveInstanceState(outState);
+        }
+        super.onSaveInstanceState(outState);
     }
 }
