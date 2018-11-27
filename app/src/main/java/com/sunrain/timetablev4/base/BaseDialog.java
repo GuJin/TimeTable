@@ -29,7 +29,7 @@ public class BaseDialog<T extends BaseDialog> extends Dialog {
     private OnClickListener mPositiveListener;
     private int mRequireWidth;
 
-    public BaseDialog(Context context) {
+    public BaseDialog(@NonNull Context context) {
         super(context, R.style.MyDialog);
         View view = initView(context);
         View contentView = getContentView(context, mFlContent);
