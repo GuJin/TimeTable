@@ -1,6 +1,7 @@
 package com.sunrain.timetablev4.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
@@ -28,15 +29,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private DrawerArrowDrawable mArrow;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mFragmentChanger = new FragmentChanger(getFragmentManager(), R.id.fl_main);
-            mFragmentChanger.onRestoreInstanceState(savedInstanceState);
-        }
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     protected int getContentView() {
         return R.layout.activity_main;
     }
@@ -47,9 +39,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected void initData(Bundle savedInstanceState) {
+    protected void initData(@Nullable Bundle savedInstanceState) {
         initBugly();
-        initFragment();
+        initFragment(savedInstanceState);
         initPost(savedInstanceState);
     }
 
@@ -84,10 +76,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         CrashReport.initCrashReport(MyApplication.sContext, BuildConfig.BUGLY_ID, BuildConfig.DEBUG, strategy);
     }
 
-    private void initFragment() {
-        if (mFragmentChanger == null) {
-            // 如果mFragmentChanger不为null，则代表在onCreate方法中恢复过，系统会帮助我们显示对应的fragment
-            mFragmentChanger = new FragmentChanger(getFragmentManager(), R.id.fl_main);
+    private void initFragment(Bundle savedInstanceState) {
+        mFragmentChanger = new FragmentChanger(getSupportFragmentManager(), R.id.fl_main);
+        if (savedInstanceState != null) {
+            mFragmentChanger.onRestoreInstanceState(savedInstanceState);
+        } else {
             mFragmentChanger.showFragment(CourseFragment.class);
         }
     }

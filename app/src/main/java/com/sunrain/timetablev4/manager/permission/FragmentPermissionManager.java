@@ -1,15 +1,13 @@
 package com.sunrain.timetablev4.manager.permission;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-
 import com.sunrain.timetablev4.R;
 
 
@@ -56,12 +54,12 @@ class FragmentPermissionManager extends BasePermissionManager {
 
         if (!TextUtils.isEmpty(message)) {
             for (String permission : permissions) {
-                if (FragmentCompat.shouldShowRequestPermissionRationale(mFragment, permission)) {
+                if (mFragment.shouldShowRequestPermissionRationale(permission)) {
                     new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Light_Dialog_Alert).setMessage(message)
                             .setCancelable(false).setPositiveButton(R.string.i_know, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            FragmentCompat.requestPermissions(mFragment, permissions, requestCode);
+                            mFragment.requestPermissions(permissions, requestCode);
                         }
                     }).show();
                     return;
@@ -74,13 +72,13 @@ class FragmentPermissionManager extends BasePermissionManager {
                     .setCancelable(false).setPositiveButton(mFragment.getString(R.string.i_know), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    FragmentCompat.requestPermissions(mFragment, permissions, requestCode);
+                    mFragment.requestPermissions(permissions, requestCode);
                 }
             }).show();
             return;
         }
 
-        FragmentCompat.requestPermissions(mFragment, permissions, requestCode);
+        mFragment.requestPermissions(permissions, requestCode);
     }
 
     @Override
@@ -92,8 +90,7 @@ class FragmentPermissionManager extends BasePermissionManager {
 
         boolean neverAskAgainChecked = false;
         for (int i = 0; i < permissions.length; i++) {
-            if (grantResults[i] != PackageManager.PERMISSION_GRANTED && !FragmentCompat
-                    .shouldShowRequestPermissionRationale(mFragment, permissions[i])) {
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED && !mFragment.shouldShowRequestPermissionRationale(permissions[i])) {
                 neverAskAgainChecked = true;
                 break;
             }

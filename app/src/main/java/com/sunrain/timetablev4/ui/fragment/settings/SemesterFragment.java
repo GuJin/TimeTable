@@ -59,7 +59,7 @@ public class SemesterFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Override
-    public void initData() {
+    public void initData(@Nullable Bundle savedInstanceState) {
         mSimpleDateFormat = new SimpleDateFormat("yyyy - MM - dd", Locale.getDefault());
         initSpinner();
         setDate();

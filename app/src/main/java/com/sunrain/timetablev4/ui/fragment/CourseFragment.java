@@ -48,12 +48,23 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
     protected void initView(View view, @Nullable Bundle savedInstanceState) {
         mTvWeek = view.findViewById(R.id.tv_week);
         mImgBtnRestore = view.findViewById(R.id.imgBtn_restore);
+
     }
 
     @Override
-    public void initData() {
-        initTableView();
+    public void initData(Bundle savedInstanceState) {
         mTableData = TableData.getInstance();
+
+        if (savedInstanceState != null) {
+            long jumpDate = savedInstanceState.getLong("JumpDate", 0);
+            if (jumpDate != 0) {
+                mJumpDate = jumpDate;
+                mTableData.setCurrentWeek(CalendarUtil.getCurrentWeek(mJumpDate));
+                mImgBtnRestore.setVisibility(DateUtils.isToday(mJumpDate) ? View.INVISIBLE : View.VISIBLE);
+            }
+        }
+
+        initTableView();
         setShowingWeek();
         setListener();
     }
@@ -175,5 +186,13 @@ public class CourseFragment extends BaseFragment implements View.OnClickListener
         }
         mClassDialog.setMessage(sb.toString());
         mClassDialog.show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mJumpDate != 0) {
+            outState.putLong("JumpDate", mJumpDate);
+        }
+        super.onSaveInstanceState(outState);
     }
 }

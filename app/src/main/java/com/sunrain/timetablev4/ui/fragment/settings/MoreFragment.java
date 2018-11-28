@@ -61,7 +61,7 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
-    public void initData() {
+    public void initData(@Nullable Bundle savedInstanceState) {
         mPermissionManager = PermissionManager.Factory.get(this, this);
         setListener();
     }

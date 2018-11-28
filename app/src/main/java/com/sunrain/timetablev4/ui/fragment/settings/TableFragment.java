@@ -46,7 +46,7 @@ public class TableFragment extends BaseFragment implements CompoundButton.OnChec
     }
 
     @Override
-    public void initData() {
+    public void initData(@Nullable Bundle savedInstanceState) {
         initSpinner();
         initSwitch();
         initCheckBox();

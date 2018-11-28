@@ -1,9 +1,9 @@
 package com.sunrain.timetablev4.ui.fragment;
 
-import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,15 +29,6 @@ public class SettingsFragment extends BaseFragment implements RadioGroup.OnCheck
     private SparseArray<Class<? extends Fragment>> mFragmentArray;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mFragmentChanger = new FragmentChanger(getChildFragmentManager(), R.id.fl_content);
-            mFragmentChanger.onRestoreInstanceState(savedInstanceState);
-        }
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
@@ -49,19 +40,22 @@ public class SettingsFragment extends BaseFragment implements RadioGroup.OnCheck
     }
 
     @Override
-    public void initData() {
+    public void initData(@Nullable Bundle savedInstanceState) {
         setListener();
-        initFragment();
-        if (mFragmentChanger == null) {
-            // 如果mFragmentChanger不为null，则代表在onCreate方法中恢复过，系统会帮助我们显示对应的fragment
-            mFragmentChanger = new FragmentChanger(getChildFragmentManager(), R.id.fl_content);
+        initFragmentArray();
+
+        mFragmentChanger = new FragmentChanger(getChildFragmentManager(), R.id.fl_content);
+
+        if (savedInstanceState != null) {
+            mFragmentChanger.onRestoreInstanceState(savedInstanceState);
+        } else {
             // 不使用RadioGroup的check方法，会多次调用onCheckedChanged
             // https://stackoverflow.com/questions/10263778/radiogroup-calls-oncheckchanged-three-times
             mRbSemester.setChecked(true);
         }
     }
 
-    private void initFragment() {
+    private void initFragmentArray() {
         mFragmentArray = new SparseArray<>();
         mFragmentArray.put(R.id.rb_semester, SemesterFragment.class);
         mFragmentArray.put(R.id.rb_table, TableFragment.class);

@@ -1,10 +1,10 @@
 package com.sunrain.timetablev4.base;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +20,19 @@ public abstract class BaseFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return createView(inflater, container);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initView(view, savedInstanceState);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
+        initData(savedInstanceState);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -45,6 +45,6 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract void initView(View view, @Nullable Bundle savedInstanceState);
 
-    protected abstract void initData();
+    protected abstract void initData(@Nullable Bundle savedInstanceState);
 
 }

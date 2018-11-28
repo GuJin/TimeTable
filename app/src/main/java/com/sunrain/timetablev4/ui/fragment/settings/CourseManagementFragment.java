@@ -62,7 +62,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     }
 
     @Override
-    public void initData() {
+    public void initData(@Nullable Bundle savedInstanceState) {
         initCourseClassroomListView();
         initClassTimeListView();
         setListener();
