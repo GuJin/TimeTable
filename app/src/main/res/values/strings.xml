@@ -46,5 +46,12 @@
     <string name="app_widget_configure_intensity">背景颜色强度（%d%%）</string>
     <string name="app_widget_configure_time_style">时间样式（%s）</string>
 
+    <string name="dialog_feedback">如果软件出现了问题，可以通过邮件进行反馈。
+        \n如果觉得软件有可以改进的地方也欢迎反馈，但请详细描述改进是为了解决什么问题。
+        \n\n因为还要上班，还要忙其他事情，你们的反馈我肯定会看到，但很抱歉无法100%%回复你们。提出的改进因为要考虑所有人的情况，可能会采纳也可能不会采纳，请各位理解。
+        \n\n反馈邮箱：itimetable@foxmail.com，反馈时请告诉我软件的版本号，当前版本：%s。
+        \n\n谢谢大家。
+    </string>
+
 
 </resources>

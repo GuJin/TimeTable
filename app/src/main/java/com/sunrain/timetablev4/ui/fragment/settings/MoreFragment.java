@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.sunrain.timetablev4.ui.dialog.DonationDialog;
 import com.sunrain.timetablev4.ui.dialog.InputCourseDialog;
 import com.sunrain.timetablev4.ui.dialog.MessageDialog;
 import com.sunrain.timetablev4.ui.dialog.ShareClassDialog;
+import com.sunrain.timetablev4.utils.ClipboardUtil;
 import com.sunrain.timetablev4.utils.WebUtil;
 import com.sunrain.timetablev4.view.table.TableData;
 
@@ -38,7 +40,8 @@ import java.util.List;
 
 import tech.gujin.toast.ToastUtil;
 
-public class MoreFragment extends BaseFragment implements View.OnClickListener, PermissionManager.OnRequestPermissionsListener {
+public class MoreFragment extends BaseFragment implements View.OnClickListener, PermissionManager
+        .OnRequestPermissionsListener, View.OnLongClickListener {
 
     private final int REQUEST_BACKGROUND_PICK_IMG = 1;
     private final int REQUEST_INPUT_COURSE = 2;
@@ -77,7 +80,10 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
         view.findViewById(R.id.btn_version).setOnClickListener(this);
         view.findViewById(R.id.btn_praise).setOnClickListener(this);
         view.findViewById(R.id.btn_donation).setOnClickListener(this);
-        view.findViewById(R.id.btn_say).setOnClickListener(this);
+        view.findViewById(R.id.btn_feedback).setOnClickListener(this);
+
+        view.findViewById(R.id.btn_donation).setOnLongClickListener(this);
+        view.findViewById(R.id.btn_feedback).setOnLongClickListener(this);
     }
 
     @Override
@@ -107,8 +113,8 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.btn_github:
                 WebUtil.gotoWeb(mActivity, "https://github.com/GuJin/TimeTable");
                 break;
-            case R.id.btn_say:
-                sendEmail();
+            case R.id.btn_feedback:
+                showEmailDialog();
                 break;
             case R.id.btn_tutorial:
                 WebUtil.gotoWeb(mActivity, "http://timetable.gujin.tech/tutorial.html");
@@ -116,16 +122,34 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void sendEmail() {
-        Intent data = new Intent(Intent.ACTION_SENDTO);
-        data.setData(Uri.parse("mailto:itimetable@foxmail.com"));
-        data.putExtra(Intent.EXTRA_SUBJECT, "来自：我是课程表");
-        data.putExtra(Intent.EXTRA_TEXT, getFeedBackInfo());
-        if (data.resolveActivity(MyApplication.sContext.getPackageManager()) != null) {
-            startActivity(data);
-        } else {
-            ToastUtil.show("邮箱：itimetable@foxmail.com", true);
+    private void showEmailDialog() {
+        String message = getString(R.string.dialog_feedback, BuildConfig.VERSION_NAME);
+        MessageDialog messageDialog = new MessageDialog(mActivity).setMessage(message);
+        messageDialog.setPositiveButton("复制邮箱地址", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                ClipboardUtil.writeToClipboard("邮箱", "itimetable@foxmail.com");
+                ToastUtil.show("已复制");
+            }
+        });
+
+        final Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:itimetable@foxmail.com"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "我是课程表：建议反馈");
+        intent.putExtra(Intent.EXTRA_TEXT, getFeedBackInfo());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (intent.resolveActivity(MyApplication.sContext.getPackageManager()) != null) {
+            messageDialog.setNegativeButton("打开邮件应用", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // 使用startActivity(intent)第二次点击会崩溃
+                    MyApplication.sContext.startActivity(intent);
+                }
+            });
         }
+
+        messageDialog.setTextGravity(Gravity.START).show();
     }
 
     private String getFeedBackInfo() {
@@ -255,5 +279,18 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         mPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_donation:
+                ToastUtil.show("比起金额，更喜欢你们在转账备注里给我写的留言");
+                return true;
+            case R.id.btn_feedback:
+                ToastUtil.show("能看到有人给我发邮件就已经很高兴了");
+                return true;
+        }
+        return false;
     }
 }

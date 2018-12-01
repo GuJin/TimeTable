@@ -64,7 +64,7 @@
             app:layout_constraintTop_toTopOf="@+id/btn_praise" />
 
         <Button
-            android:id="@+id/btn_say"
+            android:id="@+id/btn_feedback"
             style="@style/SettingsButton"
             android:text="建议反馈"
             app:layout_constraintStart_toEndOf="@+id/btn_donation"
