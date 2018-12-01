@@ -38,4 +38,9 @@ public class MessageDialog extends BaseDialog<MessageDialog> {
         return this;
     }
 
+    public MessageDialog setTextGravity(int gravity) {
+        mTextView.setGravity(gravity);
+        return this;
+    }
+
 }
