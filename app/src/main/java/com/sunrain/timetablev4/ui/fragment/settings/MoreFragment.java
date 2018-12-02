@@ -285,10 +285,10 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.btn_donation:
-                ToastUtil.show("比起金额，更喜欢你们在转账备注里给我写的留言");
+                ToastUtil.show("比起金额，更喜欢你们在转账备注里的留言", true);
                 return true;
             case R.id.btn_feedback:
-                ToastUtil.show("能看到有人给我发邮件就已经很高兴了");
+                ToastUtil.show("能看到有人发来邮件就已经很高兴了");
                 return true;
         }
         return false;
