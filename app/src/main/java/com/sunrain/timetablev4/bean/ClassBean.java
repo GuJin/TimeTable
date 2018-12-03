@@ -126,7 +126,7 @@ public class ClassBean {
          * 1：上 一
          * 2：上 1
          */
-        public static String getFormatTimeInDay(int section, int time, int timeStyle) {
+        public static synchronized String getFormatTimeInDay(int section, int time, int timeStyle) {
             sSb.setLength(0);
 
             initTimeStyleArray(timeStyle);
