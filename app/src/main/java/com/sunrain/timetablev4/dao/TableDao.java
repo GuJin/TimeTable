@@ -218,7 +218,7 @@ public class TableDao extends BaseDao {
     }
 
     @NonNull
-    public static SparseArray<ClassBean> getClasses(String selection, String[] selectionArgs) {
+    private static SparseArray<ClassBean> getClasses(String selection, String[] selectionArgs) {
         SQLiteDatabase db = DBManager.getDb();
         Cursor cursor = query(db, TABLE_NAME, selection, selectionArgs);
         int count = cursor.getCount();
