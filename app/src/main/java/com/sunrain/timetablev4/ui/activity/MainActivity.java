@@ -11,6 +11,7 @@ import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.base.BaseActivity;
 import com.sunrain.timetablev4.constants.SharedPreConstants;
+import com.sunrain.timetablev4.manager.CrashHandler;
 import com.sunrain.timetablev4.manager.FragmentChanger;
 import com.sunrain.timetablev4.manager.WallpaperManager;
 import com.sunrain.timetablev4.thread.DataCheckThread;
@@ -66,6 +67,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initBugly() {
+        CrashHandler.getInstance().init();
         if (TextUtils.isEmpty(BuildConfig.BUGLY_ID)) {
             return;
         }
