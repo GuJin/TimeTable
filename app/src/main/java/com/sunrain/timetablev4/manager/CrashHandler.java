@@ -3,15 +3,15 @@ package com.sunrain.timetablev4.manager;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.os.TransactionTooLargeException;
+import android.widget.Toast;
 
 import com.sunrain.timetablev4.application.MyApplication;
 
 import java.io.File;
 import java.util.List;
-
-import tech.gujin.toast.ToastUtil;
-
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
@@ -34,15 +34,25 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
 
         if (ex != null) {
-            Throwable cause = ex.getCause();
-            if (cause instanceof TransactionTooLargeException) {
+            if(ex instanceof TransactionTooLargeException || ex.getCause() instanceof TransactionTooLargeException){
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        Looper.prepare();
+                        Toast.makeText(MyApplication.sContext, "崩溃了，请邮件向itimetable@foxmail.com反馈", Toast.LENGTH_LONG).show();
+                        Looper.loop();
+                    }
+                }.start();
+
                 // 目前尚未知道TransactionTooLargeException崩溃原因，怀疑是壁纸过大
                 File picFile = new File(MyApplication.sContext.getFilesDir(), WallpaperManager.FILE_NAME);
                 if (picFile.exists()) {
                     //noinspection ResultOfMethodCallIgnored
                     picFile.delete();
                 }
-                ToastUtil.show("崩溃了，请邮件向itimetable@foxmail.com反馈", true, ToastUtil.Mode.NORMAL);
+                // 为了让进程多存活一会，让Toast显示
+                SystemClock.sleep(2500);
             }
         }
 

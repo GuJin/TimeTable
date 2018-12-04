@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initData(@Nullable Bundle savedInstanceState) {
         initBugly();
+        CrashHandler.getInstance().init();
         initFragment(savedInstanceState);
         initPost(savedInstanceState);
     }
@@ -67,7 +68,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initBugly() {
-        CrashHandler.getInstance().init();
         if (TextUtils.isEmpty(BuildConfig.BUGLY_ID)) {
             return;
         }
