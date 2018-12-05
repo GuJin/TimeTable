@@ -219,16 +219,33 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
                         dialog.dismiss();
                     }
                 });
+
         editDialog.setPositiveButton(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                CourseClassroomBean newBean = new CourseClassroomBean(editDialog.getCourse(), editDialog.getClassroom());
+
+                final String course = editDialog.getCourse();
+                final String classroom = editDialog.getClassroom();
+
+                if (TextUtils.isEmpty(course)) {
+                    ToastUtil.show("课程名称不能为空");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(classroom)) {
+                    ToastUtil.show("上课地点不能为空");
+                    return;
+                }
+
+                CourseClassroomBean newBean = new CourseClassroomBean(course, classroom);
+
                 if (CourseClassroomDao.exists(newBean)) {
                     ToastUtil.show("已有相同条目");
                 } else {
                     dialog.dismiss();
                     updateCourseClassroom(bean, newBean);
                 }
+
             }
         }).show();
     }
@@ -267,6 +284,7 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     }
 
     private class OnContentChangedListener implements TableData.OnTableDataChangedListener {
+
         @Override
         public void onContentChange() {
             needContentRefresh = true;
