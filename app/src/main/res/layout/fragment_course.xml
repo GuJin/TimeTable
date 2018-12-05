@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_week"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="@dimen/leftBar_width"
+        android:layout_height="@dimen/leftBar_width"
         android:layout_marginTop="80dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <ImageButton
         android:id="@+id/imgBtn_restore"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="@dimen/leftBar_width"
+        android:layout_height="@dimen/leftBar_width"
         android:layout_marginTop="130dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_restore"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 </FrameLayout>
