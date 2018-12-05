@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckedTextView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.sunrain.timetablev4.R;
 
-public class AppWidgetConfigureActivity extends Activity implements View.OnClickListener, SeekBar
-        .OnSeekBarChangeListener, RadioGroup.OnCheckedChangeListener {
+public class AppWidgetConfigureActivity extends Activity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, RadioGroup
+        .OnCheckedChangeListener {
 
     private int mAppWidgetId;
     private RadioGroup mRgBgColor;
@@ -21,6 +22,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
     private SeekBar mSbIntensity;
     private TextView mTvIntensity;
     private TextView mTvTimeStyle;
+    private CheckedTextView mCtvWeek;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
         mSbIntensity = findViewById(R.id.sb_intensity);
         mRgTimeStyle = findViewById(R.id.rg_time_style);
         mTvTimeStyle = findViewById(R.id.tv_time_style);
+        mCtvWeek = findViewById(R.id.ctv_week);
     }
 
     private void setListener() {
@@ -58,6 +61,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
         findViewById(R.id.btn_cancel).setOnClickListener(this);
         mSbIntensity.setOnSeekBarChangeListener(this);
         mRgTimeStyle.setOnCheckedChangeListener(this);
+//        mCtvWeek.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -68,8 +72,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
                 break;
             case R.id.btn_confirm:
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-                DayAppWidgetProvider.updateAppWidgetConfig(appWidgetManager, mAppWidgetId, getSettingColor(),
-                        getTimeStyle());
+                DayAppWidgetProvider.updateAppWidgetConfig(appWidgetManager, mAppWidgetId, getSettingColor(), getTimeStyle());
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
                 setResult(RESULT_OK, resultValue);
