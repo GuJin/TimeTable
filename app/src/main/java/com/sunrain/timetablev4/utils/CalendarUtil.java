@@ -5,6 +5,7 @@ import com.sunrain.timetablev4.constants.SharedPreConstants;
 import java.util.Calendar;
 
 public class CalendarUtil {
+
     /**
      * @return 0：星期一
      */
@@ -15,11 +16,17 @@ public class CalendarUtil {
         return androidWeekToCustomWeek(cal.get(Calendar.DAY_OF_WEEK));
     }
 
+    /**
+     * 从0开始
+     */
     public static int getCurrentWeek() {
         return getCurrentWeek(System.currentTimeMillis());
     }
 
-    public static int getCurrentWeek(long currentDateTime) {
+    /**
+     * 从0开始
+     */
+    public static synchronized int getCurrentWeek(long currentDateTime) {
         long startDateTime = SharedPreUtils.getLong(SharedPreConstants.SEMESTER_START_DATE, 0);
         if (startDateTime == 0) {
             return 0;
