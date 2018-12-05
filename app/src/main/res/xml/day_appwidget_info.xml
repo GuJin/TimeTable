@@ -4,7 +4,7 @@
     android:minHeight="110dp"
     android:minResizeHeight="40dp"
     android:minWidth="250dp"
-    android:previewImage="@drawable/bg_wallpaper_default"
+    android:previewImage="@drawable/img_app_widget_day_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="14400000"
     android:widgetCategory="home_screen" />
