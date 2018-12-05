@@ -68,7 +68,7 @@ public class ClassQrCodeHelper {
         }
 
         if (version > sVersion) {
-            ToastUtil.postShow("二维码版本高，请升级到最新版我是课程表后重试", true, ToastUtil.Mode.NORMAL);
+            ToastUtil.postShow("二维码版本高，请升级到最新版我是课程表", true, ToastUtil.Mode.NORMAL);
             return null;
         }
 
