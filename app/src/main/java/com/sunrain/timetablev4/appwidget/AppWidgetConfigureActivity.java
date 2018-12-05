@@ -13,6 +13,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.sunrain.timetablev4.R;
+import com.sunrain.timetablev4.dao.AppWidgetDao;
+
+import java.util.Map;
 
 public class AppWidgetConfigureActivity extends Activity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, RadioGroup
         .OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
@@ -46,6 +49,12 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
 
         initView();
         setListener();
+
+        // 某些机型可以重复拉起这个activity
+        Map<String, Integer> configMap = AppWidgetDao.getAppWidgetConfig(mAppWidgetId);
+        if (configMap != null) {
+            setConfig(configMap);
+        }
     }
 
     private void initView() {
@@ -63,6 +72,43 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
         mSbIntensity.setOnSeekBarChangeListener(this);
         mRgTimeStyle.setOnCheckedChangeListener(this);
         mCbWeek.setOnCheckedChangeListener(this);
+    }
+
+    private void setConfig(Map<String, Integer> configMap) {
+        Integer backgroundColor = configMap.get("backgroundColor");
+        if (backgroundColor != null) {
+            int r = (int) (((backgroundColor >> 16) & 0xff) / 255.0f * 100);
+            if (r == 0) {
+                //当前版本只有黑白两色
+                mRgBgColor.check(R.id.rb_black);
+            } else {
+                mRgBgColor.check(R.id.rb_white);
+            }
+
+            int a = Math.round(((backgroundColor >> 24) & 0xff) / 255.0f * 100);
+            mSbIntensity.setProgress(a);
+        }
+
+        Integer timeStyle = configMap.get("timeStyle");
+        if (timeStyle != null) {
+            switch (timeStyle) {
+                case AppWidgetConstants.TIME_STYLE_SECOND:
+                    mRgTimeStyle.check(R.id.rb_time_style_2);
+                    break;
+                case AppWidgetConstants.TIME_STYLE_THIRD:
+                    mRgTimeStyle.check(R.id.rb_time_style_3);
+                    break;
+                case AppWidgetConstants.TIME_STYLE_FIRST:
+                    mRgTimeStyle.check(R.id.rb_time_style_1);
+                default:
+                    break;
+            }
+        }
+
+        Integer weekStyle = configMap.get("weekStyle");
+        if (weekStyle != null) {
+            mCbWeek.setChecked(weekStyle == AppWidgetConstants.WEEK_STYLE_ENABLE);
+        }
     }
 
     @Override

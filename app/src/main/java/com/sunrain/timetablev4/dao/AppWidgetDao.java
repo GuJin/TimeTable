@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AppWidgetDao extends BaseDao {
 
     private static final String TABLE_NAME = "app_widget";
@@ -28,6 +31,33 @@ public class AppWidgetDao extends BaseDao {
         }
 
         DBManager.close(db);
+    }
+
+    public static Map<String, Integer> getAppWidgetConfig(int appWidgetId) {
+        SQLiteDatabase db = DBManager.getDb();
+        String selection = "appWidgetId = ?";
+        String[] selectionArgs = {String.valueOf(appWidgetId)};
+        String[] columns = {"backgroundColor", "timeStyle", "weekStyle"};
+        Cursor cursor = queryComplex(db, TABLE_NAME, columns, selection, selectionArgs, null, null, null, null);
+        int count = cursor.getCount();
+
+        if (count == 0) {
+            cursor.close();
+            return null;
+        }
+
+        Map<String, Integer> configMap = null;
+
+        if (cursor.moveToNext()) {// id只存在一个，所以不用while
+            configMap = new HashMap<>();
+            configMap.put("backgroundColor", cursor.getInt(cursor.getColumnIndex("backgroundColor")));
+            configMap.put("timeStyle", cursor.getInt(cursor.getColumnIndex("timeStyle")));
+            configMap.put("weekStyle", cursor.getInt(cursor.getColumnIndex("weekStyle")));
+        }
+
+        cursor.close();
+
+        return configMap;
     }
 
     public static int getAppWidgetBackgroundColor(int appWidgetId, int defaultColor) {

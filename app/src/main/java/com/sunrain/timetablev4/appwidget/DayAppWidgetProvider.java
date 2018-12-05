@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
 import com.sunrain.timetablev4.BuildConfig;
@@ -67,7 +68,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private String getDateText(int appWidgetId, long currentTimeMillis, SimpleDateFormat simpleDateFormat) {
+    private static String getDateText(int appWidgetId, long currentTimeMillis, SimpleDateFormat simpleDateFormat) {
         String date = simpleDateFormat.format(currentTimeMillis);
         if (AppWidgetDao.getAppWidgetWeekStyle(appWidgetId, AppWidgetConstants.WEEK_STYLE_DISABLE) == AppWidgetConstants.WEEK_STYLE_ENABLE) {
             return date + " " + (CalendarUtil.getCurrentWeek(currentTimeMillis) + 1);
@@ -133,6 +134,11 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         AppWidgetDao.clear();
     }
 
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        onUpdate(context, appWidgetManager, new int[]{appWidgetId});
+    }
+
     private PendingIntent makePendingIntent(Context context, int appWidgetId, String action) {
         Intent intent = new Intent(context, DayAppWidgetProvider.class);
         intent.setAction(action);
@@ -152,6 +158,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         views.setRemoteAdapter(R.id.lv_day_appwidget, intent);
         views.setEmptyView(R.id.lv_day_appwidget, R.id.empty_view);
         views.setInt(R.id.fl_root, "setBackgroundColor", backgroundColor);
+        views.setTextViewText(R.id.tv_date, getDateText(appWidgetId, System.currentTimeMillis(), new SimpleDateFormat("M月d日 E", Locale.getDefault())));
         appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
     }
 
@@ -161,6 +168,13 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
                 DayAppWidgetProvider.class));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_day_appwidget);
+
+        for (int appWidgetId : appWidgetIds) {
+            // 如果有显示当前周数的话 还要刷新周数
+            RemoteViews views = new RemoteViews(MyApplication.sContext.getPackageName(), R.layout.day_appwidget);
+            views.setTextViewText(R.id.tv_date, getDateText(appWidgetId, System.currentTimeMillis(), new SimpleDateFormat("M月d日 E", Locale.getDefault())));
+            appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
+        }
     }
 
     public void notifyUpdate(Context context) {
