@@ -40,8 +40,8 @@ import java.util.List;
 
 import tech.gujin.toast.ToastUtil;
 
-public class MoreFragment extends BaseFragment implements View.OnClickListener, PermissionManager
-        .OnRequestPermissionsListener, View.OnLongClickListener {
+public class MoreFragment extends BaseFragment implements View.OnClickListener, PermissionManager.OnRequestPermissionsListener, View
+        .OnLongClickListener {
 
     private final int REQUEST_BACKGROUND_PICK_IMG = 1;
     private final int REQUEST_INPUT_COURSE = 2;
@@ -143,8 +143,15 @@ public class MoreFragment extends BaseFragment implements View.OnClickListener, 
             messageDialog.setNegativeButton("打开邮件应用", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    // 使用startActivity(intent)第二次点击会崩溃
-                    MyApplication.sContext.startActivity(intent);
+                    dialog.dismiss();
+                    startActivity(intent);
+                }
+            });
+        } else {
+            messageDialog.setNegativeButton("关闭", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
                 }
             });
         }
