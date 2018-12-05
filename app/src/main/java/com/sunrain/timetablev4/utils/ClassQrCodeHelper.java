@@ -10,9 +10,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import tech.gujin.toast.ToastUtil;
+
 public class ClassQrCodeHelper {
 
-    public static final int version = 2;
+    private static final int sVersion = 2;
 
     public static JSONObject toJSONObject(List<ClassBean> list) throws JSONException {
 
@@ -45,7 +47,7 @@ public class ClassQrCodeHelper {
             classBeanJsonArray.put(zipForVersion2(classBean));
         }
 
-        courseJsonObject.put("v", version);
+        courseJsonObject.put("v", sVersion);
         return courseJsonObject;
     }
 
@@ -62,6 +64,11 @@ public class ClassQrCodeHelper {
             version = courseJsonObject.getInt("v");
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
+        }
+
+        if (version > sVersion) {
+            ToastUtil.postShow("二维码版本高，请升级到最新版我是课程表后重试", true, ToastUtil.Mode.NORMAL);
             return null;
         }
 
