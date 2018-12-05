@@ -34,7 +34,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
 
         if (ex != null) {
-            if(ex instanceof TransactionTooLargeException || ex.getCause() instanceof TransactionTooLargeException){
+            if (ex instanceof TransactionTooLargeException || ex.getCause() instanceof TransactionTooLargeException) {
 
                 new Thread() {
                     @Override
