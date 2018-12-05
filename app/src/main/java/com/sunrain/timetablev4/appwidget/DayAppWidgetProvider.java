@@ -9,16 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import com.sunrain.timetablev4.BuildConfig;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.dao.AppWidgetDao;
+import com.sunrain.timetablev4.utils.CalendarUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -56,17 +55,24 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.day_appwidget);
             rv.setRemoteAdapter(R.id.lv_day_appwidget, intent);
             rv.setEmptyView(R.id.lv_day_appwidget, R.id.empty_view);
-            rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(currentTimeMillis));
-            rv.setInt(R.id.fl_root, "setBackgroundColor", AppWidgetDao.getAppWidgetBackgroundColor(appWidgetId, Color
-                    .TRANSPARENT));
+            rv.setTextViewText(R.id.tv_date, getDateText(appWidgetId, currentTimeMillis, simpleDateFormat));
+            rv.setInt(R.id.fl_root, "setBackgroundColor", AppWidgetDao.getAppWidgetBackgroundColor(appWidgetId, Color.TRANSPARENT));
 
             rv.setOnClickPendingIntent(R.id.imgBtn_restore, makePendingIntent(context, appWidgetId, ACTION_RESTORE));
-            rv.setOnClickPendingIntent(R.id.imgBtn_yesterday, makePendingIntent(context, appWidgetId,
-                    ACTION_YESTERDAY));
+            rv.setOnClickPendingIntent(R.id.imgBtn_yesterday, makePendingIntent(context, appWidgetId, ACTION_YESTERDAY));
             rv.setOnClickPendingIntent(R.id.imgBtn_tomorrow, makePendingIntent(context, appWidgetId, ACTION_TOMORROW));
 
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_day_appwidget);
             appWidgetManager.updateAppWidget(appWidgetId, rv);
+        }
+    }
+
+    private String getDateText(int appWidgetId, long currentTimeMillis, SimpleDateFormat simpleDateFormat) {
+        String date = simpleDateFormat.format(currentTimeMillis);
+        if (AppWidgetDao.getAppWidgetWeekStyle(appWidgetId, AppWidgetConstants.WEEK_STYLE_DISABLE) == AppWidgetConstants.WEEK_STYLE_ENABLE) {
+            return date + " " + (CalendarUtil.getCurrentWeek(currentTimeMillis) + 1);
+        } else {
+            return date;
         }
     }
 
@@ -105,7 +111,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
             }
 
             AppWidgetDao.saveAppWidgetCurrentTime(appWidgetId, newTime);
-            rv.setTextViewText(R.id.tv_date, simpleDateFormat.format(newTime));
+            rv.setTextViewText(R.id.tv_date, getDateText(appWidgetId, newTime, simpleDateFormat));
 
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_day_appwidget);
             appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
@@ -135,8 +141,8 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    static void updateAppWidgetConfig(AppWidgetManager appWidgetManager, int appWidgetId, int color, int timeStyle) {
-        AppWidgetDao.saveAppWidgetConfig(appWidgetId, color, timeStyle);
+    static void updateAppWidgetConfig(AppWidgetManager appWidgetManager, int appWidgetId, int backgroundColor, int timeStyle, int weekStyle) {
+        AppWidgetDao.saveAppWidgetConfig(appWidgetId, backgroundColor, timeStyle, weekStyle);
 
         Intent intent = new Intent(MyApplication.sContext, DayAppWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
@@ -145,7 +151,7 @@ public class DayAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(MyApplication.sContext.getPackageName(), R.layout.day_appwidget);
         views.setRemoteAdapter(R.id.lv_day_appwidget, intent);
         views.setEmptyView(R.id.lv_day_appwidget, R.id.empty_view);
-        views.setInt(R.id.fl_root, "setBackgroundColor", color);
+        views.setInt(R.id.fl_root, "setBackgroundColor", backgroundColor);
         appWidgetManager.partiallyUpdateAppWidget(appWidgetId, views);
     }
 

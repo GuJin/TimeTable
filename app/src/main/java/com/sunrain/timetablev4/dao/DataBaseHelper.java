@@ -52,7 +52,7 @@ class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeFrom2To3(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE app_widget(_id INTEGER PRIMARY KEY AUTOINCREMENT , appWidgetId INTEGER , currentTime INTEGER , backgroundColor INTEGER , timeStyle INTEGER , UNIQUE(appWidgetId))");
+        db.execSQL("CREATE TABLE app_widget(_id INTEGER PRIMARY KEY AUTOINCREMENT , appWidgetId INTEGER , currentTime INTEGER , backgroundColor INTEGER , timeStyle INTEGER , weekStyle INTEGER , UNIQUE(appWidgetId))");
     }
 
     private void upgradeFrom1To2(SQLiteDatabase db) {
@@ -105,6 +105,6 @@ class DataBaseHelper extends SQLiteOpenHelper {
     private void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE table_1(_id INTEGER PRIMARY KEY AUTOINCREMENT , week INTEGER , section INTEGER , time INTEGER , startWeek INTEGER , endWeek INTEGER , doubleWeek INTEGER , course CHAR , classroom CHAR)");
         db.execSQL("CREATE TABLE course_classroom(_id INTEGER PRIMARY KEY AUTOINCREMENT , course CHAR , classroom CHAR)");
-        db.execSQL("CREATE TABLE app_widget(_id INTEGER PRIMARY KEY AUTOINCREMENT , appWidgetId INTEGER , currentTime INTEGER , backgroundColor INTEGER , timeStyle INTEGER , UNIQUE(appWidgetId))");
+        db.execSQL("CREATE TABLE app_widget(_id INTEGER PRIMARY KEY AUTOINCREMENT , appWidgetId INTEGER , currentTime INTEGER , backgroundColor INTEGER , timeStyle INTEGER , weekStyle INTEGER , UNIQUE(appWidgetId))");
     }
 }

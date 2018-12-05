@@ -45,6 +45,8 @@
 
     <string name="app_widget_configure_intensity">背景颜色强度（%d%%）</string>
     <string name="app_widget_configure_time_style">时间样式（%s）</string>
+    <string name="app_widget_configure_week_style_enable">显示周数（12月5日 周三 15）</string>
+    <string name="app_widget_configure_week_style_disable">显示周数（12月5日 周三）</string>
 
     <string name="dialog_feedback">如果软件出现了问题，可以通过邮件进行反馈。
         \n如果觉得软件有可以改进的地方也欢迎反馈，但请详细描述改进是为了解决什么问题。

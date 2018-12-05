@@ -80,8 +80,8 @@ dependencies {
     implementation files('libs/core-3.2.1.jar')
 }
 
-//walle {
-//    apkOutputFolder = new File("${project.buildDir}/outputs/apk/release/channels")
-//    apkFileNameFormat = 'timetable_${versionName}_${channel}.apk'
-//    channelFile = new File("${project.getProjectDir()}/channel")
-//}
+walle {
+    apkOutputFolder = new File("${project.buildDir}/outputs/apk/release/channels")
+    apkFileNameFormat = 'timetable_${versionName}_${channel}.apk'
+    channelFile = new File("${project.getProjectDir()}/channel")
+}

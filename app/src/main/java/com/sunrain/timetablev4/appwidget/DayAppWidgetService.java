@@ -3,7 +3,6 @@ package com.sunrain.timetablev4.appwidget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.util.SparseArray;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -39,7 +38,7 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
     DayAppWidgetRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
         mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        mAppWidgetTimeStyle = AppWidgetDao.getAppWidgetTimeStyle(mAppWidgetId, 0);
+        mAppWidgetTimeStyle = AppWidgetDao.getAppWidgetTimeStyle(mAppWidgetId, AppWidgetConstants.TIME_STYLE_FIRST);
     }
 
     @Override
@@ -50,12 +49,9 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
     @Override
     public void onDataSetChanged() {
 
-        mMorningClasses = SharedPreUtils.getInt(SharedPreConstants.MORNING_CLASS_NUMBER, SharedPreConstants
-                .DEFAULT_MORNING_CLASS_NUMBER);
-        mAfternoonClasses = SharedPreUtils.getInt(SharedPreConstants.AFTERNOON_CLASS_NUMBER, SharedPreConstants
-                .DEFAULT_AFTERNOON_CLASS_NUMBER);
-        mEveningClasses = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants
-                .DEFAULT_EVENING_CLASS_NUMBER);
+        mMorningClasses = SharedPreUtils.getInt(SharedPreConstants.MORNING_CLASS_NUMBER, SharedPreConstants.DEFAULT_MORNING_CLASS_NUMBER);
+        mAfternoonClasses = SharedPreUtils.getInt(SharedPreConstants.AFTERNOON_CLASS_NUMBER, SharedPreConstants.DEFAULT_AFTERNOON_CLASS_NUMBER);
+        mEveningClasses = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants.DEFAULT_EVENING_CLASS_NUMBER);
         mClassCount = mMorningClasses + mAfternoonClasses + mEveningClasses;
 
         long currentTime = AppWidgetDao.getAppWidgetCurrentTime(mAppWidgetId, System.currentTimeMillis());
