@@ -237,6 +237,11 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
                     return;
                 }
 
+                if (course.equals(bean.course) && classroom.equals(bean.classroom)) {
+                    dialog.dismiss();
+                    return;
+                }
+
                 CourseClassroomBean newBean = new CourseClassroomBean(course, classroom);
 
                 if (CourseClassroomDao.exists(newBean)) {
