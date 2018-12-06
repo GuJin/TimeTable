@@ -76,7 +76,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
 
     private void setConfig(Map<String, Integer> configMap) {
         Integer backgroundColor = configMap.get("backgroundColor");
-        if (backgroundColor != null) {
+        if (backgroundColor != null && backgroundColor != -1) {
             int r = (int) (((backgroundColor >> 16) & 0xff) / 255.0f * 100);
             if (r == 0) {
                 //当前版本只有黑白两色
@@ -90,7 +90,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
         }
 
         Integer timeStyle = configMap.get("timeStyle");
-        if (timeStyle != null) {
+        if (timeStyle != null && timeStyle != -1) {
             switch (timeStyle) {
                 case AppWidgetConstants.TIME_STYLE_SECOND:
                     mRgTimeStyle.check(R.id.rb_time_style_2);
@@ -106,7 +106,7 @@ public class AppWidgetConfigureActivity extends Activity implements View.OnClick
         }
 
         Integer weekStyle = configMap.get("weekStyle");
-        if (weekStyle != null) {
+        if (weekStyle != null && weekStyle != -1) {
             mCbWeek.setChecked(weekStyle == AppWidgetConstants.WEEK_STYLE_ENABLE);
         }
     }
