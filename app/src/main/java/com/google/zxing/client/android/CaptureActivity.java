@@ -40,16 +40,22 @@ import android.view.WindowManager;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
+import com.google.zxing.ChecksumException;
 import com.google.zxing.DecodeHintType;
+import com.google.zxing.FormatException;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
+import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.manager.permission.PermissionManager;
+import com.sunrain.timetablev4.utils.ImageUtil;
 import com.sunrain.timetablev4.utils.RunnableExecutorService;
 import com.sunrain.timetablev4.view.CropImageView.util.Utils;
 
@@ -235,15 +241,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     }
 
-    public void handleDecode(Result rawResult) {
+    public void handleDecode(String resultString) {
         inactivityTimer.onActivity();
-        if (rawResult == null) {
-            ToastUtil.show("二维码错误");
-            finish();
-            return;
-        }
-
-        String resultString = rawResult.getText();
         if (TextUtils.isEmpty(resultString)) {
             ToastUtil.show("二维码错误");
             finish();
@@ -345,21 +344,21 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             return;
         }
         //解析图片
-        RunnableExecutorService.when(new Callable<Result>() {
+        RunnableExecutorService.when(new Callable<String>() {
             @Override
-            public Result call() {
+            public String call() {
                 Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(MyApplication.sContext, uri, 600);
                 return syncDecodeQRCode(sampledBitmap, false);
             }
-        }).done(new RunnableExecutorService.DoneCallback<Result>() {
+        }).done(new RunnableExecutorService.DoneCallback<String>() {
             @Override
-            public void done(Result result) {
+            public void done(String result) {
                 handleDecode(result);
             }
         }).execute();
     }
 
-    public Result syncDecodeQRCode(Bitmap bitmap, boolean retry) {
+    public String syncDecodeQRCode(Bitmap bitmap, boolean retry) {
         HashMap<DecodeHintType, Object> hintTypeObjectHashMap = new HashMap<>();
         List<BarcodeFormat> allFormats = new ArrayList<>(1);
         allFormats.add(BarcodeFormat.QR_CODE);
@@ -378,7 +377,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
             Result result = new MultiFormatReader().decode(new BinaryBitmap(new HybridBinarizer(source)), hintTypeObjectHashMap);
             if (result != null) {
-                return result;
+                return result.getText();
             } else {
                 return null;
             }
@@ -390,6 +389,25 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 return null;
             }
         }
+    }
+
+    private String syncDecodeQRCodeByYUV(Bitmap bitmap) {
+        final byte[] bitmapYUVBytes = ImageUtil.getBitmapYUVBytes(bitmap);
+        if (bitmapYUVBytes == null) {
+            return null;
+        }
+        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(bitmapYUVBytes, bitmap.getWidth(), bitmap.getHeight(), 0, 0, bitmap
+                .getWidth(), bitmap.getHeight(), true);
+        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+        Reader reader = new QRCodeReader();
+        Result result;
+        try {
+            result = reader.decode(binaryBitmap);
+        } catch (NotFoundException | ChecksumException | FormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result.getText();
     }
 
     @Override

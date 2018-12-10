@@ -1,6 +1,5 @@
 package com.sunrain.timetablev4.view.CropImageView.util;
 
-import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.opengl.GLES10;
-import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
@@ -98,7 +96,6 @@ public class Utils {
      * @param uri     The Uri of the image
      * @return Image file
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private static File getFileFromUri(final Context context, final Uri uri) {
         String filePath = null;
         // DocumentProvider
