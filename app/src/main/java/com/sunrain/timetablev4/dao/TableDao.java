@@ -190,10 +190,8 @@ public class TableDao extends BaseDao {
     @NonNull
     public static SparseArray<ClassBean> getClasses(int currentWeek, boolean isDoubleWeek) {
         int doubleWeek = isDoubleWeek ? 1 : 2;
-
         String selection = "? >= startWeek and ? <= endWeek and ( doubleWeek = ? or doubleWeek = ?)";
         String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(doubleWeek), "0"};
-
         return getClasses(selection, selectionArgs);
     }
 
@@ -204,16 +202,11 @@ public class TableDao extends BaseDao {
         return getClasses(selection, selectionArgs);
     }
 
-    /**
-     * 在启用单双周的情况下使用
-     */
     @NonNull
-    public static SparseArray<ClassBean> getClassesInDay(int currentWeek, boolean isDoubleWeek) {
-        int doubleWeek = isDoubleWeek ? 1 : 2;
-
-        String selection = "? >= startWeek and ? <= endWeek and ( doubleWeek = ? or doubleWeek = ?)";
-        String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(doubleWeek), "0"};
-
+    public static SparseArray<ClassBean> getClassesInDay(int currentWeek, int dayOfWeek, boolean isDoubleWeek) {
+        String doubleWeek = isDoubleWeek ? "1" : "2";
+        String selection = "? >= startWeek and ? <= endWeek and week = ? and ( doubleWeek = ? or doubleWeek = ?)";
+        String[] selectionArgs = {String.valueOf(currentWeek), String.valueOf(currentWeek), String.valueOf(dayOfWeek), doubleWeek, "0"};
         return getClasses(selection, selectionArgs);
     }
 

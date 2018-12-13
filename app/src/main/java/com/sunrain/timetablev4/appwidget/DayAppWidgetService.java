@@ -16,6 +16,7 @@ import com.sunrain.timetablev4.utils.CalendarUtil;
 import com.sunrain.timetablev4.utils.SharedPreUtils;
 
 public class DayAppWidgetService extends RemoteViewsService {
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new DayAppWidgetRemoteViewsFactory(this.getApplicationContext(), intent);
@@ -58,8 +59,16 @@ class DayAppWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         mDayOfWeek = CalendarUtil.getDayOfWeek(currentTime);
 
         mSparseArray.clear();
-        SparseArray<ClassBean> classesInDay = TableDao.getClassesInDay(CalendarUtil.getCurrentWeek(currentTime),
-                mDayOfWeek);
+
+        int currentWeek = CalendarUtil.getCurrentWeek(currentTime);
+        SparseArray<ClassBean> classesInDay;
+
+        boolean isDoubleWeekEnabled = SharedPreUtils.getInt(SharedPreConstants.DOUBLE_WEEK, SharedPreConstants.DEFAULT_DOUBLE_WEEK) == 1;
+        if (isDoubleWeekEnabled) {
+            classesInDay = TableDao.getClassesInDay(currentWeek, mDayOfWeek, CalendarUtil.isDoubleWeek(currentWeek));
+        } else {
+            classesInDay = TableDao.getClassesInDay(currentWeek, mDayOfWeek);
+        }
 
         for (int i = 0; i < classesInDay.size(); i++) {
             int key = classesInDay.keyAt(i);
