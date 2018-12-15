@@ -1,9 +1,14 @@
 package com.sunrain.timetablev4.view.table;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.text.Layout;
+import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -155,36 +160,133 @@ public class TableView extends View {
         drawClasses(canvas);
     }
 
+    /**
+     * 绘制课程文字
+     */
+    @TargetApi(Build.VERSION_CODES.M)
+    @SuppressWarnings("SingleStatementInBlock")
     private void drawClasses(Canvas canvas) {
         SparseArray<ClassBean> classes = mTableData.getClasses();
         for (int i = 0; i < classes.size(); i++) {
             int key = classes.keyAt(i);
             ClassBean classBean = classes.get(key);
 
-            int x = TIME_BOX_WIDTH + mClassBoxWidth * classBean.week + mClassBoxWidth / 2;
-            int y = WEEK_BOX_HEIGHT + mClassBoxHeight * classBean.time + mClassBoxHeight / 2 - mTextBaseline;
+            int x, y; // 所在格子的中心点
+
+            x = TIME_BOX_WIDTH + mClassBoxWidth * classBean.week + mClassBoxWidth / 2;
+            y = WEEK_BOX_HEIGHT + mClassBoxHeight * classBean.time + mClassBoxHeight / 2;
             if (classBean.section == 1) {
                 y += mMorningHeight;
             } else if (classBean.section == 2) {
                 y += mMorningHeight + mAfternoonHeight;
             }
 
-            if (mTextPaint.measureText(classBean.course) > mBoxTextMaxWidth) {
-                canvas.drawText(TextUtils.ellipsize(classBean.course, mTextPaint, mBoxTextMaxWidth, TextUtils.TruncateAt.END)
-                        .toString(), x, y - mTextHeight, mTextPaint);
-            } else {
-                canvas.drawText(classBean.course, x, y - mTextHeight, mTextPaint);
+            boolean isCourseSingleLine = mTextPaint.measureText(classBean.course) <= mBoxTextMaxWidth;
+            boolean isClassroomSingleLine = mTextPaint.measureText(classBean.classroom) <= mBoxTextMaxWidth;
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                drawClassesV21(canvas, classBean, x, y, isCourseSingleLine, isClassroomSingleLine);
+                continue;
             }
 
-            if (mTextPaint.measureText(classBean.classroom) > mBoxTextMaxWidth) {
-                canvas.drawText(TextUtils.ellipsize(classBean.classroom, mTextPaint, mBoxTextMaxWidth, TextUtils.TruncateAt.END)
-                        .toString(), x, y + mTextHeight, mTextPaint);
-            } else {
-                canvas.drawText(classBean.classroom, x, y + mTextHeight, mTextPaint);
+            if (isCourseSingleLine && isClassroomSingleLine) {
+                canvas.drawText(classBean.course, x, y - mTextBaseline - mTextHeight, mTextPaint);
+                canvas.drawText(classBean.classroom, x, y - mTextBaseline + mTextHeight, mTextPaint);
+                continue;
             }
+
+            /*
+             * 注意：
+             * StaticLayout 从左上角绘制
+             * canvas.drawText 从左下角绘制
+             */
+
+            /*
+             * 间距标准：
+             * 上半部分一行 下半部分一行 间距：mTextHeight
+             * 上半部分两行 下半部分一行 间距：mTextHeight
+             * 上半部分一行 下半部分两行 间距：mTextHeight
+             * 上半部分两行 下半部分两行 间距：两个StaticLayout之间默认间距
+             */
+
+            if (!isCourseSingleLine && !isClassroomSingleLine) {
+                StaticLayout staticLayoutCourse = getStaticLayout(classBean.course);
+
+                canvas.save();
+                canvas.translate(x, y - staticLayoutCourse.getHeight());
+
+                staticLayoutCourse.draw(canvas);
+
+                StaticLayout staticLayoutClassroom = getStaticLayout(classBean.classroom);
+
+                canvas.translate(0, staticLayoutCourse.getHeight()); // 注意这里没有调用canvas.restore();
+                staticLayoutClassroom.draw(canvas);
+                canvas.restore();
+                continue;
+            }
+
+            if (!isCourseSingleLine) {
+                StaticLayout staticLayout = getStaticLayout(classBean.course);
+
+                /*
+                 * 这个计算为了得出：使文字内容所构成的矩形框，在它的课程格子中居中的高度
+                 */
+                final int i1 = staticLayout.getHeight() / 2 + mTextHeight; // 原始：(staticLayout.getHeight() + mTextHeight * 2) / 2
+
+                canvas.save();
+                canvas.translate(x, y - i1);
+
+                staticLayout.draw(canvas);
+                canvas.translate(0, i1 * 2); // 注意这里没有调用canvas.restore();
+
+                canvas.drawText(classBean.classroom, 0, mTextBaseline, mTextPaint);
+                canvas.restore();
+                continue;
+            }
+
+            // only !isClassroomSingleLine
+            StaticLayout staticLayout = getStaticLayout(classBean.classroom);
+
+            final int i1 = staticLayout.getHeight() / 2 + mTextHeight; // 原始：(staticLayout.getHeight() + mTextHeight * 2) / 2
+
+            canvas.save();
+            canvas.translate(x, y - i1);
+
+            canvas.drawText(classBean.course, 0, mTextBaseline + mTextHeight * 2, mTextPaint);
+
+            canvas.translate(0, i1 + mTextBaseline); // 注意这里没有调用canvas.restore();
+            staticLayout.draw(canvas);
+            canvas.restore();
         }
     }
 
+    @NonNull
+    @TargetApi(Build.VERSION_CODES.M)
+    private StaticLayout getStaticLayout(String string) {
+        return StaticLayout.Builder.obtain(string, 0, string.length(), mTextPaint, mBoxTextMaxWidth)
+                .setAlignment(Layout.Alignment.ALIGN_NORMAL).setMaxLines(2).setEllipsize(TextUtils.TruncateAt.END).build();
+    }
+
+    private void drawClassesV21(Canvas canvas, ClassBean classBean, int x, int y, boolean isCourseSingleLine, boolean
+            isClassroomSingleLine) {
+        if (isCourseSingleLine) {
+            canvas.drawText(classBean.course, x, y - mTextBaseline - mTextHeight, mTextPaint);
+        } else {
+            canvas.drawText(TextUtils.ellipsize(classBean.course, mTextPaint, mBoxTextMaxWidth, TextUtils.TruncateAt.END)
+                    .toString(), x, y - mTextBaseline - mTextHeight, mTextPaint);
+        }
+
+        if (isClassroomSingleLine) {
+            canvas.drawText(classBean.classroom, x, y - mTextBaseline + mTextHeight, mTextPaint);
+        } else {
+            canvas.drawText(TextUtils.ellipsize(classBean.classroom, mTextPaint, mBoxTextMaxWidth, TextUtils.TruncateAt.END)
+                    .toString(), x, y - mTextBaseline + mTextHeight, mTextPaint);
+        }
+    }
+
+    /**
+     * 绘制表格相关文字
+     */
     private void drawTableText(Canvas canvas) {
         // 星期
         for (int i = 0, width = TIME_BOX_WIDTH + mClassBoxWidth / 2; i < mWorkdays; i++, width += mClassBoxWidth) {
