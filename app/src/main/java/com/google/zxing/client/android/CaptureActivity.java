@@ -31,33 +31,16 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.FormatException;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.PlanarYUVLuminanceSource;
-import com.google.zxing.RGBLuminanceSource;
-import com.google.zxing.Reader;
-import com.google.zxing.Result;
+import android.view.*;
+import com.google.zxing.*;
 import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.qrcode.QRCodeReader;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.manager.permission.PermissionManager;
-import com.sunrain.timetablev4.utils.ImageUtil;
 import com.sunrain.timetablev4.utils.RunnableExecutorService;
 import com.sunrain.timetablev4.view.CropImageView.util.Utils;
+import tech.gujin.toast.ToastUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,8 +48,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
-
-import tech.gujin.toast.ToastUtil;
 
 /**
  * This activity opens the camera and does the actual scanning on a background thread. It draws a
@@ -391,24 +372,24 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
     }
 
-    private String syncDecodeQRCodeByYUV(Bitmap bitmap) {
-        final byte[] bitmapYUVBytes = ImageUtil.getBitmapYUVBytes(bitmap);
-        if (bitmapYUVBytes == null) {
-            return null;
-        }
-        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(bitmapYUVBytes, bitmap.getWidth(), bitmap.getHeight(), 0, 0, bitmap
-                .getWidth(), bitmap.getHeight(), true);
-        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
-        Reader reader = new QRCodeReader();
-        Result result;
-        try {
-            result = reader.decode(binaryBitmap);
-        } catch (NotFoundException | ChecksumException | FormatException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return result.getText();
-    }
+//    private String syncDecodeQRCodeByYUV(Bitmap bitmap) {
+//        final byte[] bitmapYUVBytes = ImageUtil.getBitmapYUVBytes(bitmap);
+//        if (bitmapYUVBytes == null) {
+//            return null;
+//        }
+//        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(bitmapYUVBytes, bitmap.getWidth(), bitmap.getHeight(), 0, 0, bitmap
+//                .getWidth(), bitmap.getHeight(), true);
+//        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+//        Reader reader = new QRCodeReader();
+//        Result result;
+//        try {
+//            result = reader.decode(binaryBitmap);
+//        } catch (NotFoundException | ChecksumException | FormatException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//        return result.getText();
+//    }
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull final int[] grantResults) {
