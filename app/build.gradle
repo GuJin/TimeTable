@@ -67,6 +67,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'tech.gujin:toast-util:1.1.1'
+    implementation 'com.google.zxing:core:3.3.3'
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
     implementation 'com.meituan.android.walle:library:1.1.6'
     implementation 'com.android.support:exifinterface:' + versions.support
@@ -77,7 +78,6 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    implementation files('libs/core-3.2.1.jar')
 }
 
 walle {
