@@ -163,8 +163,6 @@ public class TableView extends View {
     /**
      * 绘制课程文字
      */
-    @TargetApi(Build.VERSION_CODES.M)
-    @SuppressWarnings("SingleStatementInBlock")
     private void drawClasses(Canvas canvas) {
         SparseArray<ClassBean> classes = mTableData.getClasses();
         for (int i = 0; i < classes.size(); i++) {
