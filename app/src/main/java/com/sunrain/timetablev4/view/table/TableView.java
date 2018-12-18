@@ -74,7 +74,7 @@ public class TableView extends View {
 
         initPaint();
         initText(context);
-        refreshConfig();
+        initConfig();
 
         mTableData = TableData.getInstance();
 
@@ -90,12 +90,23 @@ public class TableView extends View {
         mOverFlingDistance = ViewConfiguration.get(context).getScaledOverflingDistance();
     }
 
-    void refreshConfig() {
+    void initConfig() {
         mMorningClasses = SharedPreUtils.getInt(SharedPreConstants.MORNING_CLASS_NUMBER, SharedPreConstants.DEFAULT_MORNING_CLASS_NUMBER);
         mAfternoonClasses = SharedPreUtils.getInt(SharedPreConstants.AFTERNOON_CLASS_NUMBER, SharedPreConstants
                 .DEFAULT_AFTERNOON_CLASS_NUMBER);
         mEveningClasses = SharedPreUtils.getInt(SharedPreConstants.EVENING_CLASS_NUMBER, SharedPreConstants.DEFAULT_EVENING_CLASS_NUMBER);
         mWorkdays = SharedPreUtils.getInt(SharedPreConstants.WORK_DAY, SharedPreConstants.DEFAULT_WORK_DAY);
+    }
+
+    void refreshConfig() {
+        int oldClassesCount = mMorningClasses + mAfternoonClasses + mEveningClasses;
+
+        initConfig();
+
+        // 如果之前设置了很多课程，并滚动到底部，再设置为极少量课程，会导致课表无法显示，需要主动滚动到头部
+        if (mMorningClasses + mAfternoonClasses + mEveningClasses < oldClassesCount) {
+            scrollTo(0, 0);
+        }
     }
 
     private void initText(Context context) {
