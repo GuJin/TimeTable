@@ -3,7 +3,7 @@ package com.sunrain.timetablev4.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.sunrain.timetablev4.bean.CourseClassroomBean;
 

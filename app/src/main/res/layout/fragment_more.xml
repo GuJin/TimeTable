@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="60dp">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -87,5 +87,5 @@
             app:layout_constraintStart_toEndOf="@+id/btn_version"
             app:layout_constraintTop_toTopOf="@+id/btn_version" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

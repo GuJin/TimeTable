@@ -3,7 +3,7 @@ package com.sunrain.timetablev4.dao;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

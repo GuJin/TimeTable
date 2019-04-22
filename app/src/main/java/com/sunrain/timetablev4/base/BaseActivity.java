@@ -3,7 +3,7 @@ package com.sunrain.timetablev4.base;
 import android.content.Context;
 import android.os.Bundle;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import com.sunrain.timetablev4.utils.SystemUiUtil;
 
 public abstract class BaseActivity extends FragmentActivity {

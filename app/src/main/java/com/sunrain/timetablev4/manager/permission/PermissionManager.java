@@ -1,8 +1,8 @@
 package com.sunrain.timetablev4.manager.permission;
 
 import android.app.Activity;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
 
 public interface PermissionManager {
 
