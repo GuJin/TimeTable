@@ -1,11 +1,12 @@
 package com.sunrain.timetablev4.ui.activity;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
-
+import androidx.annotation.Nullable;
 import com.sunrain.timetablev4.BuildConfig;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
@@ -44,23 +45,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initBugly();
         CrashHandler.getInstance().init();
         initFragment(savedInstanceState);
-        initPost(savedInstanceState);
+        initArrow(savedInstanceState);
+        setListener();
     }
 
-    private void initPost(final Bundle savedInstanceState) {
-        getWindow().getDecorView().post(new Runnable() {
-            @Override
-            public void run() {
-                initArrow(savedInstanceState);
-                setListener();
-                setBackground();
-                int lastVersionCode = SharedPreUtils.getInt(SharedPreConstants.VERSION_CODE, 0);
-                new DataCheckThread(MainActivity.this, lastVersionCode).start();
-                if (lastVersionCode != BuildConfig.VERSION_CODE) {
-                    SharedPreUtils.putInt(SharedPreConstants.VERSION_CODE, BuildConfig.VERSION_CODE);
-                }
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Looper.myQueue().addIdleHandler(new ResumeIdleHandler());
     }
 
     private void setBackground() {
@@ -109,11 +101,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.imgBtn_settings:
-                mImgBtnSettings.setEnabled(false);
-                changeFragment();
-                break;
+        if (v.getId() == R.id.imgBtn_settings) {
+            mImgBtnSettings.setEnabled(false);
+            changeFragment();
         }
     }
 
@@ -133,5 +123,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mFragmentChanger.onSaveInstanceState(outState);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    private class ResumeIdleHandler implements MessageQueue.IdleHandler {
+
+        @Override
+        public boolean queueIdle() {
+            setBackground();
+            int lastVersionCode = SharedPreUtils.getInt(SharedPreConstants.VERSION_CODE, 0);
+            new DataCheckThread(MainActivity.this, lastVersionCode).start();
+            if (lastVersionCode != BuildConfig.VERSION_CODE) {
+                SharedPreUtils.putInt(SharedPreConstants.VERSION_CODE, BuildConfig.VERSION_CODE);
+            }
+            return false;
+        }
     }
 }
