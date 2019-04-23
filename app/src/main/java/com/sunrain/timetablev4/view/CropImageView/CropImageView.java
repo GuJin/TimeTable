@@ -31,7 +31,6 @@ import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.manager.WallpaperManager;
 import com.sunrain.timetablev4.utils.DensityUtil;
-import com.sunrain.timetablev4.utils.FileUtil;
 import com.sunrain.timetablev4.utils.ImageUtil;
 import com.sunrain.timetablev4.view.CropImageView.animation.SimpleValueAnimator;
 import com.sunrain.timetablev4.view.CropImageView.animation.SimpleValueAnimatorListener;
@@ -41,10 +40,7 @@ import com.sunrain.timetablev4.view.CropImageView.callback.CropCallback;
 import com.sunrain.timetablev4.view.CropImageView.callback.LoadCallback;
 import com.sunrain.timetablev4.view.CropImageView.util.Utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -169,7 +165,6 @@ public class CropImageView extends ImageView {
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ss = new SavedState(superState);
-        ss.image = getBitmap();
         ss.mode = this.mCropMode;
         ss.backgroundColor = this.mBackgroundColor;
         ss.overlayColor = this.mOverlayColor;
@@ -208,38 +203,48 @@ public class CropImageView extends ImageView {
     public void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
-        this.mCropMode = ss.mode;
-        this.mBackgroundColor = ss.backgroundColor;
-        this.mOverlayColor = ss.overlayColor;
-        this.mFrameColor = ss.frameColor;
-        this.mShowGuide = ss.showGuide;
-        this.mShowHandle = ss.showHandle;
-        this.mHandleSize = ss.handleSize;
-        this.mTouchPadding = ss.touchPadding;
-        this.mMinFrameSize = ss.minFrameSize;
-        this.mCustomRatio = new PointF(ss.customRatioX, ss.customRatioY);
-        this.mFrameStrokeWeight = ss.frameStrokeWeight;
-        this.mGuideStrokeWeight = ss.guideStrokeWeight;
-        this.mHandleColor = ss.handleColor;
-        this.mGuideColor = ss.guideColor;
-        this.mInitialFrameScale = ss.initialFrameScale;
-        this.mAngle = ss.angle;
-        this.mIsAnimationEnabled = ss.isAnimationEnabled;
-        this.mAnimationDurationMillis = ss.animationDuration;
-        this.mExifRotation = ss.exifRotation;
-        this.mSourceUri = ss.sourceUri;
-        this.mCompressFormat = ss.compressFormat;
-        this.mCompressQuality = ss.compressQuality;
-        this.mOutputMaxWidth = ss.outputMaxWidth;
-        this.mOutputMaxHeight = ss.outputMaxHeight;
-        this.mOutputWidth = ss.outputWidth;
-        this.mOutputHeight = ss.outputHeight;
-        this.mInputImageWidth = ss.inputImageWidth;
-        this.mInputImageHeight = ss.inputImageHeight;
-        this.mOutputImageWidth = ss.outputImageWidth;
-        this.mOutputImageHeight = ss.outputImageHeight;
-        setImageBitmap(ss.image);
+        mCropMode = ss.mode;
+        mBackgroundColor = ss.backgroundColor;
+        mOverlayColor = ss.overlayColor;
+        mFrameColor = ss.frameColor;
+        mShowGuide = ss.showGuide;
+        mShowHandle = ss.showHandle;
+        mHandleSize = ss.handleSize;
+        mTouchPadding = ss.touchPadding;
+        mMinFrameSize = ss.minFrameSize;
+        mCustomRatio = new PointF(ss.customRatioX, ss.customRatioY);
+        mFrameStrokeWeight = ss.frameStrokeWeight;
+        mGuideStrokeWeight = ss.guideStrokeWeight;
+        mHandleColor = ss.handleColor;
+        mGuideColor = ss.guideColor;
+        mInitialFrameScale = ss.initialFrameScale;
+        mAngle = ss.angle;
+        mIsAnimationEnabled = ss.isAnimationEnabled;
+        mAnimationDurationMillis = ss.animationDuration;
+        mExifRotation = ss.exifRotation;
+        mSourceUri = ss.sourceUri;
+        mCompressFormat = ss.compressFormat;
+        mCompressQuality = ss.compressQuality;
+        mOutputMaxWidth = ss.outputMaxWidth;
+        mOutputMaxHeight = ss.outputMaxHeight;
+        mOutputWidth = ss.outputWidth;
+        mOutputHeight = ss.outputHeight;
+        mInputImageWidth = ss.inputImageWidth;
+        mInputImageHeight = ss.inputImageHeight;
+        mOutputImageWidth = ss.outputImageWidth;
+        mOutputImageHeight = ss.outputImageHeight;
+
+        int maxSize = Utils.getMaxSize();
+        int requestSize = Math.max(mViewWidth, mViewHeight);
+        if (requestSize == 0) {
+            requestSize = maxSize;
+        }
+        final Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(getContext(), mSourceUri, requestSize);
+        setImageBitmap(sampledBitmap);
         requestLayout();
+        if (mAngle != mExifRotation) {
+            setRotateLayout(mViewWidth, mViewHeight);
+        }
     }
 
     @Override
@@ -794,39 +799,31 @@ public class CropImageView extends ImageView {
     }
 
     private float getRatioX(float w) {
-        switch (mCropMode) {
-            case CUSTOM:
-                return mCustomRatio.x;
-            default:
-                return w;
+        if (mCropMode == CropMode.CUSTOM) {
+            return mCustomRatio.x;
         }
+        return w;
     }
 
     private float getRatioY(float h) {
-        switch (mCropMode) {
-            case CUSTOM:
-                return mCustomRatio.y;
-            default:
-                return h;
+        if (mCropMode == CropMode.CUSTOM) {
+            return mCustomRatio.y;
         }
+        return h;
     }
 
     private float getRatioX() {
-        switch (mCropMode) {
-            case CUSTOM:
-                return mCustomRatio.x;
-            default:
-                return 1;
+        if (mCropMode == CropMode.CUSTOM) {
+            return mCustomRatio.x;
         }
+        return 1;
     }
 
     private float getRatioY() {
-        switch (mCropMode) {
-            case CUSTOM:
-                return mCustomRatio.y;
-            default:
-                return 1;
+        if (mCropMode == CropMode.CUSTOM) {
+            return mCustomRatio.y;
         }
+        return 1;
     }
 
     private float sq(float value) {
@@ -857,7 +854,7 @@ public class CropImageView extends ImageView {
     private Bitmap getBitmap() {
         Bitmap bm = null;
         Drawable d = getDrawable();
-        if (d != null && d instanceof BitmapDrawable) {
+        if (d instanceof BitmapDrawable) {
             bm = ((BitmapDrawable) d).getBitmap();
         }
         return bm;
@@ -1087,8 +1084,9 @@ public class CropImageView extends ImageView {
                 mExifRotation = Utils.getExifOrientation(getContext(), mSourceUri) - 90;
                 int maxSize = Utils.getMaxSize();
                 int requestSize = Math.max(mViewWidth, mViewHeight);
-                if (requestSize == 0)
+                if (requestSize == 0) {
                     requestSize = maxSize;
+                }
                 try {
                     final Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(getContext(), mSourceUri, requestSize);
                     mInputImageWidth = Utils.sInputImageWidth;
@@ -1129,7 +1127,7 @@ public class CropImageView extends ImageView {
         final float newScale = calcScale(mViewWidth, mViewHeight, newAngle);
         final float scaleDiff = newScale - currentScale;
         SimpleValueAnimator animator = getAnimator();
-        animator.addAnimatorListener(new SimpleValueAnimatorListener() {
+        animator.setAnimatorListener(new SimpleValueAnimatorListener() {
             @Override
             public void onAnimationStarted() {
                 mIsRotating = true;
@@ -1226,17 +1224,13 @@ public class CropImageView extends ImageView {
                     picFile.delete();
                 }
 
-                FileOutputStream fileOutputStream = null;
-                try {
-                    fileOutputStream = new FileOutputStream(picFile);
+                try (FileOutputStream fileOutputStream = new FileOutputStream(picFile)) {
                     cropped.compress(Bitmap.CompressFormat.WEBP, 100, fileOutputStream);
-                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     postErrorOnMainThread(mCropCallback);
                     mIsCropping = false;
                     return;
-                } finally {
-                    FileUtil.close(fileOutputStream);
                 }
 
                 mHandler.post(new Runnable() {
@@ -1332,7 +1326,6 @@ public class CropImageView extends ImageView {
         float customRatioY;
         float frameStrokeWeight;
         float guideStrokeWeight;
-        boolean isCropEnabled;
         int handleColor;
         int guideColor;
         float initialFrameScale;
@@ -1341,15 +1334,12 @@ public class CropImageView extends ImageView {
         int animationDuration;
         int exifRotation;
         Uri sourceUri;
-        Uri saveUri;
         Bitmap.CompressFormat compressFormat;
         int compressQuality;
-        boolean isDebug;
         int outputMaxWidth;
         int outputMaxHeight;
         int outputWidth;
         int outputHeight;
-        boolean isHandleShadowEnabled;
         int inputImageWidth;
         int inputImageHeight;
         int outputImageWidth;
@@ -1375,7 +1365,6 @@ public class CropImageView extends ImageView {
             customRatioY = in.readFloat();
             frameStrokeWeight = in.readFloat();
             guideStrokeWeight = in.readFloat();
-            isCropEnabled = (in.readInt() != 0);
             handleColor = in.readInt();
             guideColor = in.readInt();
             initialFrameScale = in.readFloat();
@@ -1384,15 +1373,12 @@ public class CropImageView extends ImageView {
             animationDuration = in.readInt();
             exifRotation = in.readInt();
             sourceUri = in.readParcelable(Uri.class.getClassLoader());
-            saveUri = in.readParcelable(Uri.class.getClassLoader());
             compressFormat = (Bitmap.CompressFormat) in.readSerializable();
             compressQuality = in.readInt();
-            isDebug = (in.readInt() != 0);
             outputMaxWidth = in.readInt();
             outputMaxHeight = in.readInt();
             outputWidth = in.readInt();
             outputHeight = in.readInt();
-            isHandleShadowEnabled = (in.readInt() != 0);
             inputImageWidth = in.readInt();
             inputImageHeight = in.readInt();
             outputImageWidth = in.readInt();
@@ -1416,7 +1402,6 @@ public class CropImageView extends ImageView {
             out.writeFloat(customRatioY);
             out.writeFloat(frameStrokeWeight);
             out.writeFloat(guideStrokeWeight);
-            out.writeInt(isCropEnabled ? 1 : 0);
             out.writeInt(handleColor);
             out.writeInt(guideColor);
             out.writeFloat(initialFrameScale);
@@ -1425,15 +1410,12 @@ public class CropImageView extends ImageView {
             out.writeInt(animationDuration);
             out.writeInt(exifRotation);
             out.writeParcelable(sourceUri, flag);
-            out.writeParcelable(saveUri, flag);
             out.writeSerializable(compressFormat);
             out.writeInt(compressQuality);
-            out.writeInt(isDebug ? 1 : 0);
             out.writeInt(outputMaxWidth);
             out.writeInt(outputMaxHeight);
             out.writeInt(outputWidth);
             out.writeInt(outputHeight);
-            out.writeInt(isHandleShadowEnabled ? 1 : 0);
             out.writeInt(inputImageWidth);
             out.writeInt(inputImageHeight);
             out.writeInt(outputImageWidth);

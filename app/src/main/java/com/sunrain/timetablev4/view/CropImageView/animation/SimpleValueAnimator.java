@@ -6,5 +6,5 @@ public interface SimpleValueAnimator {
 
     void cancelAnimation();
 
-    void addAnimatorListener(SimpleValueAnimatorListener animatorListener);
+    void setAnimatorListener(SimpleValueAnimatorListener animatorListener);
 }

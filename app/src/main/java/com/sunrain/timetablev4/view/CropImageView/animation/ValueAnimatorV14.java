@@ -45,7 +45,7 @@ public class ValueAnimatorV14 implements SimpleValueAnimator, Animator.AnimatorL
     }
 
     @Override
-    public void addAnimatorListener(SimpleValueAnimatorListener animatorListener) {
+    public void setAnimatorListener(SimpleValueAnimatorListener animatorListener) {
         if (animatorListener != null)
             this.animatorListener = animatorListener;
     }
