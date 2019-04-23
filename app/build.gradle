@@ -64,7 +64,7 @@ dependencies {
     })
     implementation 'tech.gujin:toast-util:1.1.1'
     implementation 'com.google.zxing:core:3.3.3'
-    implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+    implementation 'com.tencent.bugly:crashreport:2.8.6'
     implementation 'com.meituan.android.walle:library:1.1.6'
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'androidx.core:core:1.0.1'
