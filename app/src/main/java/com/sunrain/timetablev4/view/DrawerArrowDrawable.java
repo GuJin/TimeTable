@@ -1,19 +1,12 @@
 package com.sunrain.timetablev4.view;
 
 
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PathMeasure;
-import android.graphics.Rect;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import androidx.annotation.NonNull;
-
 import com.sunrain.timetablev4.application.MyApplication;
 
 import java.lang.ref.WeakReference;
@@ -44,8 +37,8 @@ public class DrawerArrowDrawable extends Drawable {
     private boolean flip;
 
     private float parameter;
-    private final float coordsA[] = {0f, 0f};
-    private final float coordsB[] = {0f, 0f};
+    private final float[] coordsA = {0f, 0f};
+    private final float[] coordsB = {0f, 0f};
 
     private final ArrowHandler mHandler;
     private AnimationListener mAnimationListener;
@@ -88,7 +81,7 @@ public class DrawerArrowDrawable extends Drawable {
     public void draw(@NonNull Canvas canvas) {
         if (flip) {
             canvas.save();
-            canvas.scale(1f, -1f, getIntrinsicWidth() / 2, getIntrinsicHeight() / 2);
+            canvas.scale(1f, -1f, getIntrinsicWidth() >> 1, getIntrinsicHeight() >> 1);
         }
 
         topLine.draw(canvas);

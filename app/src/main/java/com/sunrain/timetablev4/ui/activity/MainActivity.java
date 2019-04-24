@@ -29,6 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageButton mImgBtnSettings;
     private DrawerArrowDrawable mArrow;
+    private Bundle mSavedInstanceState;
 
     @Override
     protected int getContentView() {
@@ -44,9 +45,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void initData(@Nullable Bundle savedInstanceState) {
         initBugly();
         CrashHandler.getInstance().init();
-        initFragment(savedInstanceState);
-        initArrow(savedInstanceState);
-        setListener();
+        setBackground();
+        mSavedInstanceState = savedInstanceState;
+        initFragment();
     }
 
     @Override
@@ -70,10 +71,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         CrashReport.initCrashReport(MyApplication.sContext, BuildConfig.BUGLY_ID, BuildConfig.DEBUG, strategy);
     }
 
-    private void initFragment(Bundle savedInstanceState) {
+    private void initFragment() {
         mFragmentChanger = new FragmentChanger(getSupportFragmentManager(), R.id.fl_main);
-        if (savedInstanceState != null) {
-            mFragmentChanger.onRestoreInstanceState(savedInstanceState);
+        if (mSavedInstanceState != null) {
+            mFragmentChanger.onRestoreInstanceState(mSavedInstanceState);
         } else {
             mFragmentChanger.showFragment(CourseFragment.class);
         }
@@ -83,7 +84,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mImgBtnSettings.setOnClickListener(this);
     }
 
-    private void initArrow(Bundle savedInstanceState) {
+    private void initArrow() {
         mArrow = new DrawerArrowDrawable();
         mArrow.setAnimationListener(new DrawerArrowDrawable.AnimationListener() {
             @Override
@@ -94,7 +95,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mImgBtnSettings.setImageDrawable(mArrow);
 
         // 注意这里的equals条件和changeFragment()方法中的条件相反
-        if (savedInstanceState != null && SettingsFragment.class.getSimpleName().equals(mFragmentChanger.getLastFragmentName())) {
+        if (mSavedInstanceState != null && SettingsFragment.class.getSimpleName().equals(mFragmentChanger.getLastFragmentName())) {
             mArrow.startArrowAnim();
         }
     }
@@ -129,7 +130,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         public boolean queueIdle() {
-            setBackground();
+            initArrow();
+            setListener();
             int lastVersionCode = SharedPreUtils.getInt(SharedPreConstants.VERSION_CODE, 0);
             new DataCheckThread(MainActivity.this, lastVersionCode).start();
             if (lastVersionCode != BuildConfig.VERSION_CODE) {
