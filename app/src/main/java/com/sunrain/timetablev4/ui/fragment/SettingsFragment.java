@@ -2,8 +2,6 @@ package com.sunrain.timetablev4.ui.fragment;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +9,17 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import com.sunrain.timetablev4.R;
-import com.sunrain.timetablev4.view.table.TableData;
 import com.sunrain.timetablev4.base.BaseFragment;
 import com.sunrain.timetablev4.manager.FragmentChanger;
-import com.sunrain.timetablev4.ui.fragment.settings.MoreFragment;
 import com.sunrain.timetablev4.ui.fragment.settings.CourseManagementFragment;
+import com.sunrain.timetablev4.ui.fragment.settings.MoreFragment;
 import com.sunrain.timetablev4.ui.fragment.settings.SemesterFragment;
 import com.sunrain.timetablev4.ui.fragment.settings.TableFragment;
+import com.sunrain.timetablev4.view.table.TableData;
 
 public class SettingsFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
 
@@ -71,6 +71,10 @@ public class SettingsFragment extends BaseFragment implements RadioGroup.OnCheck
         }
     }
 
+    public void showSemesterFragment() {
+        mRgSettings.check(R.id.rb_semester);
+    }
+
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         mFragmentChanger.showFragment(mFragmentArray.get(checkedId));
@@ -90,7 +94,7 @@ public class SettingsFragment extends BaseFragment implements RadioGroup.OnCheck
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         mFragmentChanger.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }

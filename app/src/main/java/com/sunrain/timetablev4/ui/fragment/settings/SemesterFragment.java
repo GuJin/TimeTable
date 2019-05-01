@@ -2,14 +2,13 @@ package com.sunrain.timetablev4.ui.fragment.settings;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
+import androidx.annotation.Nullable;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.base.BaseFragment;
 import com.sunrain.timetablev4.constants.SharedPreConstants;
@@ -19,13 +18,12 @@ import com.sunrain.timetablev4.ui.dialog.MessageDialog;
 import com.sunrain.timetablev4.utils.SharedPreUtils;
 import com.sunrain.timetablev4.view.UserSpinner;
 import com.sunrain.timetablev4.view.table.TableData;
+import tech.gujin.toast.ToastUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import tech.gujin.toast.ToastUtil;
 
 public class SemesterFragment extends BaseFragment implements View.OnClickListener, UserSpinner.OnItemSelectedByUserListener {
 
@@ -84,9 +82,13 @@ public class SemesterFragment extends BaseFragment implements View.OnClickListen
 
         if (mStartDate != 0) {
             mTvStart.setText(mSimpleDateFormat.format(new Date(mStartDate)));
+        } else {
+            mTvStart.setText(R.string.click_edit);
         }
         if (mEndDate != 0) {
             mTvEnd.setText(mSimpleDateFormat.format(new Date(mEndDate)));
+        } else {
+            mTvEnd.setText(R.string.click_edit);
         }
     }
 

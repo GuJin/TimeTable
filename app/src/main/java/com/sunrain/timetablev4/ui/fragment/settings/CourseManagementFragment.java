@@ -3,7 +3,6 @@ package com.sunrain.timetablev4.ui.fragment.settings;
 import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-
+import androidx.annotation.Nullable;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.adapter.course_management.ClassTimeAdapter;
 import com.sunrain.timetablev4.adapter.course_management.CourseClassroomAdapter;
@@ -24,14 +23,14 @@ import com.sunrain.timetablev4.dao.TableDao;
 import com.sunrain.timetablev4.ui.dialog.CourseClassroomEditDialog;
 import com.sunrain.timetablev4.ui.dialog.CourseClassroomLongClickDialog;
 import com.sunrain.timetablev4.ui.dialog.MessageDialog;
+import com.sunrain.timetablev4.ui.fragment.SettingsFragment;
 import com.sunrain.timetablev4.utils.DensityUtil;
 import com.sunrain.timetablev4.utils.SharedPreUtils;
 import com.sunrain.timetablev4.utils.SystemUiUtil;
 import com.sunrain.timetablev4.view.table.TableData;
+import tech.gujin.toast.ToastUtil;
 
 import java.util.List;
-
-import tech.gujin.toast.ToastUtil;
 
 public class CourseManagementFragment extends BaseFragment implements ViewTreeObserver.OnGlobalLayoutListener, View.OnClickListener,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -127,6 +126,11 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
     }
 
     private void checkValid() {
+
+        if (isSemesterInvalid()) {
+            return;
+        }
+
         String course = mEtCourse.getText().toString();
         String classroom = mEtClassroom.getText().toString();
 
@@ -147,6 +151,35 @@ public class CourseManagementFragment extends BaseFragment implements ViewTreeOb
         }
 
         save(bean);
+    }
+
+    private boolean isSemesterInvalid() {
+        long startDate = SharedPreUtils.getLong(SharedPreConstants.SEMESTER_START_DATE, 0);
+        long endDate = SharedPreUtils.getLong(SharedPreConstants.SEMESTER_END_DATE, 0);
+        if (startDate == 0 || endDate == 0) {
+            new MessageDialog(mActivity).setMessage("请先设置学期日期")
+                    .setNegativeButton(new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            SettingsFragment settingsFragment = (SettingsFragment) getParentFragment();
+                            if (settingsFragment != null) {
+                                settingsFragment.showSemesterFragment();
+                            } else {
+                                ToastUtil.show("跳转失败 请手动设置");
+                            }
+                        }
+                    })
+                    .show();
+            return true;
+        }
+        return false;
     }
 
     private void save(CourseClassroomBean bean) {

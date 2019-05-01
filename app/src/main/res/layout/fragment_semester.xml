@@ -18,7 +18,6 @@
         android:layout_alignBottom="@id/tv_start_hint"
         android:layout_toStartOf="@id/tv_start_hint"
         android:background="?android:attr/selectableItemBackground"
-        android:text="@string/click_edit"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_start_hint"
         app:layout_constraintLeft_toRightOf="@+id/tv_start_hint"/>
 
@@ -34,7 +33,6 @@
         style="@style/SettingsItem.NormalText"
         android:layout_alignBottom="@id/tv_end_hint"
         android:background="?android:attr/selectableItemBackground"
-        android:text="@string/click_edit"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_end_hint"
         app:layout_constraintLeft_toRightOf="@+id/tv_end_hint"/>
 
