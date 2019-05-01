@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:text="@string/line"
         app:layout_constraintBaseline_toBaselineOf="@+id/sp_start_week"
+        app:layout_constraintEnd_toStartOf="@+id/sp_end_week"
         app:layout_constraintStart_toEndOf="@+id/sp_start_week"/>
 
     <com.sunrain.timetablev4.view.UserSpinner

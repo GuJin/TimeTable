@@ -3,14 +3,13 @@ package com.sunrain.timetablev4.ui.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
-
+import androidx.annotation.NonNull;
 import com.sunrain.timetablev4.R;
 import com.sunrain.timetablev4.application.MyApplication;
 import com.sunrain.timetablev4.base.BaseDialog;
@@ -167,7 +166,13 @@ public class ClassTimeDialog extends BaseDialog<ClassTimeDialog> implements User
 
         int semesterWeek = mSpEndWeek.getAdapter().getCount() - 1;
         mSpStartWeek.setSelection(mClassBean.startWeek > semesterWeek ? semesterWeek : mClassBean.startWeek);
-        mSpEndWeek.setSelection(mClassBean.endWeek > semesterWeek ? semesterWeek : mClassBean.endWeek);
+
+        if (mClassBean._id == -1) {
+            // 新增
+            mSpEndWeek.setSelection(semesterWeek);
+        } else {
+            mSpEndWeek.setSelection(mClassBean.endWeek > semesterWeek ? semesterWeek : mClassBean.endWeek);
+        }
     }
 
     private void prepareSpinnerData() {
